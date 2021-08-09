@@ -73,7 +73,7 @@ export class Path {
       @param ext The new file extension.
   */
   public withBase(base: string | Path): Path {
-    return new Path(this.value, this.base);
+    return new Path(this.value, base);
   }
 
   /** Return a new Path object, but with the file extension replaced by `ext`.

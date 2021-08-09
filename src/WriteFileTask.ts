@@ -1,10 +1,16 @@
 import { open } from 'fs/promises';
 import { Task } from './Task';
-import c from 'ansi-colors';
 import { Path } from './Paths';
 import { Builder } from './target';
 import { isSource } from './source';
 import { BuildError } from './errors';
+import c from 'ansi-colors';
+import path from 'path';
+import fs from 'fs';
+import util from 'util';
+
+const mkdir = util.promisify(fs.mkdir);
+const exists = util.promisify(fs.exists);
 
 interface WriteOptions {
   path?: string | Path;
@@ -43,21 +49,30 @@ export class WriteFileTask extends Task<Buffer | string> implements Builder {
   }
 
   /** Return a conduit containing the file path, which lazily reads the file. */
-  public out(): Promise<Buffer | string> {
-    return this.source.out();
+  public read(): Promise<Buffer | string> {
+    return this.source.read();
   }
 
   /** Run all tasks and generate the file. */
   public async build(): Promise<void> {
-    // this.modified = false;
-    const buffer = await this.source.out();
-    const dstPath = this.path;
-    if (isSource(dstPath)) {
-      throw new BuildError(`Cannot overwrite source file '${dstPath.fullPath()}'.`);
+    // Don't allow overwriting of source files.
+    if (isSource(this.filePath)) {
+      throw new BuildError(`Cannot overwrite source file '${this.filePath.fullPath()}'.`);
     }
-    const fh = await open(dstPath.fullPath(), 'w', 0o666);
+    const fullPath = this.filePath.fullPath();
+
+    // Ensure output directory exists.
+    const dirPath = path.dirname(fullPath);
+    const dirPathExists = await exists(dirPath);
+    if (!dirPathExists) {
+      await mkdir(dirPath, { recursive: true })
+    }
+
+    // Write the file.
+    const fh = await open(fullPath, 'w', 0o666);
+    const buffer = await this.source.read();
     fh.writeFile(buffer);
-    console.log(`${c.greenBright('write')}: ${dstPath.toString()}`);
+    console.log(`${c.greenBright('write')}: ${this.filePath.toString()}`);
   }
 }
 
