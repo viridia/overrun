@@ -1,12 +1,14 @@
 {
-  "name": "pipefitter",
-  "description": "Pipefitter is a framework for setting up asset pipelines in Node.js.",
+  "name": "overrun",
+  "description": "Overrun is a framework for setting up asset pipelines in Node.js.",
   "version": "0.1.0",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc --project ./src/tsconfig.json",
     "clean": "rm -r dist",
+    "demo": "ts-node ./test/pipelines.ts --cwd ./test/",
     "lint": "eslint ./src",
+    "prepublish": "npm run build",
     "test": "jest",
     "test:watch": "jest --watch"
   },

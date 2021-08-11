@@ -1,5 +1,5 @@
 import c from 'ansi-colors';
-import { TaskArray } from './directory';
+import { TaskArray } from "./TaskArray";
 import { BuildError } from './errors';
 import { Task } from './Task';
 

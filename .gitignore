@@ -1,5 +1,4 @@
 node_modules/
-dist/
 coverage/
 test/output
 .DS_Store
