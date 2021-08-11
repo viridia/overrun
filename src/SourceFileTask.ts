@@ -6,7 +6,6 @@ import { BuildError } from './errors';
 import { Stats } from 'fs';
 
 /** A task which reads a source file and returns a buffer. */
-
 export class SourceFileTask extends AbstractTask<Buffer> {
   private readonly dependants = new Set<Task<unknown>>();
   private stats?: Promise<Stats>;
@@ -33,9 +32,9 @@ export class SourceFileTask extends AbstractTask<Buffer> {
     );
   }
 
-  /** Return true if the last modified time of this file is newer than the given date. */
-  public isNewerThan(date: Date): boolean {
-    return this.lastModified > date;
+  /** Return the modification date of this source file. */
+  public getModTime(): Promise<Date> {
+    return this.prep().then(st => st.mtime);
   }
 
   /** Return the output of the task. */

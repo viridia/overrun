@@ -1,4 +1,4 @@
-import { TaskArray } from "./TaskArray";
+import { TaskArray } from './TaskArray';
 import { Task } from './Task';
 export interface BuilderOptions {
     dryRun?: boolean;
@@ -6,14 +6,14 @@ export interface BuilderOptions {
 /** A target is anything that can be built. */
 export interface Builder {
     build(options: BuilderOptions): Promise<void>;
-    get isModified(): boolean;
+    isModified(): Promise<boolean>;
 }
 export interface NamedBuilder extends Builder {
     getName(): string;
 }
 export interface Target {
     name: string;
-    builder: Builder | Builder[];
+    builders: Builder[];
 }
 declare type Builders = NamedBuilder | NamedBuilder[] | TaskArray<NamedBuilder & Task<unknown>>;
 /**

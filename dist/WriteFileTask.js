@@ -19,6 +19,7 @@ class WriteFileTask extends AbstractTask_1.AbstractTask {
     source;
     filePath;
     dependencies = new Set();
+    stats;
     constructor(source, options) {
         super();
         this.source = source;
@@ -55,9 +56,20 @@ class WriteFileTask extends AbstractTask_1.AbstractTask {
         this.source.addDependent(dependent, dependencies);
     }
     /** True if any sources of this file are newer than the file. */
-    get isModified() {
-        return false;
-        // return this.dependencies.s
+    async isModified() {
+        const stats = await this.getStats();
+        if (stats === null) {
+            return true;
+        }
+        else {
+            for (const dep of this.dependencies) {
+                const depTime = await dep.getModTime();
+                if (depTime > stats.mtime) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
     /** Return a conduit containing the file path, which lazily reads the file. */
     read() {
@@ -85,10 +97,27 @@ class WriteFileTask extends AbstractTask_1.AbstractTask {
             const fh = await promises_1.open(fullPath, 'w', 0o666);
             await fh.writeFile(buffer);
             await fh.close();
-            console.log(`Wrote ${this.filePath.toString()}: ${buffer.length}`);
+            this.stats = undefined;
+            // console.log(` - ${c.greenBright('Wrote')}: ${this.filePath.toString()} - ${buffer.length} bytes.`);
             // TODO: get new modification time.
         }
-        // console.log(`${c.greenBright('Wrote')}: ${this.filePath.toString()}`);
+    }
+    getStats() {
+        const srcPath = this.path.fullPath;
+        if (this.stats === undefined) {
+            this.stats = promises_1.stat(srcPath).then(st => {
+                if (!st.isFile()) {
+                    throw new errors_1.BuildError(`'${srcPath}' is not a regular file.`);
+                }
+                return st;
+            }, err => {
+                if (err.code === 'ENOENT') {
+                    return null;
+                }
+                throw err;
+            });
+        }
+        return this.stats;
     }
 }
 exports.WriteFileTask = WriteFileTask;

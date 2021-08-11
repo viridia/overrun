@@ -13,8 +13,8 @@ export declare class SourceFileTask extends AbstractTask<Buffer> {
     get path(): Path;
     /** Returns a promise which resolves when we know the modified date of this file. */
     get ready(): Promise<void>;
-    /** Return true if the last modified time of this file is newer than the given date. */
-    isNewerThan(date: Date): boolean;
+    /** Return the modification date of this source file. */
+    getModTime(): Promise<Date>;
     /** Return the output of the task. */
     read(): Promise<Buffer>;
     private prep;

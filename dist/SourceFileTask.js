@@ -25,9 +25,9 @@ class SourceFileTask extends AbstractTask_1.AbstractTask {
     get ready() {
         return this.prep().then(() => { }, () => { });
     }
-    /** Return true if the last modified time of this file is newer than the given date. */
-    isNewerThan(date) {
-        return this.lastModified > date;
+    /** Return the modification date of this source file. */
+    getModTime() {
+        return this.prep().then(st => st.mtime);
     }
     /** Return the output of the task. */
     read() {

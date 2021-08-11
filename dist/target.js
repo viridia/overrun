@@ -17,7 +17,7 @@ function target(nameOrBuilder, builder) {
         else if (Array.isArray(builder)) {
             if (builder.length > 0) {
                 targets.push({
-                    builder,
+                    builders: builder,
                     name: nameOrBuilder,
                 });
             }
@@ -28,7 +28,7 @@ function target(nameOrBuilder, builder) {
         else if (builder instanceof TaskArray_1.TaskArray) {
             if (builder.items().length > 0) {
                 targets.push({
-                    builder: builder.items(),
+                    builders: builder.items(),
                     name: nameOrBuilder,
                 });
             }
@@ -38,7 +38,7 @@ function target(nameOrBuilder, builder) {
         }
         else {
             targets.push({
-                builder,
+                builders: [builder],
                 name: nameOrBuilder,
             });
         }
@@ -46,7 +46,7 @@ function target(nameOrBuilder, builder) {
     else if (Array.isArray(nameOrBuilder)) {
         if (nameOrBuilder.length > 0) {
             targets.push({
-                builder: nameOrBuilder,
+                builders: nameOrBuilder,
                 name: nameOrBuilder[0].getName(),
             });
         }
@@ -57,7 +57,7 @@ function target(nameOrBuilder, builder) {
     else if (nameOrBuilder instanceof TaskArray_1.TaskArray) {
         if (nameOrBuilder.length > 0) {
             targets.push({
-                builder: nameOrBuilder.items(),
+                builders: nameOrBuilder.items(),
                 name: nameOrBuilder.items()[0].getName(),
             });
         }
@@ -67,7 +67,7 @@ function target(nameOrBuilder, builder) {
     }
     else if (nameOrBuilder) {
         targets.push({
-            builder: nameOrBuilder,
+            builders: [nameOrBuilder],
             name: nameOrBuilder.getName(),
         });
     }
@@ -78,9 +78,17 @@ function target(nameOrBuilder, builder) {
 }
 exports.target = target;
 async function buildTargets(options = {}) {
-    const results = await Promise.allSettled(targets.map(({ name, builder }) => {
-        if (Array.isArray(builder)) {
-            const promises = builder.map(b => b.build(options).catch(err => {
+    const results = await Promise.allSettled(targets.map(async ({ name, builders }) => {
+        const toBuild = new Set();
+        await Promise.all(builders.map(async (b) => {
+            const modified = await b.isModified();
+            if (modified) {
+                toBuild.add(b);
+            }
+        }));
+        // const toBuild = builders.filter(b => !upToDate.has(b));
+        if (toBuild.size > 0) {
+            const promises = builders.map(b => b.build(options).catch(err => {
                 if (err instanceof errors_1.BuildError) {
                     console.error(`${ansi_colors_1.default.blue('Target')} ${ansi_colors_1.default.magentaBright(name)}: ${ansi_colors_1.default.red(err.message)}`);
                 }
@@ -95,18 +103,8 @@ async function buildTargets(options = {}) {
             });
         }
         else {
-            return builder.build(options).then(() => {
-                console.log(`${ansi_colors_1.default.greenBright('Finished')}: ${name}`);
-            }, err => {
-                if (err instanceof errors_1.BuildError) {
-                    console.error(`${ansi_colors_1.default.blue('Target')} ${ansi_colors_1.default.magentaBright(name)}: ${ansi_colors_1.default.red(err.message)}`);
-                }
-                else {
-                    console.log(`Not a build error?`);
-                    console.error(err);
-                }
-                throw err;
-            });
+            console.log(`${ansi_colors_1.default.cyanBright('Already up to date')}: ${name}`);
+            return Promise.resolve();
         }
     }));
     const rejected = results.filter(result => result.status === 'rejected');

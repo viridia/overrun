@@ -1,5 +1,5 @@
 import c from 'ansi-colors';
-import { TaskArray } from "./TaskArray";
+import { TaskArray } from './TaskArray';
 import { BuildError } from './errors';
 import { Task } from './Task';
 
@@ -10,7 +10,7 @@ export interface BuilderOptions {
 /** A target is anything that can be built. */
 export interface Builder {
   build(options: BuilderOptions): Promise<void>;
-  get isModified(): boolean;
+  isModified(): Promise<boolean>;
 }
 
 export interface NamedBuilder extends Builder {
@@ -19,7 +19,7 @@ export interface NamedBuilder extends Builder {
 
 export interface Target {
   name: string;
-  builder: Builder | Builder[];
+  builders: Builder[];
 }
 
 const targets: Target[] = [];
@@ -41,7 +41,7 @@ export function target(nameOrBuilder: string | Builders, builder?: Builders): vo
     } else if (Array.isArray(builder)) {
       if (builder.length > 0) {
         targets.push({
-          builder,
+          builders: builder,
           name: nameOrBuilder,
         });
       } else {
@@ -50,7 +50,7 @@ export function target(nameOrBuilder: string | Builders, builder?: Builders): vo
     } else if (builder instanceof TaskArray) {
       if (builder.items().length > 0) {
         targets.push({
-          builder: builder.items(),
+          builders: builder.items(),
           name: nameOrBuilder,
         });
       } else {
@@ -58,14 +58,14 @@ export function target(nameOrBuilder: string | Builders, builder?: Builders): vo
       }
     } else {
       targets.push({
-        builder,
+        builders: [builder],
         name: nameOrBuilder,
       });
     }
   } else if (Array.isArray(nameOrBuilder)) {
     if (nameOrBuilder.length > 0) {
       targets.push({
-        builder: nameOrBuilder,
+        builders: nameOrBuilder,
         name: nameOrBuilder[0].getName(),
       });
     } else {
@@ -74,7 +74,7 @@ export function target(nameOrBuilder: string | Builders, builder?: Builders): vo
   } else if (nameOrBuilder instanceof TaskArray) {
     if (nameOrBuilder.length > 0) {
       targets.push({
-        builder: nameOrBuilder.items(),
+        builders: nameOrBuilder.items(),
         name: nameOrBuilder.items()[0].getName(),
       });
     } else {
@@ -82,7 +82,7 @@ export function target(nameOrBuilder: string | Builders, builder?: Builders): vo
     }
   } else if (nameOrBuilder) {
     targets.push({
-      builder: nameOrBuilder,
+      builders: [nameOrBuilder],
       name: nameOrBuilder.getName(),
     });
   } else {
@@ -93,9 +93,18 @@ export function target(nameOrBuilder: string | Builders, builder?: Builders): vo
 
 export async function buildTargets(options: BuilderOptions = {}): Promise<boolean> {
   const results = await Promise.allSettled(
-    targets.map(({ name, builder }) => {
-      if (Array.isArray(builder)) {
-        const promises = builder.map(b =>
+    targets.map(async ({ name, builders }) => {
+      const toBuild = new Set<Builder>();
+      await Promise.all(builders.map(async b => {
+        const modified = await b.isModified();
+        if (modified) {
+          toBuild.add(b);
+        }
+      }))
+
+      // const toBuild = builders.filter(b => !upToDate.has(b));
+      if (toBuild.size > 0) {
+        const promises = builders.map(b =>
           b.build(options).catch(err => {
             if (err instanceof BuildError) {
               console.error(`${c.blue('Target')} ${c.magentaBright(name)}: ${c.red(err.message)}`);
@@ -110,20 +119,8 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
           console.log(`${c.greenBright('Finished')}: ${name}`);
         });
       } else {
-        return builder.build(options).then(
-          () => {
-            console.log(`${c.greenBright('Finished')}: ${name}`);
-          },
-          err => {
-            if (err instanceof BuildError) {
-              console.error(`${c.blue('Target')} ${c.magentaBright(name)}: ${c.red(err.message)}`);
-            } else {
-              console.log(`Not a build error?`);
-              console.error(err);
-            }
-            throw err;
-          }
-        );
+        console.log(`${c.cyanBright('Already up to date')}: ${name}`);
+        return Promise.resolve();
       }
     })
   );

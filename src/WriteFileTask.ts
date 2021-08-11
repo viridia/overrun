@@ -1,4 +1,4 @@
-import { open } from 'fs/promises';
+import { open, stat } from 'fs/promises';
 import { SourceTask, Task } from './Task';
 import { Path } from './Paths';
 import { Builder, BuilderOptions } from './target';
@@ -7,7 +7,7 @@ import { BuildError } from './errors';
 import { AbstractTask } from './AbstractTask';
 import { WritableTask, WriteOptions } from './write';
 import path from 'path';
-import fs from 'fs';
+import fs, { Stats } from 'fs';
 import util from 'util';
 
 const mkdir = util.promisify(fs.mkdir);
@@ -17,6 +17,8 @@ const exists = util.promisify(fs.exists);
 export class WriteFileTask extends AbstractTask<Buffer | string> implements Builder {
   private filePath: Path;
   private dependencies = new Set<SourceTask>();
+  private stats?: Promise<Stats | null>;
+
   constructor(private source: WritableTask, options?: WriteOptions) {
     super();
     source.addDependent(this, this.dependencies);
@@ -51,9 +53,19 @@ export class WriteFileTask extends AbstractTask<Buffer | string> implements Buil
   }
 
   /** True if any sources of this file are newer than the file. */
-  public get isModified(): boolean {
-    return false;
-    // return this.dependencies.s
+  public async isModified(): Promise<boolean> {
+    const stats = await this.getStats();
+    if (stats === null) {
+      return true;
+    } else {
+      for (const dep of this.dependencies) {
+        const depTime = await dep.getModTime();
+        if (depTime > stats.mtime) {
+          return true;
+        }
+      }
+      return false;
+    }
   }
 
   /** Return a conduit containing the file path, which lazily reads the file. */
@@ -84,8 +96,30 @@ export class WriteFileTask extends AbstractTask<Buffer | string> implements Buil
       const fh = await open(fullPath, 'w', 0o666);
       await fh.writeFile(buffer);
       await fh.close();
+      this.stats = undefined;
       // console.log(` - ${c.greenBright('Wrote')}: ${this.filePath.toString()} - ${buffer.length} bytes.`);
       // TODO: get new modification time.
     }
+  }
+
+  public getStats(): Promise<Stats | null> {
+    const srcPath = this.path.fullPath;
+    if (this.stats === undefined) {
+      this.stats = stat(srcPath).then(
+        st => {
+          if (!st.isFile()) {
+            throw new BuildError(`'${srcPath}' is not a regular file.`);
+          }
+          return st;
+        },
+        err => {
+          if (err.code === 'ENOENT') {
+            return null;
+          }
+          throw err;
+        }
+      );
+    }
+    return this.stats;
   }
 }
