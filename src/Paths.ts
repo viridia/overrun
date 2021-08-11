@@ -1,9 +1,24 @@
 import path from 'path';
 
-/** Class representing a file path. */
+/** Class representing a file path. This can represent either a single unified path string,
+    (either absolute or relative to the current directory), or it can represent the combination
+    of a 'base' directory and a relative path from that base. The latter representation is
+    convenient when there is a source directory tree that has the same hierarchical structure
+    as the destination directory tree - this allows the 'base' path to be replaced without changing
+    the relative portion of the path.
+ */
 export class Path {
   private readonly value: string;
   private readonly base: string | undefined;
+
+  /** Create a path from a string or Path. */
+  static from(base: string | Path, relPath?: string): Path {
+    return relPath !== undefined
+      ? new Path(relPath, base)
+      : typeof base === 'string'
+      ? new Path(base)
+      : base;
+  }
 
   /** Construct a new path from a string. Note: this normalizes the path.
       @param value A string representing the file path.
@@ -11,16 +26,9 @@ export class Path {
 
       If `base` is not present and value is a Path, it will use value.base as the base.
   */
-  constructor(value: string | Path, base?: string | Path) {
-    this.value = typeof value === 'string' ? path.normalize(value) : value.toString();
-    this.base =
-      typeof base === 'string'
-        ? path.normalize(base)
-        : base
-        ? base.toString()
-        : value instanceof Path
-        ? value.base
-        : undefined;
+  constructor(value: string, base?: string | Path) {
+    this.value = path.normalize(value);
+    this.base = typeof base === 'string' ? path.normalize(base) : base?.value;
   }
 
   /** Return the string form of the path. */
@@ -29,8 +37,13 @@ export class Path {
   }
 
   /** Return the full path, including the base. */
-  public fullPath(): string {
+  public get fullPath(): string {
     return this.base ? path.resolve(this.base, this.value) : this.value;
+  }
+
+  /** Return the base path. */
+  public get basePath(): string | undefined {
+    return this.base;
   }
 
   /** Return the filename extension, including the leading '.' */
@@ -39,7 +52,7 @@ export class Path {
   }
 
   /** Return the filename, without the directory or file extension. */
-  public get basename(): string {
+  public get stem(): string {
     return path.basename(this.value, path.extname(this.value));
   }
 
@@ -87,16 +100,16 @@ export class Path {
   /** Return a new Path object, but with the filename 'name'.
       @param name The new filename, not including file extension.
   */
-  public withFilenameAndExt(name: string): Path {
+  public withFilename(name: string): Path {
     const parsed = path.parse(this.value);
     return new Path(path.format({ ...parsed, name, base: undefined }), this.base);
   }
 
   /** Return a new Path object, but with the filename and extension replaced by 'name'.
-      @param name The new filename, with extension.
+      @param nameAndExt The new filename, with extension.
   */
-  public withFilename(name: string): Path {
+  public withFilenameAndExt(nameAndExt: string): Path {
     const parsed = path.parse(this.value);
-    return new Path(path.format({ ...parsed, base: name }), this.base);
+    return new Path(path.format({ ...parsed, base: nameAndExt }), this.base);
   }
 }

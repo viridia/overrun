@@ -1,4 +1,4 @@
-import { Path } from "./Paths";
+import { Path } from './Paths';
 
 export type TransformFn<In, Out> = (input: In) => Out;
 
@@ -6,7 +6,7 @@ export type TransformFn<In, Out> = (input: In) => Out;
 export abstract class Task<T> {
   /** Mark a task as being dependent on this task, meaning that the target is considered to
       be out of date when any of its dependencies are out of date. */
-  public abstract addDependent(dependent: Task<unknown>, dependencies: Set<Task<unknown>>): void;
+  public abstract addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
 
   /** The filesystem location associated with the build artifact produced by this task. */
   public abstract get path(): Path | undefined;
@@ -19,6 +19,14 @@ export abstract class Task<T> {
       @returns A new Task which transforms the output when run.
   */
   public transform<Out>(transform: (input: T) => Out): Task<Out> {
+    return new TransformTask<T, Out>(this, transform);
+  }
+
+  /** Transform the output of this task through an async function.
+      @param transform A function which accepts the input type and returns the output type.
+      @returns A new Task which transforms the output when run.
+  */
+  public transformAsync<Out>(transform: (input: T) => Promise<Out>): Task<Out> {
     return new TransformTask<T, Out>(this, transform);
   }
 
@@ -42,6 +50,15 @@ export abstract class Task<T> {
   }
 }
 
+/** A task that has a "last modified" date. */
+export interface SourceTask {
+  /** Returns a promise which resolves when we know the modified date of this file. */
+  get ready(): Promise<void>;
+
+  /** Return true if the last modified time of this file is newer than the given date. */
+  isNewerThan(date: Date): boolean;
+}
+
 /** A simplified transform task which accepts a synchronous transform function. */
 export class TransformTask<In, Out> extends Task<Out> {
   /** Construct a new transform task.
@@ -49,7 +66,7 @@ export class TransformTask<In, Out> extends Task<Out> {
       @param transformer A function which accepts an input value and returns an output
         value. This function will be called during the build, once the input data is ready.
    */
-  constructor(private source: Task<In>, private transformer: (input: In) => Out) {
+  constructor(private source: Task<In>, private transformer: (input: In) => Out | Promise<Out>) {
     super();
   }
 
@@ -57,7 +74,7 @@ export class TransformTask<In, Out> extends Task<Out> {
     return this.source.path;
   }
 
-  public addDependent(dependent: Task<unknown>, dependencies: Set<Task<unknown>>) {
+  public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>) {
     // For transforms, just add a dependency directly on the source.
     this.source.addDependent(dependent, dependencies);
   }

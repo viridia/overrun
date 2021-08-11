@@ -33,6 +33,7 @@
   "dependencies": {
     "ansi-colors": "^4.1.1",
     "chokidar": "^3.5.2",
+    "fast-glob": "^3.2.7",
     "yargs": "^16.2.0"
   }
 }
