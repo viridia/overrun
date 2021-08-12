@@ -1,5 +1,6 @@
 import path from 'path';
 import { Path } from './Paths';
+import { rootPaths } from './rootPaths';
 import { SourceFileTask } from './SourceFileTask';
 
 const sources = new Map<string, SourceFileTask>();
@@ -15,8 +16,7 @@ export function source(baseOrFile: string | Path, relPath?: string): SourceFileT
   }
 
   const rfTask = new SourceFileTask(srcPath);
-  sources.set(srcPathFull, rfTask);
-  directories.add(path.dirname(srcPathFull));
+  addSource(rfTask);
   return rfTask;
 }
 
@@ -24,4 +24,19 @@ export function source(baseOrFile: string | Path, relPath?: string): SourceFileT
 export function isSource(path: Path): boolean {
   const fullPath = path.fullPath;
   return sources.has(fullPath);
+}
+
+export function addSource(task: SourceFileTask) {
+  const srcPathFull = task.path.fullPath;
+  sources.set(srcPathFull, task);
+  directories.add(path.dirname(srcPathFull));
+}
+
+/** Return true if `path` is a source file. */
+export function getSource(path: string): SourceFileTask | undefined {
+  return sources.get(path);
+}
+
+export function getWatchDirs() {
+  return rootPaths(Array.from(directories));
 }

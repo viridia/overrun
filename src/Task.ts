@@ -1,6 +1,7 @@
 import { Path } from './Paths';
 
 export type TransformFn<In, Out> = (input: In) => Out;
+export type TransformFnAsync<In, Out> = (input: In) => Promise<Out> | Out;
 
 /** Object representing a pipeline operation to be performed on a specific asset. */
 export interface Task<T> {
@@ -18,7 +19,7 @@ export interface Task<T> {
       @param transform A function which accepts the input type and returns the output type.
       @returns A new Task which transforms the output when run.
   */
-  transform<Out>(transform: (input: T) => Promise<Out> | Out): Task<Out>;
+  transform<Out>(transform: TransformFnAsync<T, Out>): Task<Out>;
 
   /** Pipe the output of this task through another task.
       @param taskGen A function which creates a task, given a reference to this task.

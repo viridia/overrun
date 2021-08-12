@@ -11,8 +11,11 @@ export class SourceFileTask extends AbstractTask<Buffer> {
   private stats?: Promise<Stats>;
   private lastModified = new Date();
 
-  constructor(private filePath: Path) {
+  constructor(private filePath: Path, stats?: Stats) {
     super();
+    if (stats) {
+      this.stats = Promise.resolve(stats);
+    }
   }
 
   public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {
@@ -40,6 +43,11 @@ export class SourceFileTask extends AbstractTask<Buffer> {
   /** Return the output of the task. */
   public read(): Promise<Buffer> {
     return this.prep().then(() => this.readFile());
+  }
+
+  /** Used when we detect the file is modified. */
+  public updateStats(stats: Stats) {
+    this.stats = Promise.resolve(stats);
   }
 
   private prep() {

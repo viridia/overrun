@@ -2,9 +2,13 @@ import c from 'ansi-colors';
 import { TaskArray } from './TaskArray';
 import { BuildError } from './errors';
 import { Task } from './Task';
+import chokidar from 'chokidar';
+import { getSource, getWatchDirs } from './source';
 
 export interface BuilderOptions {
   dryRun?: boolean;
+  watchMode?: boolean;
+  targets?: string[];
 }
 
 /** A target is anything that can be built. */
@@ -91,18 +95,30 @@ export function target(nameOrBuilder: string | Builders, builder?: Builders): vo
   }
 }
 
-export async function buildTargets(options: BuilderOptions = {}): Promise<boolean> {
-  const results = await Promise.allSettled(
-    targets.map(async ({ name, builders }) => {
-      const toBuild = new Set<Builder>();
-      await Promise.all(builders.map(async b => {
-        const modified = await b.isModified();
-        if (modified) {
-          toBuild.add(b);
-        }
-      }))
+async function checkOutOfDateTargets(builders: Builder[]): Promise<Set<Builder>> {
+  const toBuild = new Set<Builder>();
+  await Promise.all(
+    builders.map(async b => {
+      const modified = await b.isModified();
+      if (modified) {
+        toBuild.add(b);
+      }
+    })
+  );
+  return toBuild;
+}
 
-      // const toBuild = builders.filter(b => !upToDate.has(b));
+export async function buildTargets(options: BuilderOptions = {}): Promise<boolean> {
+  let targetsToBuild = targets;
+  if (options.targets !== undefined && options.targets.length > 0) {
+    targetsToBuild = targets.filter(t => options.targets!.includes(t.name));
+  }
+
+  getWatchDirs();
+
+  const results = await Promise.allSettled(
+    targetsToBuild.map(async ({ name, builders }) => {
+      const toBuild = await checkOutOfDateTargets(builders);
       if (toBuild.size > 0) {
         const promises = builders.map(b =>
           b.build(options).catch(err => {
@@ -130,5 +146,62 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
     console.log(c.red(`${rejected.length} targets failed.`));
     return false;
   }
+
+  if (options.watchMode && !options.dryRun) {
+    const dirs = getWatchDirs();
+    const watcher = chokidar.watch(dirs, {
+      persistent: true,
+      alwaysStat: true,
+    });
+    let debounceTimer: NodeJS.Timeout | null = null; //  = global.setTimeout();
+    let isChanged = false;
+
+    const rebuild = async () => {
+      isChanged = false;
+      const promises = targetsToBuild.map(async ({ name, builders }) => {
+        const toBuild = await checkOutOfDateTargets(builders);
+        if (toBuild.size > 0) {
+          const promises = builders.map(b =>
+            b.build(options).catch(err => {
+              if (err instanceof BuildError) {
+                console.error(
+                  `${c.blue('Target')} ${c.magentaBright(name)}: ${c.red(err.message)}`
+                );
+              } else {
+                console.log(`Not a build error?`);
+                console.error(err);
+              }
+            })
+          );
+          return Promise.all(promises).then(() => {
+            console.log(`${c.greenBright('Rebuilt')}: ${name}`);
+          });
+        }
+      });
+
+      await Promise.all(promises);
+
+      // Don't clear the timer until build is done; that way we don't schedule a new build
+      // until the previous one has finished.
+      debounceTimer = null;
+      if (isChanged) {
+        rebuild();
+      }
+    };
+
+    watcher.on('change', (path, stats) => {
+      if (path && stats) {
+        const source = getSource(path);
+        if (source) {
+          source.updateStats(stats);
+          isChanged = true;
+          if (!debounceTimer) {
+            debounceTimer = global.setTimeout(rebuild, 300);
+          }
+        }
+      }
+    });
+  }
+
   return true;
 }

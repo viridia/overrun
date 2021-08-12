@@ -5,9 +5,8 @@ import { AbstractTask, TransformTask } from "./AbstractTask";
 /** Represents an array of tasks. These are usually created when operating on collections of
     source files.
  */
-
 export class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
-  constructor(private sources: T2[], private dirPath: Path) {
+  constructor(private sources: T2[], private dirPath?: Path) {
     super();
   }
 
@@ -15,7 +14,7 @@ export class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
     this.sources.forEach(src => src.addDependent(dependent, dependencies));
   }
 
-  public get path(): Path {
+  public get path(): Path | undefined {
     return this.dirPath;
   }
 
