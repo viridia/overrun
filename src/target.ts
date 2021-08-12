@@ -3,7 +3,7 @@ import { TaskArray } from './TaskArray';
 import { BuildError } from './errors';
 import { Task } from './Task';
 import chokidar from 'chokidar';
-import { getSource, getWatchDirs } from './source';
+import { getSource, getWatchDirs } from './sourceInternal';
 
 export interface BuilderOptions {
   dryRun?: boolean;

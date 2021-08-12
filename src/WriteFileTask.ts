@@ -2,7 +2,7 @@ import { open, stat } from 'fs/promises';
 import { SourceTask, Task } from './Task';
 import { Path } from './Paths';
 import { Builder, BuilderOptions } from './target';
-import { isSource } from './source';
+import { isSource } from './sourceInternal';
 import { BuildError } from './errors';
 import { AbstractTask } from './AbstractTask';
 import { WritableTask, WriteOptions } from './write';

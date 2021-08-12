@@ -7,11 +7,11 @@ const argv = yargs(hideBin(process.argv))
   .version()
   .help()
   .options({
-    // f: {
-    //   alias: 'pipeline',
-    //   describe: 'Pipeline file to use.',
-    //   type: 'string',
-    // },
+    f: {
+      alias: 'pipeline',
+      describe: 'Pipeline file to use.',
+      type: 'string',
+    },
     'dry-run': {
       describe: "Don't actually write any files.",
       type: 'boolean',

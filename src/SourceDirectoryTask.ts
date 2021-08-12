@@ -5,7 +5,7 @@ import { SourceFileTask } from "./SourceFileTask";
 import { TaskArray } from "./TaskArray";
 import fg from 'fast-glob';
 import path from 'path';
-import { addSource } from './source';
+import { addSource } from './sourceInternal';
 
 /** A task which reads the contents of a directory. */
 export class SourceDirectoryTask extends AbstractTask<Path[]> {

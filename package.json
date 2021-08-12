@@ -37,5 +37,8 @@
     "chokidar": "^3.5.2",
     "fast-glob": "^3.2.7",
     "yargs": "^16.2.0"
+  },
+  "peerDependencies": {
+    "typescript": "^4.0"
   }
 }
