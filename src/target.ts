@@ -118,8 +118,8 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
 
   const results = await Promise.allSettled(
     targetsToBuild.map(async ({ name, builders }) => {
-      const toBuild = await checkOutOfDateTargets(builders);
-      if (toBuild.size > 0) {
+      // const toBuild = await checkOutOfDateTargets(builders);
+      // if (toBuild.size > 0) {
         const promises = builders.map(b =>
           b.build(options).catch(err => {
             if (err instanceof BuildError) {
@@ -134,10 +134,10 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
         return Promise.all(promises).then(() => {
           console.log(`${c.greenBright('Finished')}: ${name}`);
         });
-      } else {
-        console.log(`${c.cyanBright('Already up to date')}: ${name}`);
-        return Promise.resolve();
-      }
+      // } else {
+      //   console.log(`${c.cyanBright('Already up to date')}: ${name}`);
+      //   return Promise.resolve();
+      // }
     })
   );
 

@@ -13,12 +13,12 @@ const path_1 = __importDefault(require("path"));
     the relative portion of the path.
  */
 class Path {
-    value;
+    frag;
     base;
     /** Create a path from a string or Path. */
-    static from(base, relPath) {
-        return relPath !== undefined
-            ? new Path(relPath, base)
+    static from(base, fragment) {
+        return fragment !== undefined
+            ? new Path(fragment, base)
             : typeof base === 'string'
                 ? new Path(base)
                 : base;
@@ -30,16 +30,16 @@ class Path {
         If `base` is not present and value is a Path, it will use value.base as the base.
     */
     constructor(value, base) {
-        this.value = path_1.default.normalize(value);
-        this.base = typeof base === 'string' ? path_1.default.normalize(base) : base?.value;
+        this.frag = path_1.default.normalize(value);
+        this.base = typeof base === 'string' ? path_1.default.normalize(base) : base?.frag;
     }
-    /** Return the string form of the path. */
-    toString() {
-        return this.value;
+    /** Return the relative part of the path - the part relative to the base. */
+    get fragment() {
+        return this.frag;
     }
     /** Return the full path, including the base. */
     get fullPath() {
-        return this.base ? path_1.default.resolve(this.base, this.value) : this.value;
+        return this.base ? path_1.default.resolve(this.base, this.frag) : this.frag;
     }
     /** Return the base path. */
     get basePath() {
@@ -47,58 +47,58 @@ class Path {
     }
     /** Return the filename extension, including the leading '.' */
     get ext() {
-        return path_1.default.extname(this.value);
+        return path_1.default.extname(this.frag);
     }
     /** Return the filename, without the directory or file extension. */
     get stem() {
-        return path_1.default.basename(this.value, path_1.default.extname(this.value));
+        return path_1.default.basename(this.frag, path_1.default.extname(this.frag));
     }
     /** Return the filename, without the directory, but including the extension. */
     get filename() {
-        return path_1.default.basename(this.value);
+        return path_1.default.basename(this.frag);
     }
     /** Return a new Path object representing the parent directory of this path. */
     get parent() {
-        return new Path(path_1.default.dirname(this.value), this.base);
+        return new Path(path_1.default.dirname(this.frag), this.base);
     }
     /** Return a string containing the parent directory of this path. */
     get parentName() {
-        return path_1.default.dirname(this.value);
+        return path_1.default.dirname(this.frag);
     }
     /** Returns true if this is an absolute path. */
     get isAbsolute() {
-        return path_1.default.isAbsolute(this.value);
+        return path_1.default.isAbsolute(this.frag);
     }
     /** Return a new Path object representing the concatenation of this path with one or
         more relative paths. */
-    resolve(...relPath) {
-        return new Path(path_1.default.resolve(this.value, ...relPath), this.base);
+    resolve(...fragment) {
+        return new Path(path_1.default.resolve(this.frag, ...fragment), this.base);
     }
     /** Return a new Path object, but with the file extension replaced by `ext`.
         @param ext The new file extension.
     */
     withBase(base) {
-        return new Path(this.value, base);
+        return new Path(this.frag, base);
     }
     /** Return a new Path object, but with the file extension replaced by `ext`.
         @param ext The new file extension.
     */
     withExtension(ext) {
-        const parsed = path_1.default.parse(this.value);
+        const parsed = path_1.default.parse(this.frag);
         return new Path(path_1.default.format({ ...parsed, base: undefined, ext }), this.base);
     }
     /** Return a new Path object, but with the filename 'name'.
         @param name The new filename, not including file extension.
     */
     withFilename(name) {
-        const parsed = path_1.default.parse(this.value);
+        const parsed = path_1.default.parse(this.frag);
         return new Path(path_1.default.format({ ...parsed, name, base: undefined }), this.base);
     }
     /** Return a new Path object, but with the filename and extension replaced by 'name'.
         @param nameAndExt The new filename, with extension.
     */
     withFilenameAndExt(nameAndExt) {
-        const parsed = path_1.default.parse(this.value);
+        const parsed = path_1.default.parse(this.frag);
         return new Path(path_1.default.format({ ...parsed, base: nameAndExt }), this.base);
     }
 }

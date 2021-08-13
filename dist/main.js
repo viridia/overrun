@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.build = void 0;
+exports.build = exports.argv = void 0;
 const yargs_1 = __importDefault(require("yargs/yargs"));
 const helpers_1 = require("yargs/helpers");
 const target_1 = require("./target");
 const ansi_colors_1 = __importDefault(require("ansi-colors"));
-const argv = yargs_1.default(helpers_1.hideBin(process.argv))
+exports.argv = yargs_1.default(helpers_1.hideBin(process.argv))
     .version()
     .help()
     .options({
@@ -41,16 +41,16 @@ const argv = yargs_1.default(helpers_1.hideBin(process.argv))
     },
 })
     .describe('no-color', 'Disable colored output.').argv;
-if (argv.color !== undefined) {
-    ansi_colors_1.default.enabled = argv.color;
+if (exports.argv.color !== undefined) {
+    ansi_colors_1.default.enabled = exports.argv.color;
 }
-if (argv.cwd !== undefined) {
-    process.chdir(argv.cwd);
+if (exports.argv.cwd !== undefined) {
+    process.chdir(exports.argv.cwd);
 }
 async function build() {
-    const dryRun = argv['dry-run'];
-    const watchMode = argv['w'];
-    const success = await target_1.buildTargets({ dryRun, watchMode, targets: argv._.map(s => String(s)) });
+    const dryRun = exports.argv['dry-run'];
+    const watchMode = exports.argv['w'];
+    const success = await target_1.buildTargets({ dryRun, watchMode, targets: exports.argv._.map(s => String(s)) });
     if (!watchMode || !success) {
         process.exit(success ? 0 : 1);
     }

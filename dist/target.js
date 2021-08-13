@@ -96,26 +96,25 @@ async function buildTargets(options = {}) {
     }
     sourceInternal_1.getWatchDirs();
     const results = await Promise.allSettled(targetsToBuild.map(async ({ name, builders }) => {
-        const toBuild = await checkOutOfDateTargets(builders);
-        if (toBuild.size > 0) {
-            const promises = builders.map(b => b.build(options).catch(err => {
-                if (err instanceof errors_1.BuildError) {
-                    console.error(`${ansi_colors_1.default.blue('Target')} ${ansi_colors_1.default.magentaBright(name)}: ${ansi_colors_1.default.red(err.message)}`);
-                }
-                else {
-                    console.log(`Not a build error?`);
-                    console.error(err);
-                }
-                throw err;
-            }));
-            return Promise.all(promises).then(() => {
-                console.log(`${ansi_colors_1.default.greenBright('Finished')}: ${name}`);
-            });
-        }
-        else {
-            console.log(`${ansi_colors_1.default.cyanBright('Already up to date')}: ${name}`);
-            return Promise.resolve();
-        }
+        // const toBuild = await checkOutOfDateTargets(builders);
+        // if (toBuild.size > 0) {
+        const promises = builders.map(b => b.build(options).catch(err => {
+            if (err instanceof errors_1.BuildError) {
+                console.error(`${ansi_colors_1.default.blue('Target')} ${ansi_colors_1.default.magentaBright(name)}: ${ansi_colors_1.default.red(err.message)}`);
+            }
+            else {
+                console.log(`Not a build error?`);
+                console.error(err);
+            }
+            throw err;
+        }));
+        return Promise.all(promises).then(() => {
+            console.log(`${ansi_colors_1.default.greenBright('Finished')}: ${name}`);
+        });
+        // } else {
+        //   console.log(`${c.cyanBright('Already up to date')}: ${name}`);
+        //   return Promise.resolve();
+        // }
     }));
     const rejected = results.filter(result => result.status === 'rejected');
     if (rejected.length > 0) {

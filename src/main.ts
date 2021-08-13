@@ -3,7 +3,7 @@ import { hideBin } from 'yargs/helpers';
 import { buildTargets } from './target';
 import c from 'ansi-colors';
 
-const argv = yargs(hideBin(process.argv))
+export const argv = yargs(hideBin(process.argv))
   .version()
   .help()
   .options({

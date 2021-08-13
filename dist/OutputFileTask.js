@@ -49,7 +49,7 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
         return this.filePath;
     }
     getName() {
-        return (this.path ?? this.source.path).toString();
+        return (this.path ?? this.source.path).fragment;
     }
     /** Add a task as a dependent of this task. */
     addDependent(dependent, dependencies) {

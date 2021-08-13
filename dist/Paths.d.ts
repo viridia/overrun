@@ -6,10 +6,10 @@
     the relative portion of the path.
  */
 export declare class Path {
-    private readonly value;
+    private readonly frag;
     private readonly base;
     /** Create a path from a string or Path. */
-    static from(base: string | Path, relPath?: string): Path;
+    static from(base: string | Path, fragment?: string): Path;
     /** Construct a new path from a string. Note: this normalizes the path.
         @param value A string representing the file path.
         @param base Optional base path, which `value` is relative to.
@@ -17,8 +17,8 @@ export declare class Path {
         If `base` is not present and value is a Path, it will use value.base as the base.
     */
     constructor(value: string, base?: string | Path);
-    /** Return the string form of the path. */
-    toString(): string;
+    /** Return the relative part of the path - the part relative to the base. */
+    get fragment(): string;
     /** Return the full path, including the base. */
     get fullPath(): string;
     /** Return the base path. */
@@ -37,7 +37,7 @@ export declare class Path {
     get isAbsolute(): boolean;
     /** Return a new Path object representing the concatenation of this path with one or
         more relative paths. */
-    resolve(...relPath: string[]): Path;
+    resolve(...fragment: string[]): Path;
     /** Return a new Path object, but with the file extension replaced by `ext`.
         @param ext The new file extension.
     */

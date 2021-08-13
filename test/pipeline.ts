@@ -1,4 +1,4 @@
-import { source, build, target, output, directory } from '../dist';
+/// <reference path="../dist/index.d.ts" />
 
 target(source('./source', 'demo.txt').pipe(output({ base: './output' })));
 target(
@@ -15,5 +15,3 @@ target(
     .transform(json => JSON.stringify(json))
     .pipe(output({ base: './output', path: 'index.json' }))
 );
-
-build();
