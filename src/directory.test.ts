@@ -20,11 +20,11 @@ describe('directory', () => {
     const dir = directory(parentDir, 'src');
     const files = await dir.read();
     expect(dir.path.filename).toBe('src');
-    expect(files.some(path => path.toString() === 'src/main.ts')).toBe(true);
+    expect(files.some(path => path.fragment === 'src/main.ts')).toBe(true);
 
     const tasks = dir.files();
     expect(tasks.length).toBeGreaterThan(0);
-    const main = tasks.find(task => task.path!.toString() === 'src/main.ts');
+    const main = tasks.find(task => task.path!.fragment === 'src/main.ts');
     expect(main).not.toBeUndefined();
     expect(main!.path!.withBase('/a/b').fullPath).toBe('/a/b/src/main.ts');
   });
@@ -32,7 +32,7 @@ describe('directory', () => {
   test('path', async () => {
     const dir = directory('/a/b/c', 'd');
     expect(dir.path.fullPath).toBe('/a/b/c/d');
-    expect(dir.path.withBase('/e/f').toString()).toBe('d');
+    expect(dir.path.withBase('/e/f').fragment).toBe('d');
     expect(dir.path.withBase('/e/f').fullPath).toBe('/e/f/d');
   });
 });

@@ -5,7 +5,7 @@ import { Builder, BuilderOptions } from './target';
 import { isSource } from './sourceInternal';
 import { BuildError } from './errors';
 import { AbstractTask } from './AbstractTask';
-import { WritableTask, WriteOptions } from './write';
+import { WritableTask, WriteOptions } from './output';
 import path from 'path';
 import fs, { Stats } from 'fs';
 import util from 'util';
@@ -14,7 +14,7 @@ const mkdir = util.promisify(fs.mkdir);
 const exists = util.promisify(fs.exists);
 
 /** A task which reads a source file and returns a buffer. */
-export class WriteFileTask extends AbstractTask<Buffer | string> implements Builder {
+export class OutputFileTask extends AbstractTask<Buffer | string> implements Builder {
   private filePath: Path;
   private dependencies = new Set<SourceTask>();
   private stats?: Promise<Stats | null>;
@@ -44,7 +44,7 @@ export class WriteFileTask extends AbstractTask<Buffer | string> implements Buil
   }
 
   public getName(): string {
-    return (this.path ?? this.source.path).toString();
+    return (this.path ?? this.source.path).fragment;
   }
 
   /** Add a task as a dependent of this task. */

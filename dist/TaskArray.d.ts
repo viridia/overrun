@@ -6,10 +6,10 @@ import { AbstractTask } from "./AbstractTask";
  */
 export declare class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
     private sources;
-    private dirPath;
-    constructor(sources: T2[], dirPath: Path);
+    private dirPath?;
+    constructor(sources: T2[], dirPath?: Path | undefined);
     addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
-    get path(): Path;
+    get path(): Path | undefined;
     items(): T2[];
     read(): Promise<T2[]>;
     /** Works like Array.map(), except that the elements are tasks. */

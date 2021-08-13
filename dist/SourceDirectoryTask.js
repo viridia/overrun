@@ -10,6 +10,7 @@ const SourceFileTask_1 = require("./SourceFileTask");
 const TaskArray_1 = require("./TaskArray");
 const fast_glob_1 = __importDefault(require("fast-glob"));
 const path_1 = __importDefault(require("path"));
+const sourceInternal_1 = require("./sourceInternal");
 /** A task which reads the contents of a directory. */
 class SourceDirectoryTask extends AbstractTask_1.AbstractTask {
     dirPath;
@@ -34,7 +35,11 @@ class SourceDirectoryTask extends AbstractTask_1.AbstractTask {
             onlyFiles: true,
             globstar: true,
         });
-        return new TaskArray_1.TaskArray(files.map(file => new SourceFileTask_1.SourceFileTask(new Paths_1.Path(file, base))), this.dirPath);
+        return new TaskArray_1.TaskArray(files.map(file => {
+            const task = new SourceFileTask_1.SourceFileTask(new Paths_1.Path(file, base));
+            sourceInternal_1.addSource(task);
+            return task;
+        }), this.dirPath);
     }
     read() {
         const base = this.dirPath.basePath;

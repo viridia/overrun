@@ -16,4 +16,4 @@ __exportStar(require("./Paths"), exports);
 __exportStar(require("./source"), exports);
 __exportStar(require("./target"), exports);
 __exportStar(require("./Task"), exports);
-__exportStar(require("./write"), exports);
+__exportStar(require("./output"), exports);

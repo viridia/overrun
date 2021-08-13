@@ -10,9 +10,12 @@ class SourceFileTask extends AbstractTask_1.AbstractTask {
     dependants = new Set();
     stats;
     lastModified = new Date();
-    constructor(filePath) {
+    constructor(filePath, stats) {
         super();
         this.filePath = filePath;
+        if (stats) {
+            this.stats = Promise.resolve(stats);
+        }
     }
     addDependent(dependent, dependencies) {
         this.dependants.add(dependent);
@@ -21,10 +24,6 @@ class SourceFileTask extends AbstractTask_1.AbstractTask {
     get path() {
         return this.filePath;
     }
-    /** Returns a promise which resolves when we know the modified date of this file. */
-    get ready() {
-        return this.prep().then(() => { }, () => { });
-    }
     /** Return the modification date of this source file. */
     getModTime() {
         return this.prep().then(st => st.mtime);
@@ -32,6 +31,10 @@ class SourceFileTask extends AbstractTask_1.AbstractTask {
     /** Return the output of the task. */
     read() {
         return this.prep().then(() => this.readFile());
+    }
+    /** Used when we detect the file is modified. */
+    updateStats(stats) {
+        this.stats = Promise.resolve(stats);
     }
     prep() {
         const srcPath = this.path.fullPath;

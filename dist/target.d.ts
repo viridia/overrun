@@ -2,6 +2,8 @@ import { TaskArray } from './TaskArray';
 import { Task } from './Task';
 export interface BuilderOptions {
     dryRun?: boolean;
+    watchMode?: boolean;
+    targets?: string[];
 }
 /** A target is anything that can be built. */
 export interface Builder {

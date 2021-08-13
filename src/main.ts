@@ -21,10 +21,6 @@ const argv = yargs(hideBin(process.argv))
       normalize: true,
       type: 'string',
     },
-    color: {
-      describe: 'Enabled colored output.',
-      boolean: true,
-    },
     w: {
       alias: 'watch',
       describe: 'Watch mode.',
@@ -33,6 +29,10 @@ const argv = yargs(hideBin(process.argv))
     targets: {
       describe: 'List of targets to build (default all).',
       type: 'string',
+    },
+    color: {
+      describe: 'Enabled colored output.',
+      boolean: true,
     },
   })
   .describe('no-color', 'Disable colored output.').argv;

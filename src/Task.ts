@@ -33,9 +33,6 @@ export interface SourceTask {
   /** Location of this file in the source tree. */
   get path(): Path;
 
-  /** Returns a promise which resolves when we know the modified date of this file. */
-  get ready(): Promise<void>;
-
   /** Return true if the last modified time of this file is newer than the given date. */
   getModTime(): Promise<Date>;
 }

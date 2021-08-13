@@ -27,14 +27,6 @@ export class SourceFileTask extends AbstractTask<Buffer> {
     return this.filePath;
   }
 
-  /** Returns a promise which resolves when we know the modified date of this file. */
-  public get ready(): Promise<void> {
-    return this.prep().then(
-      () => { },
-      () => { }
-    );
-  }
-
   /** Return the modification date of this source file. */
   public getModTime(): Promise<Date> {
     return this.prep().then(st => st.mtime);

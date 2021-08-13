@@ -9,9 +9,9 @@ describe('Path', () => {
       expect(path.filename).toBe('index.html');
       expect(path.stem).toBe('index');
       expect(path.parentName).toBe('/home/work');
-      expect(path.parent.toString()).toBe('/home/work');
+      expect(path.parent.fragment).toBe('/home/work');
       expect(path.parent.fullPath).toBe('/home/work');
-      expect(path.toString()).toBe('/home/work/index.html');
+      expect(path.fragment).toBe('/home/work/index.html');
     });
 
     test('relative', () => {
@@ -21,27 +21,27 @@ describe('Path', () => {
       expect(path.filename).toBe('index.html');
       expect(path.stem).toBe('index');
       expect(path.parentName).toBe('home/work');
-      expect(path.parent.toString()).toBe('home/work');
+      expect(path.parent.fragment).toBe('home/work');
       expect(path.parent.fullPath).toBe('home/work');
-      expect(path.toString()).toBe('home/work/index.html');
+      expect(path.fragment).toBe('home/work/index.html');
     });
 
     test('.withFilename', () => {
       const path = new Path('/home/work/index.html').withFilename('assets');
       expect(path.fullPath).toBe('/home/work/assets.html');
-      expect(path.toString()).toBe('/home/work/assets.html');
+      expect(path.fragment).toBe('/home/work/assets.html');
     });
 
     test('.withFilenameAndExt', () => {
       const path = new Path('/home/work/index.html').withFilenameAndExt('icon.svg');
       expect(path.fullPath).toBe('/home/work/icon.svg');
-      expect(path.toString()).toBe('/home/work/icon.svg');
+      expect(path.fragment).toBe('/home/work/icon.svg');
     });
 
     test('.withExtension', () => {
       const path = new Path('/home/work/index.html').withExtension('.png');
       expect(path.fullPath).toBe('/home/work/index.png');
-      expect(path.toString()).toBe('/home/work/index.png');
+      expect(path.fragment).toBe('/home/work/index.png');
     });
   });
 
@@ -53,7 +53,7 @@ describe('Path', () => {
       expect(path.filename).toBe('index.html');
       expect(path.stem).toBe('index');
       expect(path.parentName).toBe('/work');
-      expect(path.parent.toString()).toBe('/work');
+      expect(path.parent.fragment).toBe('/work');
       expect(path.parent.fullPath).toBe('/work');
     });
 
@@ -64,7 +64,7 @@ describe('Path', () => {
       expect(path.filename).toBe('index.html');
       expect(path.stem).toBe('index');
       expect(path.parentName).toBe('work');
-      expect(path.parent.toString()).toBe('work');
+      expect(path.parent.fragment).toBe('work');
       expect(path.parent.fullPath).toBe('/home/work');
     });
 
@@ -75,26 +75,26 @@ describe('Path', () => {
       expect(path.filename).toBe('index.html');
       expect(path.stem).toBe('index');
       expect(path.parentName).toBe('..');
-      expect(path.parent.toString()).toBe('..');
+      expect(path.parent.fragment).toBe('..');
       expect(path.parent.fullPath).toBe('/home');
     });
 
     test('.withFilename', () => {
       const path = new Path('work/index.html', '/home').withFilename('assets');
       expect(path.fullPath).toBe('/home/work/assets.html');
-      expect(path.toString()).toBe('work/assets.html');
+      expect(path.fragment).toBe('work/assets.html');
     });
 
     test('.withFilenameAndExt', () => {
       const path = new Path('work/index.html', '/home').withFilenameAndExt('icon.svg');
       expect(path.fullPath).toBe('/home/work/icon.svg');
-      expect(path.toString()).toBe('work/icon.svg');
+      expect(path.fragment).toBe('work/icon.svg');
     });
 
     test('.withExtension', () => {
       const path = new Path('work/index.html', '/home').withExtension('.png');
       expect(path.fullPath).toBe('/home/work/index.png');
-      expect(path.toString()).toBe('work/index.png');
+      expect(path.fragment).toBe('work/index.png');
     });
   });
 

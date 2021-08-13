@@ -1,11 +1,11 @@
-import { source, build, target, write, directory } from '../src';
+import { source, build, target, output, directory } from '../src';
 
-target(source('./source', 'demo.txt').pipe(write({ base: './output' })));
+target(source('./source', 'demo.txt').pipe(output({ base: './output' })));
 target(
   'source.text',
   directory('./source', '.')
     .match('*.txt')
-    .map(src => src.pipe(write({ base: './output' })))
+    .map(src => src.pipe(output({ base: './output' })))
 );
 target(
   'source.index',
@@ -13,7 +13,7 @@ target(
     .match('*.txt')
     .reduce<string[]>([], (acc, next) => [...acc, next.path.filename])
     .transform(json => JSON.stringify(json))
-    .pipe(write({ base: './output', path: 'index.json' }))
+    .pipe(output({ base: './output', path: 'index.json' }))
 );
 
 build();

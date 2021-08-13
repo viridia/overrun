@@ -8,7 +8,7 @@ import path from 'path';
 import { addSource } from './sourceInternal';
 
 /** A task which reads the contents of a directory. */
-export class SourceDirectoryTask extends AbstractTask<Path[]> {
+export class DirectoryTask extends AbstractTask<Path[]> {
   constructor(private dirPath: Path) {
     super();
   }
@@ -28,7 +28,7 @@ export class SourceDirectoryTask extends AbstractTask<Path[]> {
   /** Create a task for every file that matches the glob. */
   public match(pattern: string): TaskArray<SourceFileTask> {
     const base = this.dirPath.basePath;
-    const files = fg.sync(path.join(this.dirPath.toString(), pattern), {
+    const files = fg.sync(path.join(this.dirPath.fragment, pattern), {
       cwd: base,
       onlyFiles: true,
       globstar: true,
@@ -46,7 +46,7 @@ export class SourceDirectoryTask extends AbstractTask<Path[]> {
 
   public read(): Promise<Path[]> {
     const base = this.dirPath.basePath;
-    return fg(path.join(this.dirPath.toString(), '*'), {
+    return fg(path.join(this.dirPath.fragment, '*'), {
       cwd: base,
       onlyFiles: true,
       globstar: true,
