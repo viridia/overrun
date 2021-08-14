@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SourceTask | overrun</title>
+	<title>BuilderOptions | overrun</title>
 	<meta name="description" content="Documentation for overrun">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">:root {
@@ -2723,19 +2723,22 @@ img {
 		<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
 			<a href="../classes/index.TransformTask.html" class="tsd-kind-icon">Transform<wbr>Task</a>
 		</li>
-		<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-			<a href="index.BuilderOptions.html" class="tsd-kind-icon">Builder<wbr>Options</a>
-		</li>
 		<li class="current tsd-kind-interface tsd-parent-kind-module tsd-is-external">
-			<a href="index.SourceTask.html" class="tsd-kind-icon">Source<wbr>Task</a>
+			<a href="index.BuilderOptions.html" class="tsd-kind-icon">Builder<wbr>Options</a>
 			<ul>
-				<li class=" tsd-kind-get-signature tsd-parent-kind-interface tsd-is-external">
-					<a href="index.SourceTask.html#path" class="tsd-kind-icon">path</a>
+				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a href="index.BuilderOptions.html#dryRun" class="tsd-kind-icon">dry<wbr>Run</a>
 				</li>
-				<li class=" tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-					<a href="index.SourceTask.html#getModTime" class="tsd-kind-icon">get<wbr>Mod<wbr>Time</a>
+				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a href="index.BuilderOptions.html#targets" class="tsd-kind-icon">targets</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+					<a href="index.BuilderOptions.html#watchMode" class="tsd-kind-icon">watch<wbr>Mode</a>
 				</li>
 			</ul>
+		</li>
+		<li class=" tsd-kind-interface tsd-parent-kind-module tsd-is-external">
+			<a href="index.SourceTask.html" class="tsd-kind-icon">Source<wbr>Task</a>
 		</li>
 		<li class=" tsd-kind-interface tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
 			<a href="index.Task.html" class="tsd-kind-icon">Task</a>
@@ -2765,18 +2768,11 @@ img {
 </nav>
 <div class="container container-main">
 	<div class="content-wrap">
-		<section class="tsd-panel tsd-comment">
-			<div class="tsd-comment tsd-typography">
-				<div class="lead">
-					<p>A task that has a &quot;last modified&quot; date.</p>
-				</div>
-			</div>
-		</section>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">SourceTask</span>
+					<span class="target">BuilderOptions</span>
 				</li>
 			</ul>
 		</section>
@@ -2785,68 +2781,47 @@ img {
 			<section class="tsd-panel tsd-index-panel">
 				<div class="tsd-index-content">
 					<section class="tsd-index-section tsd-is-external">
-						<h3>Accessors</h3>
+						<h3>Properties</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-get-signature tsd-parent-kind-interface tsd-is-external"><a href="index.SourceTask.html#path" class="tsd-kind-icon">path</a></li>
-						</ul>
-					</section>
-					<section class="tsd-index-section tsd-is-external">
-						<h3>Methods</h3>
-						<ul class="tsd-index-list">
-							<li class="tsd-kind-method tsd-parent-kind-interface tsd-is-external"><a href="index.SourceTask.html#getModTime" class="tsd-kind-icon">get<wbr>Mod<wbr>Time</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="index.BuilderOptions.html#dryRun" class="tsd-kind-icon">dry<wbr>Run</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="index.BuilderOptions.html#targets" class="tsd-kind-icon">targets</a></li>
+							<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-external"><a href="index.BuilderOptions.html#watchMode" class="tsd-kind-icon">watch<wbr>Mode</a></li>
 						</ul>
 					</section>
 				</div>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-external">
-			<h2>Accessors</h2>
-			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-interface tsd-is-external">
-				<a name="path" class="tsd-anchor"></a>
-				<h3>path</h3>
-				<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-interface tsd-is-external">
-					<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> path<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/index.Path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/viridia/overrun/blob/12206df/src/Task.ts#L45">Task.ts:45</a></li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Location of this file in the source tree.</p>
-							</div>
-						</div>
-						<h4 class="tsd-returns-title">Returns <a href="../classes/index.Path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a></h4>
-					</li>
-				</ul>
+			<h2>Properties</h2>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+				<a name="dryRun" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> dry<wbr>Run</h3>
+				<div class="tsd-signature tsd-kind-icon">dry<wbr>Run<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/target.ts#L9">target.ts:9</a></li>
+					</ul>
+				</aside>
 			</section>
-		</section>
-		<section class="tsd-panel-group tsd-member-group tsd-is-external">
-			<h2>Methods</h2>
-			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-				<a name="getModTime" class="tsd-anchor"></a>
-				<h3>get<wbr>Mod<wbr>Time</h3>
-				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface tsd-is-external">
-					<li class="tsd-signature tsd-kind-icon">get<wbr>Mod<wbr>Time<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol">&gt;</span></li>
-				</ul>
-				<ul class="tsd-descriptions">
-					<li class="tsd-description">
-						<aside class="tsd-sources">
-							<ul>
-								<li>Defined in <a href="https://github.com/viridia/overrun/blob/12206df/src/Task.ts#L48">Task.ts:48</a></li>
-							</ul>
-						</aside>
-						<div class="tsd-comment tsd-typography">
-							<div class="lead">
-								<p>Return true if the last modified time of this file is newer than the given date.</p>
-							</div>
-						</div>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol">&gt;</span></h4>
-					</li>
-				</ul>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+				<a name="targets" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> targets</h3>
+				<div class="tsd-signature tsd-kind-icon">targets<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/target.ts#L11">target.ts:11</a></li>
+					</ul>
+				</aside>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-external">
+				<a name="watchMode" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagOptional">Optional</span> watch<wbr>Mode</h3>
+				<div class="tsd-signature tsd-kind-icon">watch<wbr>Mode<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+				<aside class="tsd-sources">
+					<ul>
+						<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/target.ts#L10">target.ts:10</a></li>
+					</ul>
+				</aside>
 			</section>
 		</section>
 		<footer class="with-border-bottom">

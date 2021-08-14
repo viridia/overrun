@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AbstractTask | overrun</title>
+	<title>SourceFileTask | overrun</title>
 	<meta name="description" content="Documentation for overrun">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style type="text/css">:root {
@@ -2702,28 +2702,8 @@ img {
 </header>
 <nav class="tsd-navigation secondary">
 	<ul>
-		<li class="current tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
+		<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
 			<a href="index.AbstractTask.html" class="tsd-kind-icon">Abstract<wbr>Task</a>
-			<ul>
-				<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-					<a href="index.AbstractTask.html#constructor" class="tsd-kind-icon">constructor</a>
-				</li>
-				<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-external">
-					<a href="index.AbstractTask.html#path" class="tsd-kind-icon">path</a>
-				</li>
-				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<a href="index.AbstractTask.html#addDependent" class="tsd-kind-icon">add<wbr>Dependent</a>
-				</li>
-				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-					<a href="index.AbstractTask.html#pipe" class="tsd-kind-icon">pipe</a>
-				</li>
-				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<a href="index.AbstractTask.html#read" class="tsd-kind-icon">read</a>
-				</li>
-				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-					<a href="index.AbstractTask.html#transform" class="tsd-kind-icon">transform</a>
-				</li>
-			</ul>
 		</li>
 		<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
 			<a href="index.DirectoryTask.html" class="tsd-kind-icon">Directory<wbr>Task</a>
@@ -2734,8 +2714,31 @@ img {
 		<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
 			<a href="index.Path.html" class="tsd-kind-icon">Path</a>
 		</li>
-		<li class=" tsd-kind-class tsd-parent-kind-module tsd-is-external">
+		<li class="current tsd-kind-class tsd-parent-kind-module tsd-is-external">
 			<a href="index.SourceFileTask.html" class="tsd-kind-icon">Source<wbr>File<wbr>Task</a>
+			<ul>
+				<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+					<a href="index.SourceFileTask.html#constructor" class="tsd-kind-icon">constructor</a>
+				</li>
+				<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a href="index.SourceFileTask.html#path" class="tsd-kind-icon">path</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+					<a href="index.SourceFileTask.html#addDependent" class="tsd-kind-icon">add<wbr>Dependent</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<a href="index.SourceFileTask.html#getModTime" class="tsd-kind-icon">get<wbr>Mod<wbr>Time</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+					<a href="index.SourceFileTask.html#pipe" class="tsd-kind-icon">pipe</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+					<a href="index.SourceFileTask.html#read" class="tsd-kind-icon">read</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+					<a href="index.SourceFileTask.html#transform" class="tsd-kind-icon">transform</a>
+				</li>
+			</ul>
 		</li>
 		<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter tsd-is-external">
 			<a href="index.TaskArray.html" class="tsd-kind-icon">Task<wbr>Array</a>
@@ -2780,48 +2783,21 @@ img {
 		<section class="tsd-panel tsd-comment">
 			<div class="tsd-comment tsd-typography">
 				<div class="lead">
-					<p>An abstract base class useful for defining custom tasks. It implements most of the methods
-					of the <code>Task</code> interface.</p>
+					<p>A task which reads a source file and returns a buffer.</p>
 				</div>
 			</div>
-		</section>
-		<section class="tsd-panel tsd-type-parameters">
-			<h3>Type parameters</h3>
-			<ul class="tsd-type-parameters">
-				<li>
-					<h4>T</h4>
-				</li>
-			</ul>
 		</section>
 		<section class="tsd-panel tsd-hierarchy">
 			<h3>Hierarchy</h3>
 			<ul class="tsd-hierarchy">
 				<li>
-					<span class="target">AbstractTask</span>
+					<a href="index.AbstractTask.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">&gt;</span>
 					<ul class="tsd-hierarchy">
 						<li>
-							<a href="index.TransformTask.html" class="tsd-signature-type" data-tsd-kind="Class">TransformTask</a>
-						</li>
-						<li>
-							<a href="index.DirectoryTask.html" class="tsd-signature-type" data-tsd-kind="Class">DirectoryTask</a>
-						</li>
-						<li>
-							<a href="index.OutputFileTask.html" class="tsd-signature-type" data-tsd-kind="Class">OutputFileTask</a>
-						</li>
-						<li>
-							<a href="index.SourceFileTask.html" class="tsd-signature-type" data-tsd-kind="Class">SourceFileTask</a>
-						</li>
-						<li>
-							<a href="index.TaskArray.html" class="tsd-signature-type" data-tsd-kind="Class">TaskArray</a>
+							<span class="target">SourceFileTask</span>
 						</li>
 					</ul>
 				</li>
-			</ul>
-		</section>
-		<section class="tsd-panel">
-			<h3>Implements</h3>
-			<ul class="tsd-hierarchy">
-				<li><a href="../interfaces/index.Task.html" class="tsd-signature-type" data-tsd-kind="Interface">Task</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
 			</ul>
 		</section>
 		<section class="tsd-panel-group tsd-index-group">
@@ -2831,22 +2807,23 @@ img {
 					<section class="tsd-index-section tsd-is-external">
 						<h3>Constructors</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="index.AbstractTask.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="index.SourceFileTask.html#constructor" class="tsd-kind-icon">constructor</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section tsd-is-external">
 						<h3>Accessors</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-external"><a href="index.AbstractTask.html#path" class="tsd-kind-icon">path</a></li>
+							<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="index.SourceFileTask.html#path" class="tsd-kind-icon">path</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section tsd-is-external">
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="index.AbstractTask.html#addDependent" class="tsd-kind-icon">add<wbr>Dependent</a></li>
-							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="index.AbstractTask.html#pipe" class="tsd-kind-icon">pipe</a></li>
-							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="index.AbstractTask.html#read" class="tsd-kind-icon">read</a></li>
-							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external"><a href="index.AbstractTask.html#transform" class="tsd-kind-icon">transform</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="index.SourceFileTask.html#addDependent" class="tsd-kind-icon">add<wbr>Dependent</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-external"><a href="index.SourceFileTask.html#getModTime" class="tsd-kind-icon">get<wbr>Mod<wbr>Time</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="index.SourceFileTask.html#pipe" class="tsd-kind-icon">pipe</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external"><a href="index.SourceFileTask.html#read" class="tsd-kind-icon">read</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external"><a href="index.SourceFileTask.html#transform" class="tsd-kind-icon">transform</a></li>
 						</ul>
 					</section>
 				</div>
@@ -2854,61 +2831,68 @@ img {
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-external">
 			<h2>Constructors</h2>
-			<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
+			<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
-				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Abstract<wbr>Task&lt;T&gt;<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="index.AbstractTask.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Source<wbr>File<wbr>Task<span class="tsd-signature-symbol">(</span>filePath<span class="tsd-signature-symbol">: </span><a href="index.Path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a>, stats<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Stats</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="index.SourceFileTask.html" class="tsd-signature-type" data-tsd-kind="Class">SourceFileTask</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
+							<p>Overrides <a href="index.AbstractTask.html">AbstractTask</a>.<a href="index.AbstractTask.html#constructor">constructor</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/SourceFileTask.ts#L14">SourceFileTask.ts:14</a></li>
+							</ul>
 						</aside>
-						<h4 class="tsd-type-parameters-title">Type parameters</h4>
-						<ul class="tsd-type-parameters">
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
 							<li>
-								<h4>T</h4>
+								<h5>filePath: <a href="index.Path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagOptional">Optional</span> stats: <span class="tsd-signature-type">Stats</span></h5>
 							</li>
 						</ul>
-						<h4 class="tsd-returns-title">Returns <a href="index.AbstractTask.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<h4 class="tsd-returns-title">Returns <a href="index.SourceFileTask.html" class="tsd-signature-type" data-tsd-kind="Class">SourceFileTask</a></h4>
 					</li>
 				</ul>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-external">
 			<h2>Accessors</h2>
-			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-external">
+			<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 				<a name="path" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> path</h3>
-				<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-external">
-					<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> path<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="index.Path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a></li>
+				<h3>path</h3>
+				<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> path<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="index.Path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/viridia/overrun/blob/12206df/src/AbstractTask.ts#L9">AbstractTask.ts:9</a></li>
+								<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/SourceFileTask.ts#L26">SourceFileTask.ts:26</a></li>
 							</ul>
 						</aside>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="index.Path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a></h4>
+						<h4 class="tsd-returns-title">Returns <a href="index.Path.html" class="tsd-signature-type" data-tsd-kind="Class">Path</a></h4>
 					</li>
 				</ul>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group tsd-is-external">
 			<h2>Methods</h2>
-			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 				<a name="addDependent" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> add<wbr>Dependent</h3>
-				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<h3>add<wbr>Dependent</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 					<li class="tsd-signature tsd-kind-icon">add<wbr>Dependent<span class="tsd-signature-symbol">(</span>dependent<span class="tsd-signature-symbol">: </span><a href="../interfaces/index.Task.html" class="tsd-signature-type" data-tsd-kind="Interface">Task</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">unknown</span><span class="tsd-signature-symbol">&gt;</span>, dependencies<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/index.SourceTask.html" class="tsd-signature-type" data-tsd-kind="Interface">SourceTask</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/index.Task.html">Task</a>.<a href="../interfaces/index.Task.html#addDependent">addDependent</a></p>
+							<p>Overrides <a href="index.AbstractTask.html">AbstractTask</a>.<a href="index.AbstractTask.html#addDependent">addDependent</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/viridia/overrun/blob/12206df/src/AbstractTask.ts#L8">AbstractTask.ts:8</a></li>
+								<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/SourceFileTask.ts#L21">SourceFileTask.ts:21</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2930,18 +2914,40 @@ img {
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-				<a name="pipe" class="tsd-anchor"></a>
-				<h3>pipe</h3>
-				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-					<li class="tsd-signature tsd-kind-icon">pipe&lt;Out, Dependant&gt;<span class="tsd-signature-symbol">(</span>taskGen<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="index.AbstractTask.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Dependant</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Dependant</span></li>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+				<a name="getModTime" class="tsd-anchor"></a>
+				<h3>get<wbr>Mod<wbr>Time</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Mod<wbr>Time<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/index.Task.html">Task</a>.<a href="../interfaces/index.Task.html#pipe">pipe</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/viridia/overrun/blob/12206df/src/AbstractTask.ts#L24">AbstractTask.ts:24</a></li>
+								<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/SourceFileTask.ts#L31">SourceFileTask.ts:31</a></li>
+							</ul>
+						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Return the modification date of this source file.</p>
+							</div>
+						</div>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Date</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+				<a name="pipe" class="tsd-anchor"></a>
+				<h3>pipe</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+					<li class="tsd-signature tsd-kind-icon">pipe&lt;Out, Dependant&gt;<span class="tsd-signature-symbol">(</span>taskGen<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="index.SourceFileTask.html" class="tsd-signature-type" data-tsd-kind="Class">SourceFileTask</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Dependant</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Dependant</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<p>Inherited from <a href="index.AbstractTask.html">AbstractTask</a>.<a href="index.AbstractTask.html#pipe">pipe</a></p>
+							<ul>
+								<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/AbstractTask.ts#L24">AbstractTask.ts:24</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -2961,21 +2967,21 @@ img {
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>taskGen: <span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="index.AbstractTask.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Dependant</span></h5>
+								<h5>taskGen: <span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="index.SourceFileTask.html" class="tsd-signature-type" data-tsd-kind="Class">SourceFileTask</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Dependant</span></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>A function which creates a task, given a reference to this task.</p>
 								</div>
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter-signature">
 										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-external">
-											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="index.AbstractTask.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Dependant</span></li>
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="index.SourceFileTask.html" class="tsd-signature-type" data-tsd-kind="Class">SourceFileTask</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Dependant</span></li>
 										</ul>
 										<ul class="tsd-descriptions">
 											<li class="tsd-description">
 												<h4 class="tsd-parameters-title">Parameters</h4>
 												<ul class="tsd-parameters">
 													<li>
-														<h5>input: <a href="index.AbstractTask.html" class="tsd-signature-type" data-tsd-kind="Class">AbstractTask</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h5>
+														<h5>input: <a href="index.SourceFileTask.html" class="tsd-signature-type" data-tsd-kind="Class">SourceFileTask</a></h5>
 													</li>
 												</ul>
 												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Dependant</span></h4>
@@ -2990,43 +2996,41 @@ img {
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-external">
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
 				<a name="read" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagAbstract">Abstract</span> read</h3>
-				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-external">
-					<li class="tsd-signature tsd-kind-icon">read<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<h3>read</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-overwrite tsd-is-external">
+					<li class="tsd-signature tsd-kind-icon">read<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/index.Task.html">Task</a>.<a href="../interfaces/index.Task.html#read">read</a></p>
+							<p>Overrides <a href="index.AbstractTask.html">AbstractTask</a>.<a href="index.AbstractTask.html#read">read</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/viridia/overrun/blob/12206df/src/AbstractTask.ts#L10">AbstractTask.ts:10</a></li>
+								<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/SourceFileTask.ts#L36">SourceFileTask.ts:36</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
 							<div class="lead">
-								<p>Returns a Promise that resolves to the data output by this task. This is
-									generally called by pipeline operators to read the data from the previous step, however
-								operators are not required to do this.</p>
+								<p>Return the output of the task.</p>
 							</div>
 						</div>
-						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">&gt;</span></h4>
 					</li>
 				</ul>
 			</section>
-			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
 				<a name="transform" class="tsd-anchor"></a>
 				<h3>transform</h3>
-				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-external">
-					<li class="tsd-signature tsd-kind-icon">transform&lt;Out&gt;<span class="tsd-signature-symbol">(</span>transform<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/index.Task.html" class="tsd-signature-type" data-tsd-kind="Interface">Task</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol">&gt;</span></li>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-has-type-parameter tsd-is-inherited tsd-is-external">
+					<li class="tsd-signature tsd-kind-icon">transform&lt;Out&gt;<span class="tsd-signature-symbol">(</span>transform<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/index.Task.html" class="tsd-signature-type" data-tsd-kind="Interface">Task</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
-							<p>Implementation of <a href="../interfaces/index.Task.html">Task</a>.<a href="../interfaces/index.Task.html#transform">transform</a></p>
+							<p>Inherited from <a href="index.AbstractTask.html">AbstractTask</a>.<a href="index.AbstractTask.html#transform">transform</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/viridia/overrun/blob/12206df/src/AbstractTask.ts#L16">AbstractTask.ts:16</a></li>
+								<li>Defined in <a href="https://github.com/viridia/overrun/blob/4327a98/src/AbstractTask.ts#L16">AbstractTask.ts:16</a></li>
 							</ul>
 						</aside>
 						<div class="tsd-comment tsd-typography">
@@ -3043,21 +3047,21 @@ img {
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5>transform: <span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								<h5>transform: <span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol">&gt;</span></h5>
 								<div class="tsd-comment tsd-typography">
 									<p>A function which accepts the input type and returns the output type.</p>
 								</div>
 								<ul class="tsd-parameters">
 									<li class="tsd-parameter-signature">
 										<ul class="tsd-signatures tsd-kind-type-literal tsd-is-external">
-											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">T</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol">&gt;</span></li>
+											<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Buffer</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol">&gt;</span></li>
 										</ul>
 										<ul class="tsd-descriptions">
 											<li class="tsd-description">
 												<h4 class="tsd-parameters-title">Parameters</h4>
 												<ul class="tsd-parameters">
 													<li>
-														<h5>input: <span class="tsd-signature-type">T</span></h5>
+														<h5>input: <span class="tsd-signature-type">Buffer</span></h5>
 													</li>
 												</ul>
 												<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Out</span><span class="tsd-signature-symbol">&gt;</span></h4>
