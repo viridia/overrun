@@ -1,5 +1,5 @@
 {
-  "out": "doc",
+  "out": "docs",
   "theme": "minimal",
   "tsconfig": "src/tsconfig.json",
   "entryPoints": ["./src/index.ts", "./src/main.ts"],

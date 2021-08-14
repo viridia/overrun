@@ -5,6 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc --project ./src/tsconfig.json",
+    "build:doc": "typedoc",
     "clean": "rm -r dist",
     "demo": "ts-node ./test/pipelines.ts --cwd ./test/",
     "lint": "eslint ./src",
