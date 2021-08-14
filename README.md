@@ -151,7 +151,7 @@ being processed. Each task in the pipeline inherits the `path` of the previous t
 unless the `path` is explicitly overridden. Typically, the last task in the pipeline - the output
 task - will modify the `path` to point to the output location instead of the source location.
 
-# API Reference
+# Build file commands
 
 ## `target(name, pipeline)`
 
@@ -185,81 +185,14 @@ The two arguments are:
 
 ## `output({ base?, path? })`
 
-Creates an output task.
+Creates an output task. It accepts an object which has several optional properties:
 
-## `interface Task<T>`:
+* `base` - Replaces the `base` part of the path associated with the output task.
+* `path` - Replaces the entire path associated with the output task.
 
-A `Task` is a TypeScript interface representing an object which produces data asynchronously. It
-takes a single template parameter, which represents the type of data produced.
+Replacing the path causes the task to write to a different location than the default.
 
-**Properties and methods:**
-
-* `.path` - returns a `Path` object representing the file location for this task's data.
-* `.read()` - returns a Promise that resolves to the data output by this task. This is
-    generally called by pipeline operators to read the data from the previous step, however operators
-    are not required to do this.
-* `.transform(transformer)` - creates a new task which transforms the output of this task's
-    data. The `transformer` argument is a function which accepts the task's output as an argument,
-    and which returns either the transformed data or a promise which resolves to that data.
-    The task created will list the current task as a dependency, so if the source file is changed
-    the transform task will be re-run.
-* `.pipe(taskGen)` - similar to `transform()`, except that it allows more flexibility
-    in processing. The `taskGen` is a function which takes a single argument, the current task,
-    and which returns a new task. One of things that this gives you is access to the path
-    information for the input task.
-* `.addDependent(dependent, dependencySet)` - adds a child (dependent) task to this task's list
-    of dependents. Used during pipeline construction.
-
-## `TaskArray<T>`:
-
-A `TaskArray` is a `Task` which contains an array of other `Tasks`. This can be used in several
-ways - for example, calling `.map()` on a `TaskArray` produces a new `TaskArray` which represents
-applying the specified transformation to each item in the array individually.
-
-`TaskArrays` are created by the directory `.files()` and `.match()` methods.
-
-**Properties and methods:**
-
-* `.length` - The number of tasks in the task array.
-* `.items` - Returns the array of tasks contained in the TaskArray.
-* `.transform(transformer)` - Similar to `Task.transform()` except that it is called with an
-  array containing all of the output data for each of the tasks in the `TaskArray`.
-* `.pipe(transformer)` - Similar to `Task.pipe()` except that it is called with an
-  array containing all of the tasks in the `TaskArray`.
-* `.map(taskGen)` - This operates similarly to the `pipe()` function, except that it calls
-  the `taskGen` function, not for the entire list of tasks, but for each task individually.
-* `.reduce(init, reducer)` - used to combine all of the outputs in the task array together.
-  The reducer function operates much like `Array.reduce()` except that it is asynchronous.
-  The signature for the reducer is:
-
-  ```
-  .reduce<Out>(initVal, (acc, prev) => Out | Promise<Out>): Task<Out>
-  ```
-
-  The output of this method is a new Task which produces the combined output of the reduction.
-
-## `AbstractTask<T>`:
-
-An abstract base class useful for defining custom tasks. It implements most of the methods
-of the `Task` interface.
-
-## `SourceFileTask`:
-
-A task representing a single source input file. It implements
-
-## `DirectoryTask`:
-
-A task that lists the contents of a directory.
-
-**Properties and methods:**
-
-  * `.files()` - returns a `TaskArray` representing an array of `SourceFileTask`s, one for each file
-    in the directory.
-  * `.match(pattern)` - returns a `TaskArray` representing an array of `SourceFileTask`s, one for
-    each file whose name matches the given pattern.
-  * ...plus all of the normal methods of Task.
-
-## `Path`:
+## Path objects
 
 A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
 Python `pathlib` module.
@@ -273,57 +206,9 @@ the path and replacing it with the `output` location, while leaving the rest of 
 `Path` objects provide a means to do this easily, although it is not required that they be used
 this way.
 
-The `Path` object actually contains two path strings, known as the `base` and the `fragment`.
-The `base` represents either the source or destination directory, while the `fragment` represents
-the location of a file or directory within the base. The full path is simply the concatenation
-of `base` and `fragment` together.
+The canonical way to construct a Path is via `Path.from()`.
 
-The `base` part of the path is optional; if not present then the `fragment` represents the
-complete path. (If the fragment is a relative path, it will be relative to the current working
-directory.)
-
-The `base` path need not be an absolute path, although it often is. If it is a relative path,
-it will be resolved relative to the current working directory.
-
-The canonical way to construct a Path is via `Path.from()`, which has two forms:
-
-```ts
-const path = Path.from(fragment);
-const path = Path.from(base, fragment);
-```
-
-If supplied with a single argument, that argument represents the `fragment` part of the path.
-Otherwise, the first argument is the `base` and the second argument is the `fragment`.
-
-You can also construct a Path object directory, however note that the order of arguments is
-reversed, making the second parameter the optional one:
-
-```ts
-const path = new Path(fragment, base);
-```
-
-**Properties and methods:**
-
-  * `base` - The base portion of the path.
-  * `fragment` - The part of the path relative to the base.
-  * `complete` - The complete path, including both base and fragment.
-  * `filename` - The filename part of the path, including the filename extension.
-  * `ext` - The filename extension portion of the path.
-  * `stem` - The filename part of the path, **not** including the filename extension.
-  * `parent` - Returns a `Path` object representing the enclosing directory of this path.
-  * `parentName` - Returns a string giving the path to the enclosing directory of this path.
-  * `isAbsolute` - True if this is an absolute path, false otherwise.
-  * `resolve(...fragment)` - Returns a new Path object representing the concatenation of this
-    path with one or more relative paths.
-  * `withBase(newBase)` - Returns a copy of this `Path` object, with the same fragment as this
-    path, but with a different base path. The `newBase` parameter can either be a string or
-    a `Path` object.
-  * `withExtension(newExt)` - Returns a copy of this `Path` object, but with the file
-    extension replaced by `newExt`.
-  * `withStem(newStem)` - Returns a copy of this `Path` object, but with the stem portion of
-    the path replaced by `newStem`.
-  * `withFilename(newFilename: string)` - Returns a copy of this path, but with the filename
-    portion (including extension) replaced by `newFilename`.
+## [API Reference](./doc/modules/index.html)
 
 # Contributors
 

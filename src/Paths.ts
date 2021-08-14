@@ -1,17 +1,46 @@
 import path from 'path';
 
-/** Class representing a file path. This can represent either a single unified path string,
-    (either absolute or relative to the current directory), or it can represent the combination
-    of a 'base' directory and a relative path from that base. The latter representation is
-    convenient when there is a source directory tree that has the same hierarchical structure
-    as the destination directory tree - this allows the 'base' path to be replaced without changing
-    the relative portion of the path.
+/**
+    A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
+    Python `pathlib` module.
+
+    Typically in build environments, there is both a source directory structure and a destination
+    directory structure; and it is often the case that these two are a mirror of each other, or at
+    least share some structural similarities.
+
+    As such, it is often convenient to be able to manipulate paths by swapping out the `source`
+    part of the path and replacing it with the `output` location, while leaving the rest of the
+    path unchanged. `Path` objects provide a means to do this easily, although it is not required
+    that they be used this way.
+
+    The `Path` object actually contains two path strings, known as the `base` and the `fragment`.
+    The `base` represents either the source or destination directory, while the `fragment`
+    represents the location of a file or directory within the base. The complete path is simply the
+    concatenation of `base` and `fragment` together.
+
+    The `base` part of the path is optional; if not present then the `fragment` represents the
+    complete path. (If the fragment is a relative path, it will be relative to the current working
+    directory.)
+
+    The `base` path need not be an absolute path, although it often is. If it is a relative path,
+    it will be resolved relative to the current working directory.
+
+    The canonical way to construct a Path is via `Path.from()`, which has two forms:
  */
 export class Path {
   private readonly frag: string;
   private readonly basepath: string | undefined;
 
-  /** Create a path from a string or Path. */
+  /** Create a path from a string or Path. This method has two overloaded forms:
+
+      If supplied with a single argument, that argument represents the `fragment` part of the path.
+      Otherwise, the first argument is the `base` and the second argument is the `fragment`.
+
+      You can also construct a `Path` object direcly by calling the constructo, however note that
+      the order of arguments is reversed, making the second parameter the optional one.
+  */
+  static from(path: string | Path): Path;
+  static from(base: string | Path, fragment?: string): Path;
   static from(base: string | Path, fragment?: string): Path {
     return fragment !== undefined
       ? new Path(fragment, base)
@@ -31,12 +60,12 @@ export class Path {
     this.basepath = typeof base === 'string' ? path.normalize(base) : base?.complete;
   }
 
-  /** Return the relative part of the path - the part relative to the base. */
+  /** The part of the path relative to the base. */
   public get fragment(): string {
     return this.frag;
   }
 
-  /** Return the complete path, including both base and fragment. */
+  /** The complete path, including both base and fragment. */
   public get complete(): string {
     return this.basepath ? path.resolve(this.basepath, this.frag) : this.frag;
   }
@@ -46,17 +75,17 @@ export class Path {
     return this.basepath;
   }
 
-  /** Return the filename extension, including the leading '.' */
+  /** The filename extension, including the leading '.' */
   public get ext(): string {
     return path.extname(this.frag);
   }
 
-  /** Return the filename, without the directory or file extension. */
+  /** The filename, without the directory or file extension. */
   public get stem(): string {
     return path.basename(this.frag, path.extname(this.frag));
   }
 
-  /** Return the filename, without the directory, but including the extension. */
+  /** The filename part of the path, including the filename extension. */
   public get filename(): string {
     return path.basename(this.frag);
   }
@@ -71,7 +100,7 @@ export class Path {
     return path.dirname(this.frag);
   }
 
-  /** Returns true if this is an absolute path. */
+  /** Returns true if this is an absolute path, false otherwise. */
   public get isAbsolute(): boolean {
     return path.isAbsolute(this.basepath ?? this.frag);
   }
@@ -82,14 +111,14 @@ export class Path {
     return new Path(path.resolve(this.frag, ...fragment), this.basepath);
   }
 
-  /** Return a new Path object, but with the base replaced by `base`.
+  /** Return a copy of this Path object, but with the base replaced by `base`.
       @param ext The new base path.
   */
   public withBase(base: string | Path): Path {
     return new Path(this.frag, base);
   }
 
-  /** Return a new Path object, but with the file extension replaced by `ext`.
+  /** Return a copy of this Path object, but with the file extension replaced by `ext`.
       @param newExt The new file extension.
   */
   public withExtension(newExt: string): Path {
@@ -97,7 +126,7 @@ export class Path {
     return new Path(path.format({ ...parsed, base: undefined, ext: newExt }), this.basepath);
   }
 
-  /** Return a new Path object, but with the filename 'name'.
+  /** Return a copy of this Path object, but with the stem replaced by 'newStem'.
       @param newStem The new filename, not including file extension.
   */
   public withStem(newStem: string): Path {
@@ -105,7 +134,8 @@ export class Path {
     return new Path(path.format({ ...parsed, name: newStem, base: undefined }), this.basepath);
   }
 
-  /** Return a new Path object, but with the filename and extension replaced by 'name'.
+  /** Return a copy of this Path object, but with the filename (including extension) replaced
+      by 'newFilename'.
       @param newFilename The new filename, with extension.
   */
   public withFilename(newFilename: string): Path {

@@ -11,16 +11,20 @@ export interface BuilderOptions {
   targets?: string[];
 }
 
-/** A target is anything that can be built. */
+/** A target is anything that can be built.
+    @internal
+*/
 export interface Builder {
   build(options: BuilderOptions): Promise<void>;
   isModified(): Promise<boolean>;
 }
 
+/** @internal */
 export interface NamedBuilder extends Builder {
   getName(): string;
 }
 
+/** @internal */
 export interface Target {
   name: string;
   builders: Builder[];
@@ -108,6 +112,7 @@ async function checkOutOfDateTargets(builders: Builder[]): Promise<Set<Builder>>
   return toBuild;
 }
 
+/** @internal */
 export async function buildTargets(options: BuilderOptions = {}): Promise<boolean> {
   let targetsToBuild = targets;
   if (options.targets !== undefined && options.targets.length > 0) {

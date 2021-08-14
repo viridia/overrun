@@ -37,7 +37,9 @@ export class SourceFileTask extends AbstractTask<Buffer> {
     return this.prep().then(() => this.readFile());
   }
 
-  /** Used when we detect the file is modified. */
+  /** Used when we detect the file is modified.
+      @internal
+  */
   public updateStats(stats: Stats) {
     this.stats = Promise.resolve(stats);
   }

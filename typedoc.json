@@ -1,0 +1,11 @@
+{
+  "out": "doc",
+  "theme": "minimal",
+  "tsconfig": "src/tsconfig.json",
+  "entryPoints": ["./src/index.ts", "./src/main.ts"],
+  "externalPattern": ["./src/index.ts", "./src/main.ts"],
+  "excludeExternals": true,
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "readme": "none"
+}

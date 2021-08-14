@@ -52,7 +52,9 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
     this.source.addDependent(dependent, dependencies);
   }
 
-  /** True if any sources of this file are newer than the file. */
+  /** True if any sources of this file are newer than the file.
+      @internal
+  */
   public async isModified(): Promise<boolean> {
     const stats = await this.getStats();
     if (stats === null) {
@@ -102,6 +104,7 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
     }
   }
 
+  /** @internal */
   public getStats(): Promise<Stats | null> {
     const srcPath = this.path.complete;
     if (this.stats === undefined) {
