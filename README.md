@@ -28,9 +28,9 @@ it can be used to convert other kinds of media as well.
 
 ## Documentation
 
-  * [Installation](https://viridia.github.io/overrun/install.md)
-  * [Build configuration files](https://viridia.github.io/overrun/buildconfig.md)
-  * [Command-line arguments](https://viridia.github.io/overrun/commandline.md)
+  * [Installation](https://viridia.github.io/overrun/install.html)
+  * [Build configuration files](https://viridia.github.io/overrun/buildconfig.html)
+  * [Command-line arguments](https://viridia.github.io/overrun/commandline.html)
   * [API Reference](https://viridia.github.io/overrun/api/index.html)
 
 # Contributors

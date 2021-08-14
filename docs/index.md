@@ -1,6 +1,6 @@
 # Table of contents
 
-  * [Installation](./install.md)
-  * [Build configuration files](./buildconfig.md)
-  * [Command-line arguments](./commandline.md)
+  * [Installation](./install.html)
+  * [Build configuration files](./buildconfig.html)
+  * [Command-line arguments](./commandline.html)
   * [API Reference](./api/index.html)
