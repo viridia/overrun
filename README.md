@@ -28,10 +28,10 @@ it can be used to convert other kinds of media as well.
 
 ## Documentation
 
-  * [Installation](./doc/install.md)
-  * [Build configuration files](./doc/buildconfig.md)
-  * [Command-line arguments](./doc/commandline.md)
-  * [API Reference](./doc/api/index.html)
+  * [Installation](https://viridia.github.io/overrun/install.md)
+  * [Build configuration files](https://viridia.github.io/overrun/buildconfig.md)
+  * [Command-line arguments](https://viridia.github.io/overrun/commandline.md)
+  * [API Reference](https://viridia.github.io/overrun/api/index.html)
 
 # Contributors
 
