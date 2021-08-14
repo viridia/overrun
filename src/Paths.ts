@@ -9,7 +9,7 @@ import path from 'path';
  */
 export class Path {
   private readonly frag: string;
-  private readonly base: string | undefined;
+  private readonly basepath: string | undefined;
 
   /** Create a path from a string or Path. */
   static from(base: string | Path, fragment?: string): Path {
@@ -28,7 +28,7 @@ export class Path {
   */
   constructor(value: string, base?: string | Path) {
     this.frag = path.normalize(value);
-    this.base = typeof base === 'string' ? path.normalize(base) : base?.frag;
+    this.basepath = typeof base === 'string' ? path.normalize(base) : base?.complete;
   }
 
   /** Return the relative part of the path - the part relative to the base. */
@@ -36,14 +36,14 @@ export class Path {
     return this.frag;
   }
 
-  /** Return the full path, including the base. */
-  public get fullPath(): string {
-    return this.base ? path.resolve(this.base, this.frag) : this.frag;
+  /** Return the complete path, including both base and fragment. */
+  public get complete(): string {
+    return this.basepath ? path.resolve(this.basepath, this.frag) : this.frag;
   }
 
   /** Return the base path. */
-  public get basePath(): string | undefined {
-    return this.base;
+  public get base(): string | undefined {
+    return this.basepath;
   }
 
   /** Return the filename extension, including the leading '.' */
@@ -63,7 +63,7 @@ export class Path {
 
   /** Return a new Path object representing the parent directory of this path. */
   public get parent(): Path {
-    return new Path(path.dirname(this.frag), this.base);
+    return new Path(path.dirname(this.frag), this.basepath);
   }
 
   /** Return a string containing the parent directory of this path. */
@@ -73,43 +73,43 @@ export class Path {
 
   /** Returns true if this is an absolute path. */
   public get isAbsolute(): boolean {
-    return path.isAbsolute(this.frag);
+    return path.isAbsolute(this.basepath ?? this.frag);
   }
 
   /** Return a new Path object representing the concatenation of this path with one or
       more relative paths. */
   public resolve(...fragment: string[]): Path {
-    return new Path(path.resolve(this.frag, ...fragment), this.base);
+    return new Path(path.resolve(this.frag, ...fragment), this.basepath);
   }
 
-  /** Return a new Path object, but with the file extension replaced by `ext`.
-      @param ext The new file extension.
+  /** Return a new Path object, but with the base replaced by `base`.
+      @param ext The new base path.
   */
   public withBase(base: string | Path): Path {
     return new Path(this.frag, base);
   }
 
   /** Return a new Path object, but with the file extension replaced by `ext`.
-      @param ext The new file extension.
+      @param newExt The new file extension.
   */
-  public withExtension(ext: string): Path {
+  public withExtension(newExt: string): Path {
     const parsed = path.parse(this.frag);
-    return new Path(path.format({ ...parsed, base: undefined, ext }), this.base);
+    return new Path(path.format({ ...parsed, base: undefined, ext: newExt }), this.basepath);
   }
 
   /** Return a new Path object, but with the filename 'name'.
-      @param name The new filename, not including file extension.
+      @param newStem The new filename, not including file extension.
   */
-  public withFilename(name: string): Path {
+  public withStem(newStem: string): Path {
     const parsed = path.parse(this.frag);
-    return new Path(path.format({ ...parsed, name, base: undefined }), this.base);
+    return new Path(path.format({ ...parsed, name: newStem, base: undefined }), this.basepath);
   }
 
   /** Return a new Path object, but with the filename and extension replaced by 'name'.
-      @param nameAndExt The new filename, with extension.
+      @param newFilename The new filename, with extension.
   */
-  public withFilenameAndExt(nameAndExt: string): Path {
+  public withFilename(newFilename: string): Path {
     const parsed = path.parse(this.frag);
-    return new Path(path.format({ ...parsed, base: nameAndExt }), this.base);
+    return new Path(path.format({ ...parsed, base: newFilename }), this.basepath);
   }
 }

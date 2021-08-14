@@ -76,7 +76,7 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
   /** Run all tasks and generate the file. */
   public async build(options: BuilderOptions): Promise<void> {
     // Don't allow overwriting of source files.
-    const fullPath = this.filePath.fullPath;
+    const fullPath = this.filePath.complete;
     if (isSource(this.filePath)) {
       throw new BuildError(`Cannot overwrite source file '${fullPath}'.`);
     }
@@ -103,7 +103,7 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
   }
 
   public getStats(): Promise<Stats | null> {
-    const srcPath = this.path.fullPath;
+    const srcPath = this.path.complete;
     if (this.stats === undefined) {
       this.stats = stat(srcPath).then(
         st => {

@@ -27,7 +27,7 @@ export class DirectoryTask extends AbstractTask<Path[]> {
 
   /** Create a task for every file that matches the glob. */
   public match(pattern: string): TaskArray<SourceFileTask> {
-    const base = this.dirPath.basePath;
+    const base = this.dirPath.base;
     const files = fg.sync(path.join(this.dirPath.fragment, pattern), {
       cwd: base,
       onlyFiles: true,
@@ -45,7 +45,7 @@ export class DirectoryTask extends AbstractTask<Path[]> {
   }
 
   public read(): Promise<Path[]> {
-    const base = this.dirPath.basePath;
+    const base = this.dirPath.base;
     return fg(path.join(this.dirPath.fragment, '*'), {
       cwd: base,
       onlyFiles: true,

@@ -43,7 +43,7 @@ export class SourceFileTask extends AbstractTask<Buffer> {
   }
 
   private prep() {
-    const srcPath = this.path.fullPath;
+    const srcPath = this.path.complete;
     if (!this.stats) {
       this.stats = stat(srcPath).then(
         st => {
@@ -65,7 +65,7 @@ export class SourceFileTask extends AbstractTask<Buffer> {
   }
 
   private async readFile(): Promise<Buffer> {
-    const srcPath = this.path.fullPath;
+    const srcPath = this.path.complete;
     try {
       const fh = await open(srcPath, 'r', 0o666);
       const buffer = fh.readFile();

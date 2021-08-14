@@ -32,11 +32,49 @@ it can be used to convert other kinds of media as well.
 npm install overrun
 ```
 
+Then, in your project's package.json:
+
+```
+{
+  "build": "overrun -f pipeline.ts",
+  "build:watch": "overrun -f pipeline.ts --watch",
+}
+```
+
+You can also import overrun as a library and excute builds programmatically.
+
+## Command-line Arguments
+
+* **--version** - Displays the version number of overrun.
+* **--help** - Prints help information.
+* **-f**, **--pipeline** - Pipeline configuration file to run.
+* **--dry-run** - Don't actually write any files.
+* **--cwd** - Set current working directory before building.
+* **-w**, **--watch** - Enable watch mode, .
+* **--targets** - List of targets to build (default all).
+* **--color** - Enabled colored output.
+* **--no-color** - Disable colored output.
+
 ## Build configuration files
 
-Overrun currently functions as a library, and not a stand-alone cli command (that may change).
-Your build configuration file is actually your 'main' script. Typically this is called
-`pipeline.ts`. Here's a sample build file:
+The build configuration is defined in a TypeScript file, typically named `pipeline.ts`.
+
+```ts
+// A build target which simply copies a bunch of files
+target('images',
+  directory(__dirname, 'images')
+    .match('*.png')
+    .map(src => src.pipe(output({ base: 'output' })))
+);
+```
+
+This build configuration contains a single target. The target has a pipeline of tasks - it
+first scans the `images` directory (using a `directory()` task) for any files matching the
+pattern `*.png`. It then reads each file into a Buffer, and then pipes the buffer to a writer
+task, which writes the buffer to a new location.
+
+Instead of running the `overrun` cli command, you can make your pipeline file an executable
+program and import overrun as a library:
 
 ```ts
 #!/bin/env ts-node
@@ -51,12 +89,6 @@ target('images',
 
 build();
 ```
-
-This build configuration contains a single target. The target has a pipeline of tasks - it
-first scans the `images` directory (using a `directory()` task) for any files matching the
-pattern `*.png`. It then reads each file into a Buffer, and then pipes the buffer to a writer
-task, which writes the buffer to a new location.
-
 Here's more elaborate example which optimizes 3D models files in `.glb` format, using the
 `gltf-transform` library.
 
@@ -98,10 +130,10 @@ target(<name>, <pipeline>);
 The `name` parameter is a string which uniquely identifies the target. The `pipeline` parameter
 specified a sequence of tasks to be performed when the target is out of date.
 
-A pipeline is built up out of tasks. Most commonly, a pipeline will consist of a *source*
+A pipeline is built up out of *tasks*. Most commonly, a pipeline will consist of a *source*
 task, followed by one or more *transform* tasks, and finally an *output* task. Note that a
 pipeline *must* terminate with an output task in order to be valid - otherwise, the pipeline
-would have no effect.
+will have no effect.
 
 The source task can represent either a single source file (specified with the `source()` directive),
 or it can represent a source directory containing multiple source files (specified via
@@ -114,9 +146,14 @@ the previous task.
 Finally, the transformed data can be written to an output file by piping it to an `output()`
 task.
 
-## API Reference
+Each target contains an optional `path` property that represents the location of the file
+being processed. Each task in the pipeline inherits the `path` of the previous task in the chain
+unless the `path` is explicitly overridden. Typically, the last task in the pipeline - the output
+task - will modify the `path` to point to the output location instead of the source location.
 
-### `target(name, pipeline)`
+# API Reference
+
+## `target(name, pipeline)`
 
 Defines a new build target. The `name` argument is a string indicating the name of the target.
 This is used when printing build status; it can also be used to build a subset of all targets.
@@ -124,7 +161,7 @@ This is used when printing build status; it can also be used to build a subset o
 The `pipeline` parameter is a chain of tasks, the last of which must be an output task or an
 array of output tasks.
 
-### `source(base, fragment?)`
+## `source(base, fragment?)`
 
 Creates a `SourceFileTask` representing a single source file. The task reads the file into memory
 and provides subsequent tasks with a `Buffer` object containing the file data.
@@ -135,7 +172,7 @@ The two arguments are:
   below).
 * `fragment` - (optional) The relative portion of the path.
 
-### `directory(base, fragment?)`
+## `directory(base, fragment?)`
 
 Creates a `DirectoryTask` representing a directory of files. The list of files can be
 further narrowed by calling `.match(pattern)` on the resulting task.
@@ -146,16 +183,16 @@ The two arguments are:
   below).
 * `fragment` - (optional) The relative portion of the path.
 
-### `output({ base?, path? })`
+## `output({ base?, path? })`
 
 Creates an output task.
 
-### `Task<T>`:
+## `interface Task<T>`:
 
 A `Task` is a TypeScript interface representing an object which produces data asynchronously. It
 takes a single template parameter, which represents the type of data produced.
 
-**Methods:**
+**Properties and methods:**
 
 * `.path` - returns a `Path` object representing the file location for this task's data.
 * `.read()` - returns a Promise that resolves to the data output by this task. This is
@@ -173,7 +210,7 @@ takes a single template parameter, which represents the type of data produced.
 * `.addDependent(dependent, dependencySet)` - adds a child (dependent) task to this task's list
     of dependents. Used during pipeline construction.
 
-### `TaskArray<T>`:
+## `TaskArray<T>`:
 
 A `TaskArray` is a `Task` which contains an array of other `Tasks`. This can be used in several
 ways - for example, calling `.map()` on a `TaskArray` produces a new `TaskArray` which represents
@@ -181,7 +218,7 @@ applying the specified transformation to each item in the array individually.
 
 `TaskArrays` are created by the directory `.files()` and `.match()` methods.
 
-**Methods:**
+**Properties and methods:**
 
 * `.length` - The number of tasks in the task array.
 * `.items` - Returns the array of tasks contained in the TaskArray.
@@ -201,20 +238,20 @@ applying the specified transformation to each item in the array individually.
 
   The output of this method is a new Task which produces the combined output of the reduction.
 
-### `AbstractTask<T>`:
+## `AbstractTask<T>`:
 
 An abstract base class useful for defining custom tasks. It implements most of the methods
 of the `Task` interface.
 
-### `SourceFileTask`:
+## `SourceFileTask`:
 
 A task representing a single source input file. It implements
 
-### `DirectoryTask`:
+## `DirectoryTask`:
 
 A task that lists the contents of a directory.
 
-**Methods:**
+**Properties and methods:**
 
   * `.files()` - returns a `TaskArray` representing an array of `SourceFileTask`s, one for each file
     in the directory.
@@ -222,41 +259,76 @@ A task that lists the contents of a directory.
     each file whose name matches the given pattern.
   * ...plus all of the normal methods of Task.
 
-### `Path`:
+## `Path`:
 
-Typically in build environments, there is a source directory structure, and a destination
+A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
+Python `pathlib` module.
+
+Typically in build environments, there is both a source directory structure and a destination
 directory structure; and it is often the case that these two are a mirror of each other, or at
-least share some structural similarities. As such, it is often convenient to be able to manipulate
-paths by swapping out the `source` part of the path and replacing it with the `output` location,
-while leaving the rest of the path unchanged. `Path` objects provide a means to do this easily,
-although it is not required that they be used this way.
+least share some structural similarities.
 
-The canonical way to construct a Path is via `Path.from()`:
+As such, it is often convenient to be able to manipulate paths by swapping out the `source` part of
+the path and replacing it with the `output` location, while leaving the rest of the path unchanged.
+`Path` objects provide a means to do this easily, although it is not required that they be used
+this way.
+
+The `Path` object actually contains two path strings, known as the `base` and the `fragment`.
+The `base` represents either the source or destination directory, while the `fragment` represents
+the location of a file or directory within the base. The full path is simply the concatenation
+of `base` and `fragment` together.
+
+The `base` part of the path is optional; if not present then the `fragment` represents the
+complete path. (If the fragment is a relative path, it will be relative to the current working
+directory.)
+
+The `base` path need not be an absolute path, although it often is. If it is a relative path,
+it will be resolved relative to the current working directory.
+
+The canonical way to construct a Path is via `Path.from()`, which has two forms:
 
 ```ts
+const path = Path.from(fragment);
 const path = Path.from(base, fragment);
 ```
 
-The `fragment` parameter is optional - if absent then the first argument represents the whole path.
-Otherwise, the `base` represents a directory, and the `fragment` argument a path relative to
-that directory.
+If supplied with a single argument, that argument represents the `fragment` part of the path.
+Otherwise, the first argument is the `base` and the second argument is the `fragment`.
 
-#### `Path` methods:
+You can also construct a Path object directory, however note that the order of arguments is
+reversed, making the second parameter the optional one:
 
-(Note: Path object are similar to, and are inspired by, the Python pathlib module.)
+```ts
+const path = new Path(fragment, base);
+```
 
-## Command-line Arguments
+**Properties and methods:**
 
-* **--version** - Displays the version number of overrun.
-* **--help** - Prints help information.
-* **-f**, **--pipeline** - Pipeline file to load.
-* **--dry-run** - Don't actually write any files.
-* **--cwd** - Set current working directory.
-* **-w**, **--watch** - Enable watch mode.
-* **--targets** - List of targets to build (default all).
-* **--color** - Enabled colored output.
-* **--no-color** - Disable colored output.
+  * `base` - The base portion of the path.
+  * `fragment` - The part of the path relative to the base.
+  * `complete` - The complete path, including both base and fragment.
+  * `filename` - The filename part of the path, including the filename extension.
+  * `ext` - The filename extension portion of the path.
+  * `stem` - The filename part of the path, **not** including the filename extension.
+  * `parent` - Returns a `Path` object representing the enclosing directory of this path.
+  * `parentName` - Returns a string giving the path to the enclosing directory of this path.
+  * `isAbsolute` - True if this is an absolute path, false otherwise.
+  * `resolve(...fragment)` - Returns a new Path object representing the concatenation of this
+    path with one or more relative paths.
+  * `withBase(newBase)` - Returns a copy of this `Path` object, with the same fragment as this
+    path, but with a different base path. The `newBase` parameter can either be a string or
+    a `Path` object.
+  * `withExtension(newExt)` - Returns a copy of this `Path` object, but with the file
+    extension replaced by `newExt`.
+  * `withStem(newStem)` - Returns a copy of this `Path` object, but with the stem portion of
+    the path replaced by `newStem`.
+  * `withFilename(newFilename: string)` - Returns a copy of this path, but with the filename
+    portion (including extension) replaced by `newFilename`.
 
-# Author
+# Contributors
 
 * Talin
+
+# License
+
+* MIT

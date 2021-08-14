@@ -12,7 +12,7 @@ describe('directory', () => {
     expect(tasks.length).toBeGreaterThan(0);
     const main = tasks.find(task => task.path!.filename === 'main.ts');
     expect(main).not.toBeUndefined();
-    expect(main!.path!.withBase('/a/b').fullPath).toBe('/a/b/main.ts');
+    expect(main!.path!.withBase('/a/b').complete).toBe('/a/b/main.ts');
   });
 
   test('relative files()', async () => {
@@ -26,13 +26,13 @@ describe('directory', () => {
     expect(tasks.length).toBeGreaterThan(0);
     const main = tasks.find(task => task.path!.fragment === 'src/main.ts');
     expect(main).not.toBeUndefined();
-    expect(main!.path!.withBase('/a/b').fullPath).toBe('/a/b/src/main.ts');
+    expect(main!.path!.withBase('/a/b').complete).toBe('/a/b/src/main.ts');
   });
 
   test('path', async () => {
     const dir = directory('/a/b/c', 'd');
-    expect(dir.path.fullPath).toBe('/a/b/c/d');
+    expect(dir.path.complete).toBe('/a/b/c/d');
     expect(dir.path.withBase('/e/f').fragment).toBe('d');
-    expect(dir.path.withBase('/e/f').fullPath).toBe('/e/f/d');
+    expect(dir.path.withBase('/e/f').complete).toBe('/e/f/d');
   });
 });

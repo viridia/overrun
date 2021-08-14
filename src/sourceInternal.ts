@@ -8,12 +8,12 @@ const directories = new Set<string>();
 
 /** Return true if `path` is a source file. */
 export function isSource(path: Path): boolean {
-  const fullPath = path.fullPath;
+  const fullPath = path.complete;
   return sources.has(fullPath);
 }
 
 export function addSource(task: SourceFileTask) {
-  const srcPathFull = task.path.fullPath;
+  const srcPathFull = task.path.complete;
   sources.set(srcPathFull, task);
   directories.add(path.dirname(srcPathFull));
 }
