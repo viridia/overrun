@@ -31,7 +31,7 @@ it can be used to convert other kinds of media as well.
   * [Installation](https://viridia.github.io/overrun/install.html)
   * [Build configuration files](https://viridia.github.io/overrun/buildconfig.html)
   * [Command-line arguments](https://viridia.github.io/overrun/commandline.html)
-  * [API Reference](https://viridia.github.io/overrun/api/index.html)
+  * [API Reference](https://viridia.github.io/overrun/api/modules/index.html)
 
 # Contributors
 
@@ -40,3 +40,5 @@ it can be used to convert other kinds of media as well.
 # License
 
 * MIT
+
+https://viridia.github.io/overrun/install.html
