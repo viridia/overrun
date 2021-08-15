@@ -6,4 +6,4 @@
   * This will require writing data to temp files if there have been processing steps
     that preceded the command.
 * Better typedoc theming.
-* Better doc theming.
+* Better docs theming.

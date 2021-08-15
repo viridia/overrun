@@ -196,3 +196,5 @@ example, you can:
 Note that any function that conforms to the `taskGen` signature is, for all intents and purposes,
 a plugin. For example, the `output()` function is simply a function which returns another function
 that is a task generator, one that generates an `OutputFileTask`.
+
+Next - [Command-line arguments](./commandline.html)

@@ -1,11 +1,32 @@
 # Command-line Arguments
 
-* **--version** - Displays the version number of overrun.
-* **--help** - Prints help information.
-* **-f**, **--pipeline** - Pipeline configuration file to run.
-* **--dry-run** - Don't actually write any files.
-* **--cwd** - Set current working directory before building.
-* **-w**, **--watch** - Enable watch mode, .
-* **--targets** - List of targets to build (default all).
-* **--color** - Enabled colored output.
-* **--no-color** - Disable colored output.
+<dl>
+  <dt>--version</dt>
+  <dd>Displays the version number of overrun.</dd>
+
+  <dt>--help</dt>
+  <dd>Prints help information.</dd>
+
+  <dt>-f, --pipeline</dt>
+  <dd>Pipeline configuration file to run.</dd>
+
+  <dt>--dry-run</dt>
+  <dd>Don't actually write any files.</dd>
+
+  <dt>--cwd</dt>
+  <dd>Set current working directory before building.</dd>
+
+  <dt>-w, --watch</dt>
+  <dd>Enable watch mode, .</dd>
+
+  <dt>--targets</dt>
+  <dd>List of targets to build (default all).</dd>
+
+  <dt>--color</dt>
+  <dd>Enabled colored output.</dd>
+
+  <dt>--no-color</dt>
+  <dd>Disable colored output.</dd>
+</dl>
+
+Next - [API Reference](./api/modules/index.html)
