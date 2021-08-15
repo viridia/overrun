@@ -93,7 +93,7 @@ task.
 ## Concepts: Path objects
 
 A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
-Python `pathlib` module.
+Python `pathlib` module. Note that `Path` objects are immutable.
 
 Each task contains an optional `path` property that represents the location of the file
 being processed. For source and directory tasks, this path is the location of the source file
@@ -102,16 +102,20 @@ in the pipeline, unless the `path` is explicitly overridden. Typically, the last
 pipeline - the output task - will modify the `path` to point to the output location instead
 of the source location.
 
-Typically in build environments, there is both a source directory structure and a destination
-directory structure; and it is often the case that these two are a mirror of each other, or at
-least share some structural similarities.
+Often times in build environments, there is both a source directory structure and a destination
+directory structure; and it is frequently the case that these two hierarchies are a mirror of each
+other, or at least share some structural similarities.
 
 As such, it is often convenient to be able to manipulate paths by swapping out the `source` part of
 the path and replacing it with the `output` location, while leaving the rest of the path unchanged.
 `Path` objects provide a means to do this easily, although it is not required that they be used
 this way.
 
-The canonical way to construct a Path is via `Path.from()`.
+The canonical way to construct a Path is via `Path.from()`. This has two forms, one which takes
+a single argument which is a complete path (either absolute or relative to the current directory),
+and the other form which accepts two parameters, a "base" path and a "fragment" which is relative
+to the base. The method `.withBase(newBase)` can be used construct a copy of the current path
+but with a different base path.
 
 # Build file commands
 
@@ -174,10 +178,13 @@ argument a callback which converts data from one form to another, with the follo
 
   `transformer<In, Out>(input: In) => Out | Promise<Out>`
 
-Note that the `In` type must match the output type of the previous task. For a source task,
+Note that the `In` type must match the output type of the previous task. For a source file task,
 that type will be `Buffer`. Similarly, the `Out` type must match the input type of the next
-task, although it can also return a promise which resolves to that type. For output tasks,
-the input type is either `string` or `Buffer`.
+task, although it can also return a promise which resolves to that type. For output file tasks,
+the input type is either `string` or `Buffer`. Other kinds of tasks may have any data type.
+For example, one can easily imagine a chain of tasks which read a file (Buffer), convert to JSON
+(JsonValue), do some processing on the JSON (JsonValue), serialized the JSON (string), and then
+write to a file.
 
 The `.transform()` method returns a new task containing your transformer - you can use this
 to chain additional processing steps from that task.
