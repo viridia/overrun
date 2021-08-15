@@ -1,6 +1,7 @@
 # Build configuration files
 
 The build configuration is defined in a TypeScript file, typically named `pipeline.ts`.
+Here's a minimal example of a build configuration:
 
 ```ts
 // A build target which simply copies a bunch of files
@@ -89,10 +90,12 @@ the previous task.
 Finally, the transformed data can be written to an output file by piping it to an `output()`
 task.
 
-Each target contains an optional `path` property that represents the location of the file
-being processed. Each task in the pipeline inherits the `path` of the previous task in the chain
-unless the `path` is explicitly overridden. Typically, the last task in the pipeline - the output
-task - will modify the `path` to point to the output location instead of the source location.
+Each task contains an optional `path` property that represents the location of the file
+being processed. For source and directory tasks, this path is the location of the source file
+or directory specified. For other kinds of tasks, the `path` in inherited from the previous task
+in the pipeline, unless the `path` is explicitly overridden. Typically, the last task in the
+pipeline - the output task - will modify the `path` to point to the output location instead
+of the source location.
 
 # Build file commands
 

@@ -2,6 +2,8 @@
 
 **Overrun** is a framework for setting up asset processing pipelines in Node.js.
 
+[![npm](https://img.shields.io/npm/v/overrun.svg)](https://www.npmjs.com/package/overrun)
+
 ## Features
 
 - Support for abitrary transformations of files.

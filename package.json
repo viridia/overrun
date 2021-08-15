@@ -7,6 +7,7 @@
     "build": "tsc --project ./src/tsconfig.json",
     "build:doc": "typedoc",
     "clean": "rm -r dist",
+    "clean:doc": "rm -r docs/api",
     "demo": "ts-node ./test/pipelines.ts --cwd ./test/",
     "lint": "eslint ./src",
     "prepublish": "npm run build",
@@ -19,7 +20,7 @@
     "preset": "ts-jest"
   },
   "bin": {
-    "overrun": "./bin/overrun.js"
+    "overrun": "bin/overrun.js"
   },
   "types": "./dist/index.d.ts",
   "devDependencies": {
@@ -46,5 +47,24 @@
   },
   "peerDependencies": {
     "typescript": "^4.0"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viridia/overrun.git"
+  },
+  "keywords": [
+    "node.js",
+    "task",
+    "runner",
+    "build",
+    "pipeline"
+  ],
+  "bugs": {
+    "url": "https://github.com/viridia/overrun/issues"
+  },
+  "homepage": "https://github.com/viridia/overrun#readme"
 }

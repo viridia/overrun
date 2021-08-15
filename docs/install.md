@@ -1,4 +1,4 @@
-# Getting started
+# Installation and setup
 
 ```sh
 npm install overrun
