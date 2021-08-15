@@ -1,6 +1,5 @@
 # Possible future enhancements
 
-* CI Integration (Github actions.)
 * `tee()` operator.
 * Option to stream file data instead of reading all at once.
 * Ability to run external commands from the shell.
