@@ -5,7 +5,7 @@ target(
   'source.text',
   directory('./source', '.')
     .match('*.txt')
-    .map(src => src.pipe(output({ base: './output' })))
+    .map(output({ base: './output' }))
 );
 target(
   'source.index',

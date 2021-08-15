@@ -97,7 +97,21 @@ in the pipeline, unless the `path` is explicitly overridden. Typically, the last
 pipeline - the output task - will modify the `path` to point to the output location instead
 of the source location.
 
-# Build file commands
+## Concepts: Path objects
+
+A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
+Python `pathlib` module.
+
+Typically in build environments, there is both a source directory structure and a destination
+directory structure; and it is often the case that these two are a mirror of each other, or at
+least share some structural similarities.
+
+As such, it is often convenient to be able to manipulate paths by swapping out the `source` part of
+the path and replacing it with the `output` location, while leaving the rest of the path unchanged.
+`Path` objects provide a means to do this easily, although it is not required that they be used
+this way.
+
+The canonical way to construct a Path is via `Path.from()`.# Build file commands
 
 ## `target(name, pipeline)`
 
@@ -131,25 +145,54 @@ The two arguments are:
 
 ## `output({ base?, path? })`
 
-Creates an output task. It accepts an object which has several optional properties:
+Creates an output task, which accepts either a `string` or `Buffer` as input, and writes it
+to a file. It accepts an object which has several optional properties:
 
 * `base` - Replaces the `base` part of the path associated with the output task.
 * `path` - Replaces the entire path associated with the output task.
 
 Replacing the path causes the task to write to a different location than the default.
 
-## Path objects
+## `build()`
 
-A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
-Python `pathlib` module.
+This function tells overrun to initiate a build. This is only needed if you are using overrun
+as a library - if you are running the `overrun` command, this will happen automatically.
 
-Typically in build environments, there is both a source directory structure and a destination
-directory structure; and it is often the case that these two are a mirror of each other, or at
-least share some structural similarities.
+Note that even when running overrun as a library, it still recognizes command-line arguments.
+(This may change.)
 
-As such, it is often convenient to be able to manipulate paths by swapping out the `source` part of
-the path and replacing it with the `output` location, while leaving the rest of the path unchanged.
-`Path` objects provide a means to do this easily, although it is not required that they be used
-this way.
+# Transforms and Pipes
 
-The canonical way to construct a Path is via `Path.from()`.
+Most of the time you'll want to do more than simply copy files from place to place, but instead
+will want to modify the data in some way. The two main ways this is done is via `.transform()` and
+`.pipe()` methods.
+
+The `.transform(transformer)` method provides a simple way to transform data. It takes as it's
+argument a callback which converts data from one form to another, with the following signature:
+
+  `transformer<In, Out>(input: In) => Out | Promise<Out>`
+
+Note that the `In` type must match the output type of the previous task. For a source task,
+that type will be `Buffer`. Similarly, the `Out` type must match the input type of the next
+task, although it can also return a promise which resolves to that type. For output tasks,
+the input type is either `string` or `Buffer`.
+
+The `.pipe(taskGen)` method is more complex, but allows greater flexibility. Instead of taking
+in a simple transformation function, it takes a task constructor callback - that is, a function
+which generates a `Task`. The signature of this function is:
+
+  `taskGen<In, Out>(input: Task<In>) => Task<Out>`
+
+(In fact `.transform()` internally calls `.pipe()`, but automatically creates a `TransformTask`
+to handle the transformation.)
+
+One of the advantages of `.pipe()` is that you can do more than simply convert the data. For
+example, you can:
+
+* Access the `.path` of the input task.
+* Choose whether or not to read the file data (maybe all you care about is the file's name.)
+* Create multiple tasks, either sequential or operating in parallel.
+
+Note that any function that conforms to the `taskGen` signature is, for all intents and purposes,
+a plugin. For example, the `output()` function is simply a function which returns another function
+that is a task generator, one that generates an `OutputFileTask`.
