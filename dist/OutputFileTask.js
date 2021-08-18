@@ -55,7 +55,9 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
     addDependent(dependent, dependencies) {
         this.source.addDependent(dependent, dependencies);
     }
-    /** True if any sources of this file are newer than the file. */
+    /** True if any sources of this file are newer than the file.
+        @internal
+    */
     async isModified() {
         const stats = await this.getStats();
         if (stats === null) {
@@ -102,6 +104,7 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
             // TODO: get new modification time.
         }
     }
+    /** @internal */
     getStats() {
         const srcPath = this.path.complete;
         if (this.stats === undefined) {

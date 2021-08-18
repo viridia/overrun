@@ -89,6 +89,7 @@ async function checkOutOfDateTargets(builders) {
     }));
     return toBuild;
 }
+/** @internal */
 async function buildTargets(options = {}) {
     let targetsToBuild = targets;
     if (options.targets !== undefined && options.targets.length > 0) {

@@ -16,11 +16,14 @@ export declare class OutputFileTask extends AbstractTask<Buffer | string> implem
     getName(): string;
     /** Add a task as a dependent of this task. */
     addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
-    /** True if any sources of this file are newer than the file. */
+    /** True if any sources of this file are newer than the file.
+        @internal
+    */
     isModified(): Promise<boolean>;
     /** Return a conduit containing the file path, which lazily reads the file. */
     read(): Promise<Buffer | string>;
     /** Run all tasks and generate the file. */
     build(options: BuilderOptions): Promise<void>;
+    /** @internal */
     getStats(): Promise<Stats | null>;
 }

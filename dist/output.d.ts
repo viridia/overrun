@@ -3,6 +3,7 @@ import { Task } from './Task';
 import { Path } from './Paths';
 import { TaskArray } from "./TaskArray";
 import { OutputFileTask } from './OutputFileTask';
+/** @internal */
 export declare type WritableTask = Task<Buffer | string>;
 export interface WriteOptions {
     path?: string | Path;

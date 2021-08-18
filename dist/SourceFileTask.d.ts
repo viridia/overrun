@@ -16,7 +16,9 @@ export declare class SourceFileTask extends AbstractTask<Buffer> {
     getModTime(): Promise<Date>;
     /** Return the output of the task. */
     read(): Promise<Buffer>;
-    /** Used when we detect the file is modified. */
+    /** Used when we detect the file is modified.
+        @internal
+    */
     updateStats(stats: Stats): void;
     private prep;
     private readFile;

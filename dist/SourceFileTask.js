@@ -32,7 +32,9 @@ class SourceFileTask extends AbstractTask_1.AbstractTask {
     read() {
         return this.prep().then(() => this.readFile());
     }
-    /** Used when we detect the file is modified. */
+    /** Used when we detect the file is modified.
+        @internal
+    */
     updateStats(stats) {
         this.stats = Promise.resolve(stats);
     }

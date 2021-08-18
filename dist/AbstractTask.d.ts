@@ -1,6 +1,8 @@
 import { Path } from './Paths';
 import { Task, SourceTask } from './Task';
-/** Class representing a pipeline operation to be performed on a specific asset. */
+/** An abstract base class useful for defining custom tasks. It implements most of the methods
+    of the `Task` interface.
+ */
 export declare abstract class AbstractTask<T> implements Task<T> {
     abstract addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
     abstract get path(): Path | undefined;

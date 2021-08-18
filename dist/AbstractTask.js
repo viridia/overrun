@@ -1,7 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransformTask = exports.AbstractTask = void 0;
-/** Class representing a pipeline operation to be performed on a specific asset. */
+/** An abstract base class useful for defining custom tasks. It implements most of the methods
+    of the `Task` interface.
+ */
 class AbstractTask {
     /** Transform the output of this task through a function.
         @param transform A function which accepts the input type and returns the output type.

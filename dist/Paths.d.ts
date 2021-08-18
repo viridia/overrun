@@ -1,14 +1,42 @@
-/** Class representing a file path. This can represent either a single unified path string,
-    (either absolute or relative to the current directory), or it can represent the combination
-    of a 'base' directory and a relative path from that base. The latter representation is
-    convenient when there is a source directory tree that has the same hierarchical structure
-    as the destination directory tree - this allows the 'base' path to be replaced without changing
-    the relative portion of the path.
+/**
+    A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
+    Python `pathlib` module.
+
+    Typically in build environments, there is both a source directory structure and a destination
+    directory structure; and it is often the case that these two are a mirror of each other, or at
+    least share some structural similarities.
+
+    As such, it is often convenient to be able to manipulate paths by swapping out the `source`
+    part of the path and replacing it with the `output` location, while leaving the rest of the
+    path unchanged. `Path` objects provide a means to do this easily, although it is not required
+    that they be used this way.
+
+    The `Path` object actually contains two path strings, known as the `base` and the `fragment`.
+    The `base` represents either the source or destination directory, while the `fragment`
+    represents the location of a file or directory within the base. The complete path is simply the
+    concatenation of `base` and `fragment` together.
+
+    The `base` part of the path is optional; if not present then the `fragment` represents the
+    complete path. (If the fragment is a relative path, it will be relative to the current working
+    directory.)
+
+    The `base` path need not be an absolute path, although it often is. If it is a relative path,
+    it will be resolved relative to the current working directory.
+
+    The canonical way to construct a Path is via `Path.from()`, which has two forms:
  */
 export declare class Path {
     private readonly frag;
     private readonly basepath;
-    /** Create a path from a string or Path. */
+    /** Create a path from a string or Path. This method has two overloaded forms:
+  
+        If supplied with a single argument, that argument represents the `fragment` part of the path.
+        Otherwise, the first argument is the `base` and the second argument is the `fragment`.
+  
+        You can also construct a `Path` object direcly by calling the constructo, however note that
+        the order of arguments is reversed, making the second parameter the optional one.
+    */
+    static from(path: string | Path): Path;
     static from(base: string | Path, fragment?: string): Path;
     /** Construct a new path from a string. Note: this normalizes the path.
         @param value A string representing the file path.
@@ -17,40 +45,41 @@ export declare class Path {
         If `base` is not present and value is a Path, it will use value.base as the base.
     */
     constructor(value: string, base?: string | Path);
-    /** Return the relative part of the path - the part relative to the base. */
+    /** The part of the path relative to the base. */
     get fragment(): string;
-    /** Return the complete path, including both base and fragment. */
+    /** The complete path, including both base and fragment. */
     get complete(): string;
     /** Return the base path. */
     get base(): string | undefined;
-    /** Return the filename extension, including the leading '.' */
+    /** The filename extension, including the leading '.' */
     get ext(): string;
-    /** Return the filename, without the directory or file extension. */
+    /** The filename, without the directory or file extension. */
     get stem(): string;
-    /** Return the filename, without the directory, but including the extension. */
+    /** The filename part of the path, including the filename extension. */
     get filename(): string;
     /** Return a new Path object representing the parent directory of this path. */
     get parent(): Path;
     /** Return a string containing the parent directory of this path. */
     get parentName(): string;
-    /** Returns true if this is an absolute path. */
+    /** Returns true if this is an absolute path, false otherwise. */
     get isAbsolute(): boolean;
     /** Return a new Path object representing the concatenation of this path with one or
         more relative paths. */
     resolve(...fragment: string[]): Path;
-    /** Return a new Path object, but with the base replaced by `base`.
+    /** Return a copy of this Path object, but with the base replaced by `base`.
         @param ext The new base path.
     */
     withBase(base: string | Path): Path;
-    /** Return a new Path object, but with the file extension replaced by `ext`.
+    /** Return a copy of this Path object, but with the file extension replaced by `ext`.
         @param newExt The new file extension.
     */
     withExtension(newExt: string): Path;
-    /** Return a new Path object, but with the filename 'name'.
+    /** Return a copy of this Path object, but with the stem replaced by 'newStem'.
         @param newStem The new filename, not including file extension.
     */
     withStem(newStem: string): Path;
-    /** Return a new Path object, but with the filename and extension replaced by 'name'.
+    /** Return a copy of this Path object, but with the filename (including extension) replaced
+        by 'newFilename'.
         @param newFilename The new filename, with extension.
     */
     withFilename(newFilename: string): Path;

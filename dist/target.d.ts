@@ -5,14 +5,18 @@ export interface BuilderOptions {
     watchMode?: boolean;
     targets?: string[];
 }
-/** A target is anything that can be built. */
+/** A target is anything that can be built.
+    @internal
+*/
 export interface Builder {
     build(options: BuilderOptions): Promise<void>;
     isModified(): Promise<boolean>;
 }
+/** @internal */
 export interface NamedBuilder extends Builder {
     getName(): string;
 }
+/** @internal */
 export interface Target {
     name: string;
     builders: Builder[];
@@ -25,5 +29,6 @@ declare type Builders = NamedBuilder | NamedBuilder[] | TaskArray<NamedBuilder &
  */
 export declare function target(builder: Builders): void;
 export declare function target(name: string, builder: Builders): void;
+/** @internal */
 export declare function buildTargets(options?: BuilderOptions): Promise<boolean>;
 export {};
