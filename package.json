@@ -24,6 +24,13 @@
     "overrun": "bin/overrun.js"
   },
   "types": "./dist/index.d.ts",
+  "files": [
+    "bin",
+    "dist",
+    "docs",
+    "overrun.d.ts",
+    "src"
+  ],
   "devDependencies": {
     "@types/jest": "^26.0.24",
     "@types/node": "^16.4.13",
