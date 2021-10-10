@@ -44,7 +44,7 @@ export class SourceFileTask extends AbstractTask<Buffer> {
     this.stats = Promise.resolve(stats);
   }
 
-  private prep() {
+  private prep(): Promise<Stats> {
     const srcPath = this.path.complete;
     if (!this.stats) {
       this.stats = stat(srcPath).then(

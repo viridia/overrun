@@ -18,6 +18,18 @@ export function addSource(task: SourceFileTask) {
   directories.add(path.dirname(srcPathFull));
 }
 
+export function getOrCreateSourceTask(srcPath: Path) {
+  const srcPathFull = srcPath.complete;
+  let srcTask = sources.get(srcPathFull);
+  if (!srcTask) {
+    srcTask = new SourceFileTask(srcPath);
+    directories.add(path.dirname(srcPathFull));
+    sources.set(srcPathFull, srcTask);
+  }
+
+  return srcTask;
+}
+
 /** Return true if `path` is a source file. */
 export function getSource(path: string): SourceFileTask | undefined {
   return sources.get(path);

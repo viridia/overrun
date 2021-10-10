@@ -1,6 +1,6 @@
 import { Path } from './Paths';
 import { SourceFileTask } from './SourceFileTask';
-import { sources, addSource } from './sourceInternal';
+import { sources, getOrCreateSourceTask } from './sourceInternal';
 
 /** Create a task which reads a source file and returns a buffer. */
 export function source(baseOrFile: string | Path, fragment?: string): SourceFileTask {
@@ -11,7 +11,5 @@ export function source(baseOrFile: string | Path, fragment?: string): SourceFile
     return task;
   }
 
-  const rfTask = new SourceFileTask(srcPath);
-  addSource(rfTask);
-  return rfTask;
+  return getOrCreateSourceTask(srcPath);
 }

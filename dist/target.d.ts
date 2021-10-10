@@ -11,9 +11,6 @@ export interface BuilderOptions {
 export interface Builder {
     build(options: BuilderOptions): Promise<void>;
     isModified(): Promise<boolean>;
-}
-/** @internal */
-export interface NamedBuilder extends Builder {
     getName(): string;
 }
 /** @internal */
@@ -21,7 +18,7 @@ export interface Target {
     name: string;
     builders: Builder[];
 }
-declare type Builders = NamedBuilder | NamedBuilder[] | TaskArray<NamedBuilder & Task<unknown>>;
+declare type Builders = Builder | Builder[] | TaskArray<Builder & Task<unknown>>;
 /**
  *
  * @param name

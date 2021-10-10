@@ -5,7 +5,7 @@ import { SourceFileTask } from "./SourceFileTask";
 import { TaskArray } from "./TaskArray";
 import fg from 'fast-glob';
 import path from 'path';
-import { addSource } from './sourceInternal';
+import { getOrCreateSourceTask } from './sourceInternal';
 
 /** A task which reads the contents of a directory. */
 export class DirectoryTask extends AbstractTask<Path[]> {
@@ -36,9 +36,7 @@ export class DirectoryTask extends AbstractTask<Path[]> {
 
     return new TaskArray(
       files.map(file => {
-        const task = new SourceFileTask(new Path(file, base));
-        addSource(task);
-        return task;
+        return getOrCreateSourceTask(new Path(file, base));
       }),
       this.dirPath
     );

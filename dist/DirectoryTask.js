@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DirectoryTask = void 0;
 const Paths_1 = require("./Paths");
 const AbstractTask_1 = require("./AbstractTask");
-const SourceFileTask_1 = require("./SourceFileTask");
 const TaskArray_1 = require("./TaskArray");
 const fast_glob_1 = __importDefault(require("fast-glob"));
 const path_1 = __importDefault(require("path"));
@@ -36,9 +35,7 @@ class DirectoryTask extends AbstractTask_1.AbstractTask {
             globstar: true,
         });
         return new TaskArray_1.TaskArray(files.map(file => {
-            const task = new SourceFileTask_1.SourceFileTask(new Paths_1.Path(file, base));
-            sourceInternal_1.addSource(task);
-            return task;
+            return sourceInternal_1.getOrCreateSourceTask(new Paths_1.Path(file, base));
         }), this.dirPath);
     }
     read() {
