@@ -10,7 +10,10 @@ docs:
 - title: Command-line arguments
   url: commandline.html
 
-- title: Command-line arguments
+- title: Examples
+  url: examples.html
+
+- title: API reference
   url: api/modules/index.html
 
 - title: Roadmap

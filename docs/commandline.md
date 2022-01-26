@@ -29,4 +29,4 @@
   <dd>Disable colored output.</dd>
 </dl>
 
-Next - [API Reference](./api/modules/index.html)
+Next - [Examples](./examples.html)

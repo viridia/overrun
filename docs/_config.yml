@@ -1,3 +1,4 @@
-theme: jekyll-theme-slate
+remote_theme: pmarsceill/just-the-docs
 title: [Overrun]
-description: []
+description: [Overrun is a framework for setting up asset pipelines in Node.js.]
+search_enabled: true
