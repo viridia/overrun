@@ -20,5 +20,3 @@ Then, in your project's package.json:
 ```
 
 You can also import overrun as a library and execute builds programmatically.
-
-Next - [Build configuration files](./buildconfig.html)

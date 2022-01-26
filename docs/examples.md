@@ -120,5 +120,3 @@ target(
     .map((src) => src.pipe(svgConvert()).pipe(output({ base: dstBase })))
 );
 ```
-
-Next - [API Reference](./api/modules/index.html)

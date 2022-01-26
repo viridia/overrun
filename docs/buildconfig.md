@@ -239,5 +239,3 @@ that contains the accumulated value. It is called once for each task in the task
 
 The `.reduce` function returns a single Task whose output is the accumulation of all of the
 input tasks.
-
-Next - [Command-line arguments](./commandline.html)
