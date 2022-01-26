@@ -1,3 +1,2 @@
-## Table of contents
-
+- Table of Contents
 {:toc}
