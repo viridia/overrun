@@ -1,3 +1,9 @@
+---
+layout: default
+title: Examples
+nav_order: 4
+---
+
 # Examples
 
 ## Copy files from source to output directory

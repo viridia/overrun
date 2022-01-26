@@ -36,7 +36,7 @@ export class Path {
       If supplied with a single argument, that argument represents the `fragment` part of the path.
       Otherwise, the first argument is the `base` and the second argument is the `fragment`.
 
-      You can also construct a `Path` object direcly by calling the constructo, however note that
+      You can also construct a `Path` object direcly by calling the constructor, however note that
       the order of arguments is reversed, making the second parameter the optional one.
   */
   static from(path: string | Path): Path;

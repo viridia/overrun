@@ -1,3 +1,9 @@
+---
+layout: default
+title: Roadmap
+nav_order: 6
+---
+
 # Possible future enhancements
 
 * `tee()` operator.

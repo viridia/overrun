@@ -1,5 +1,5 @@
-import path from "path";
-import { directory } from "./directory";
+import path from 'path';
+import { directory } from './directory';
 
 describe('directory', () => {
   test('files()', async () => {
@@ -20,6 +20,7 @@ describe('directory', () => {
     const dir = directory(parentDir, 'src');
     const files = await dir.read();
     expect(dir.path.filename).toBe('src');
+    expect(dir.path.fragment).toBe('src');
     expect(files.some(path => path.fragment === 'src/main.ts')).toBe(true);
 
     const tasks = dir.files();

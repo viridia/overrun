@@ -1,3 +1,9 @@
+---
+layout: default
+title: Build configuration files
+nav_order: 2
+---
+
 # Build configuration files
 
 The build configuration is defined in a TypeScript file, typically named `pipeline.ts`.

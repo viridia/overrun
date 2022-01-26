@@ -1,3 +1,9 @@
+---
+layout: default
+title: Command-line Arguments
+nav_order: 3
+---
+
 # Command-line Arguments
 
 <dl>

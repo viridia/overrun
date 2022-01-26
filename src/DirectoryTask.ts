@@ -1,8 +1,8 @@
 import { Path } from './Paths';
 import { SourceTask, Task } from './Task';
-import { AbstractTask } from "./AbstractTask";
-import { SourceFileTask } from "./SourceFileTask";
-import { TaskArray } from "./TaskArray";
+import { AbstractTask } from './AbstractTask';
+import { SourceFileTask } from './SourceFileTask';
+import { TaskArray } from './TaskArray';
 import fg from 'fast-glob';
 import path from 'path';
 import { getOrCreateSourceTask } from './sourceInternal';
@@ -14,7 +14,7 @@ export class DirectoryTask extends AbstractTask<Path[]> {
   }
 
   // No-op: we don't support recompilation based on directory changes.
-  public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void { }
+  public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {}
 
   public get path(): Path {
     return this.dirPath;
@@ -29,14 +29,16 @@ export class DirectoryTask extends AbstractTask<Path[]> {
   public match(pattern: string): TaskArray<SourceFileTask> {
     const base = this.dirPath.base;
     const files = fg.sync(path.join(this.dirPath.fragment, pattern), {
-      cwd: base,
+      cwd: base && path.resolve(base),
       onlyFiles: true,
       globstar: true,
     });
 
     return new TaskArray(
       files.map(file => {
-        return getOrCreateSourceTask(new Path(file, base));
+        return getOrCreateSourceTask(
+          new Path(file, path.join(this.dirPath.fragment, path.basename(file)))
+        );
       }),
       this.dirPath
     );

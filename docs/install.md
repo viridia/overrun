@@ -1,3 +1,9 @@
+---
+layout: default
+title: Installation and setup
+nav_order: 1
+---
+
 # Installation and setup
 
 ```sh
