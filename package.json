@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc --project ./src/tsconfig.json",
-    "build:doc": "typedoc",
+    "build:doc": "typedoc --plugin typedoc-plugin-markdown",
     "clean": "rm -r dist",
     "clean:doc": "rm -r docs/api",
     "demo": "ts-node ./test/pipelines.ts --cwd ./test/",
@@ -45,7 +45,8 @@
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.4",
     "ts-node": "^10.1.0",
-    "typedoc": "^0.21.5",
+    "typedoc": "^0.22.11",
+    "typedoc-plugin-markdown": "^3.11.12",
     "typescript": "^4.3.5"
   },
   "dependencies": {

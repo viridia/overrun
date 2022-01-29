@@ -1,6 +1,6 @@
 {
   "out": "docs/api",
-  "theme": "minimal",
+  "theme": "markdown",
   "tsconfig": "src/tsconfig.json",
   "entryPoints": ["./src/index.ts", "./src/main.ts"],
   "externalPattern": ["./src/index.ts", "./src/main.ts"],

@@ -11,9 +11,7 @@ export interface BuilderOptions {
   targets?: string[];
 }
 
-/** A target is anything that can be built.
-    @internal
-*/
+/** Represents a chain of pipeline stages that produce some output. */
 export interface Builder {
   build(options: BuilderOptions): Promise<void>;
   isModified(): Promise<boolean>;
