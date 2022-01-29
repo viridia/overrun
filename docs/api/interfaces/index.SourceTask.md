@@ -30,7 +30,7 @@ Location of this file in the source tree.
 
 #### Defined in
 
-[Task.ts:45](https://github.com/viridia/overrun/blob/b21a862/src/Task.ts#L45)
+[Task.ts:45](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L45)
 
 ## Methods
 
@@ -46,4 +46,4 @@ Return true if the last modified time of this file is newer than the given date.
 
 #### Defined in
 
-[Task.ts:48](https://github.com/viridia/overrun/blob/b21a862/src/Task.ts#L48)
+[Task.ts:48](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L48)

@@ -63,7 +63,7 @@
 
 #### Defined in
 
-[Task.ts:3](https://github.com/viridia/overrun/blob/b21a862/src/Task.ts#L3)
+[Task.ts:3](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L3)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[Task.ts:4](https://github.com/viridia/overrun/blob/b21a862/src/Task.ts#L4)
+[Task.ts:4](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L4)
 
 ## Functions
 
@@ -117,7 +117,7 @@ Create a task which reads a source file and returns a buffer.
 
 #### Defined in
 
-[directory.ts:5](https://github.com/viridia/overrun/blob/b21a862/src/directory.ts#L5)
+[directory.ts:5](https://github.com/viridia/overrun/blob/20a7ff0/src/directory.ts#L5)
 
 ___
 
@@ -149,7 +149,7 @@ ___
 
 #### Defined in
 
-[output.ts:14](https://github.com/viridia/overrun/blob/b21a862/src/output.ts#L14)
+[output.ts:14](https://github.com/viridia/overrun/blob/20a7ff0/src/output.ts#L14)
 
 ▸ **output**(`options?`): (`source`: `WritableTask`[]) => [`OutputFileTask`](../classes/index.OutputFileTask.md)[]
 
@@ -177,7 +177,7 @@ ___
 
 #### Defined in
 
-[output.ts:15](https://github.com/viridia/overrun/blob/b21a862/src/output.ts#L15)
+[output.ts:15](https://github.com/viridia/overrun/blob/20a7ff0/src/output.ts#L15)
 
 ▸ **output**(`options?`): (`source`: [`TaskArray`](../classes/index.TaskArray.md)<`WritableTask`\>) => [`OutputFileTask`](../classes/index.OutputFileTask.md)[]
 
@@ -205,7 +205,7 @@ ___
 
 #### Defined in
 
-[output.ts:16](https://github.com/viridia/overrun/blob/b21a862/src/output.ts#L16)
+[output.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/output.ts#L16)
 
 ___
 
@@ -228,7 +228,7 @@ Create a task which reads a source file and returns a buffer.
 
 #### Defined in
 
-[source.ts:6](https://github.com/viridia/overrun/blob/b21a862/src/source.ts#L6)
+[source.ts:6](https://github.com/viridia/overrun/blob/20a7ff0/src/source.ts#L6)
 
 ___
 
@@ -248,7 +248,7 @@ ___
 
 #### Defined in
 
-[target.ts:36](https://github.com/viridia/overrun/blob/b21a862/src/target.ts#L36)
+[target.ts:36](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L36)
 
 ▸ **target**(`name`, `builder`): `void`
 
@@ -265,4 +265,4 @@ ___
 
 #### Defined in
 
-[target.ts:37](https://github.com/viridia/overrun/blob/b21a862/src/target.ts#L37)
+[target.ts:37](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L37)

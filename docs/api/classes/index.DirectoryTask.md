@@ -49,7 +49,7 @@ A task which reads the contents of a directory.
 
 #### Defined in
 
-[DirectoryTask.ts:12](https://github.com/viridia/overrun/blob/b21a862/src/DirectoryTask.ts#L12)
+[DirectoryTask.ts:12](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L12)
 
 ## Accessors
 
@@ -67,7 +67,7 @@ AbstractTask.path
 
 #### Defined in
 
-[DirectoryTask.ts:19](https://github.com/viridia/overrun/blob/b21a862/src/DirectoryTask.ts#L19)
+[DirectoryTask.ts:19](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L19)
 
 ## Methods
 
@@ -95,7 +95,7 @@ be out of date when any of its dependencies are out of date.
 
 #### Defined in
 
-[DirectoryTask.ts:17](https://github.com/viridia/overrun/blob/b21a862/src/DirectoryTask.ts#L17)
+[DirectoryTask.ts:17](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L17)
 
 ___
 
@@ -111,7 +111,7 @@ Create a task for every file in the directory.
 
 #### Defined in
 
-[DirectoryTask.ts:24](https://github.com/viridia/overrun/blob/b21a862/src/DirectoryTask.ts#L24)
+[DirectoryTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L24)
 
 ___
 
@@ -133,7 +133,7 @@ Create a task for every file that matches the glob.
 
 #### Defined in
 
-[DirectoryTask.ts:29](https://github.com/viridia/overrun/blob/b21a862/src/DirectoryTask.ts#L29)
+[DirectoryTask.ts:29](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L29)
 
 ___
 
@@ -168,7 +168,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L24)
+[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L24)
 
 ___
 
@@ -190,7 +190,7 @@ operators are not required to do this.
 
 #### Defined in
 
-[DirectoryTask.ts:47](https://github.com/viridia/overrun/blob/b21a862/src/DirectoryTask.ts#L47)
+[DirectoryTask.ts:47](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L47)
 
 ___
 
@@ -224,4 +224,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L16)
+[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L16)

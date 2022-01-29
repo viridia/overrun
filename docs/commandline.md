@@ -34,3 +34,5 @@ nav_order: 3
   <dt>--no-color</dt>
   <dd>Disable colored output.</dd>
 </dl>
+
+**Next**: [Examples](./examples.md)

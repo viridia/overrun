@@ -49,7 +49,7 @@ A task which reads a source file and returns a buffer.
 
 #### Defined in
 
-[SourceFileTask.ts:14](https://github.com/viridia/overrun/blob/b21a862/src/SourceFileTask.ts#L14)
+[SourceFileTask.ts:14](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L14)
 
 ## Accessors
 
@@ -67,7 +67,7 @@ AbstractTask.path
 
 #### Defined in
 
-[SourceFileTask.ts:26](https://github.com/viridia/overrun/blob/b21a862/src/SourceFileTask.ts#L26)
+[SourceFileTask.ts:26](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L26)
 
 ## Methods
 
@@ -95,7 +95,7 @@ be out of date when any of its dependencies are out of date.
 
 #### Defined in
 
-[SourceFileTask.ts:21](https://github.com/viridia/overrun/blob/b21a862/src/SourceFileTask.ts#L21)
+[SourceFileTask.ts:21](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L21)
 
 ___
 
@@ -111,7 +111,7 @@ Return the modification date of this source file.
 
 #### Defined in
 
-[SourceFileTask.ts:31](https://github.com/viridia/overrun/blob/b21a862/src/SourceFileTask.ts#L31)
+[SourceFileTask.ts:31](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L31)
 
 ___
 
@@ -146,7 +146,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L24)
+[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L24)
 
 ___
 
@@ -166,7 +166,7 @@ Return the output of the task.
 
 #### Defined in
 
-[SourceFileTask.ts:36](https://github.com/viridia/overrun/blob/b21a862/src/SourceFileTask.ts#L36)
+[SourceFileTask.ts:36](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L36)
 
 ___
 
@@ -200,4 +200,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L16)
+[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L16)

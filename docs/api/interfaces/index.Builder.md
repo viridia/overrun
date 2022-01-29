@@ -36,7 +36,7 @@ Represents a chain of pipeline stages that produce some output.
 
 #### Defined in
 
-[target.ts:16](https://github.com/viridia/overrun/blob/b21a862/src/target.ts#L16)
+[target.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L16)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[target.ts:18](https://github.com/viridia/overrun/blob/b21a862/src/target.ts#L18)
+[target.ts:18](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L18)
 
 ___
 
@@ -64,4 +64,4 @@ ___
 
 #### Defined in
 
-[target.ts:17](https://github.com/viridia/overrun/blob/b21a862/src/target.ts#L17)
+[target.ts:17](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L17)

@@ -69,7 +69,7 @@ process tasks individually, use the `map()` or `reduce()` methods.
 
 #### Defined in
 
-[TaskArray.ts:12](https://github.com/viridia/overrun/blob/b21a862/src/TaskArray.ts#L12)
+[TaskArray.ts:12](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L12)
 
 ## Accessors
 
@@ -85,7 +85,7 @@ Returns the number of tasks in this `TaskArray`.
 
 #### Defined in
 
-[TaskArray.ts:39](https://github.com/viridia/overrun/blob/b21a862/src/TaskArray.ts#L39)
+[TaskArray.ts:39](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L39)
 
 ___
 
@@ -105,7 +105,7 @@ AbstractTask.path
 
 #### Defined in
 
-[TaskArray.ts:20](https://github.com/viridia/overrun/blob/b21a862/src/TaskArray.ts#L20)
+[TaskArray.ts:20](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L20)
 
 ## Methods
 
@@ -133,7 +133,7 @@ be out of date when any of its dependencies are out of date.
 
 #### Defined in
 
-[TaskArray.ts:16](https://github.com/viridia/overrun/blob/b21a862/src/TaskArray.ts#L16)
+[TaskArray.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L16)
 
 ___
 
@@ -155,7 +155,7 @@ Find a task by some predicate.
 
 #### Defined in
 
-[TaskArray.ts:44](https://github.com/viridia/overrun/blob/b21a862/src/TaskArray.ts#L44)
+[TaskArray.ts:44](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L44)
 
 ___
 
@@ -171,7 +171,7 @@ The array of tasks contained in this `TaskArray`.
 
 #### Defined in
 
-[TaskArray.ts:25](https://github.com/viridia/overrun/blob/b21a862/src/TaskArray.ts#L25)
+[TaskArray.ts:25](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L25)
 
 ___
 
@@ -200,7 +200,7 @@ Works like Array.map(), except that the elements are tasks.
 
 #### Defined in
 
-[TaskArray.ts:34](https://github.com/viridia/overrun/blob/b21a862/src/TaskArray.ts#L34)
+[TaskArray.ts:34](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L34)
 
 ___
 
@@ -235,7 +235,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L24)
+[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L24)
 
 ___
 
@@ -257,7 +257,7 @@ operators are not required to do this.
 
 #### Defined in
 
-[TaskArray.ts:29](https://github.com/viridia/overrun/blob/b21a862/src/TaskArray.ts#L29)
+[TaskArray.ts:29](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L29)
 
 ___
 
@@ -289,7 +289,7 @@ A new Task which produces the combined output of the reduction.
 
 #### Defined in
 
-[TaskArray.ts:54](https://github.com/viridia/overrun/blob/b21a862/src/TaskArray.ts#L54)
+[TaskArray.ts:54](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L54)
 
 ___
 
@@ -323,4 +323,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L16)
+[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L16)

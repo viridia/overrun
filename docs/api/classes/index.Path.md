@@ -74,7 +74,7 @@ Construct a new path from a string. Note: this normalizes the path.
 
 #### Defined in
 
-[Paths.ts:58](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L58)
+[Paths.ts:58](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L58)
 
 ## Accessors
 
@@ -90,7 +90,7 @@ Return the base path.
 
 #### Defined in
 
-[Paths.ts:74](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L74)
+[Paths.ts:74](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L74)
 
 ___
 
@@ -106,7 +106,7 @@ The complete path, including both base and fragment.
 
 #### Defined in
 
-[Paths.ts:69](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L69)
+[Paths.ts:69](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L69)
 
 ___
 
@@ -122,7 +122,7 @@ The filename extension, including the leading '.'
 
 #### Defined in
 
-[Paths.ts:79](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L79)
+[Paths.ts:79](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L79)
 
 ___
 
@@ -138,7 +138,7 @@ The filename part of the path, including the filename extension.
 
 #### Defined in
 
-[Paths.ts:89](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L89)
+[Paths.ts:89](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L89)
 
 ___
 
@@ -154,7 +154,7 @@ The part of the path relative to the base.
 
 #### Defined in
 
-[Paths.ts:64](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L64)
+[Paths.ts:64](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L64)
 
 ___
 
@@ -170,7 +170,7 @@ Returns true if this is an absolute path, false otherwise.
 
 #### Defined in
 
-[Paths.ts:104](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L104)
+[Paths.ts:104](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L104)
 
 ___
 
@@ -186,7 +186,7 @@ Return a new Path object representing the parent directory of this path.
 
 #### Defined in
 
-[Paths.ts:94](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L94)
+[Paths.ts:94](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L94)
 
 ___
 
@@ -202,7 +202,7 @@ Return a string containing the parent directory of this path.
 
 #### Defined in
 
-[Paths.ts:99](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L99)
+[Paths.ts:99](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L99)
 
 ___
 
@@ -218,7 +218,7 @@ The filename, without the directory or file extension.
 
 #### Defined in
 
-[Paths.ts:84](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L84)
+[Paths.ts:84](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L84)
 
 ## Methods
 
@@ -241,7 +241,7 @@ more relative paths.
 
 #### Defined in
 
-[Paths.ts:110](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L110)
+[Paths.ts:110](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L110)
 
 ___
 
@@ -263,7 +263,7 @@ Return a copy of this Path object, but with the base replaced by `base`.
 
 #### Defined in
 
-[Paths.ts:117](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L117)
+[Paths.ts:117](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L117)
 
 ___
 
@@ -285,7 +285,7 @@ Return a copy of this Path object, but with the file extension replaced by `ext`
 
 #### Defined in
 
-[Paths.ts:124](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L124)
+[Paths.ts:124](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L124)
 
 ___
 
@@ -308,7 +308,7 @@ by 'newFilename'.
 
 #### Defined in
 
-[Paths.ts:141](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L141)
+[Paths.ts:141](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L141)
 
 ___
 
@@ -330,7 +330,7 @@ Return a copy of this Path object, but with the stem replaced by 'newStem'.
 
 #### Defined in
 
-[Paths.ts:132](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L132)
+[Paths.ts:132](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L132)
 
 ___
 
@@ -358,7 +358,7 @@ the order of arguments is reversed, making the second parameter the optional one
 
 #### Defined in
 
-[Paths.ts:42](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L42)
+[Paths.ts:42](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L42)
 
 ▸ `Static` **from**(`base`, `fragment?`): [`Path`](index.Path.md)
 
@@ -375,4 +375,4 @@ the order of arguments is reversed, making the second parameter the optional one
 
 #### Defined in
 
-[Paths.ts:43](https://github.com/viridia/overrun/blob/b21a862/src/Paths.ts#L43)
+[Paths.ts:43](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L43)

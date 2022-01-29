@@ -11,17 +11,18 @@ Here's a minimal example of a build configuration:
 
 ```ts
 // A build target which simply copies a bunch of files
-target('images',
+target(
+  'images',
   directory(__dirname, 'images')
     .match('*.png')
     .map(src => src.pipe(output({ base: 'output' })))
 );
 ```
 
-This build configuration contains a single target. The target has a pipeline of tasks - it
+This build configuration contains a single target. The target has a "pipeline" of tasks - it
 first scans the `images` directory (using a `directory()` task) for any files matching the
-pattern `*.png`. It then reads each file into a Buffer, and then pipes the buffer to a writer
-task, which writes the buffer to a new location.
+glob pattern `*.png`. It then reads each file into a `Buffer`, and then pipes the buffer to a
+"writer" task, which writes the buffer to a new location.
 
 Instead of running the `overrun` cli command, you can make your pipeline file an executable
 program and import overrun as a library:
@@ -31,7 +32,8 @@ program and import overrun as a library:
 import { target, source, write, build } from 'overrun';
 
 // A build target which simply copies a bunch of files
-target('images',
+target(
+  'images',
   directory(__dirname, 'images')
     .match('*.png')
     .map(src => src.pipe(output({ base: 'output' })))
@@ -39,6 +41,7 @@ target('images',
 
 build();
 ```
+
 Here's more elaborate example which optimizes 3D models files in `.glb` format, using the
 `gltf-transform` library.
 
@@ -57,12 +60,15 @@ target(
   'characters',
   directory(srcBase, 'characters')
     .match('*.glb')
-    .map(src => src.transform(async (srcBuffer: Buffer) => {
-      const gltf = io.readBinary(srcBuffer.buffer);
-      await gltf.transform(resample(), dedup());
-      return Buffer.from(io.writeBinary(gltf));
-    })
-    .pipe(output({ base: dstBase })))
+    .map(src =>
+      src
+        .transform(async (srcBuffer: Buffer) => {
+          const gltf = io.readBinary(srcBuffer.buffer);
+          await gltf.transform(resample(), dedup());
+          return Buffer.from(io.writeBinary(gltf));
+        })
+        .pipe(output({ base: dstBase }))
+    )
 );
 
 build();
@@ -70,23 +76,24 @@ build();
 
 ## Concepts: Targets and Tasks
 
-A build definition file consists of a number of *targets*, each of which is associated with
+A build configuration file consists of a number of _targets_, each of which is associated with
 one or more build artifacts. The format of a target declaration is:
 
 ```
 target(<name>, <pipeline>);
 ```
 
-The `name` parameter is a string which uniquely identifies the target. The `pipeline` parameter
-specified a sequence of tasks to be performed when the target is out of date.
+The `name` parameter is a string which uniquely identifies the target, and is printed to the
+console when the target buikd is complete. The `pipeline` parameter specified a sequence of
+tasks to be performed when the target is out of date.
 
-A pipeline is built up out of *tasks*. Most commonly, a pipeline will consist of a *source*
-task, followed by one or more *transform* tasks, and finally an *output* task. Note that a
-pipeline *must* terminate with an output task in order to be valid - otherwise, the pipeline
+A pipeline is built up out of _tasks_. Most commonly, a pipeline will consist of a _source_
+task, followed by one or more _transform_ tasks, and finally an _output_ task. A pipeline
+_must_ terminate with an output task in order to be valid - otherwise, the pipeline
 will have no effect.
 
-The source task can represent either a single source file (specified with the `source()` directive),
-or it can represent a source directory containing multiple source files (specified via
+The source task can represent either a single source file (specified with the `source()`
+directive), or it can represent a source directory containing multiple source files (specified via
 `directory()`).
 
 Subsequent tasks can be defined by calling either `.transform()`, `.pipe()` or `.reduce()` on
@@ -101,14 +108,13 @@ task.
 A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
 Python `pathlib` module. Note that `Path` objects are immutable.
 
-Each task contains an optional `path` property that represents the location of the file
-being processed. For source and directory tasks, this path is the location of the source file
-or directory specified. For other kinds of tasks, the `path` in inherited from the previous task
+Overrun uses `Path` objects to represent the location of a source or output file. Each task contains an optional `path` property that represents the location of the file being processed.
+For `source()` and `directory()` tasks, this path is the location of the source file or directory specified. For other kinds of tasks, the `path` in inherited from the previous task
 in the pipeline, unless the `path` is explicitly overridden. Typically, the last task in the
 pipeline - the output task - will modify the `path` to point to the output location instead
 of the source location.
 
-Often times in build environments, there is both a source directory structure and a destination
+Often times in build environments, there is both a "source" directory structure and a "destination"
 directory structure; and it is frequently the case that these two hierarchies are a mirror of each
 other, or at least share some structural similarities.
 
@@ -117,21 +123,35 @@ the path and replacing it with the `output` location, while leaving the rest of 
 `Path` objects provide a means to do this easily, although it is not required that they be used
 this way.
 
+Internally, a `Path` object contains two strings: a "base" and a "fragment". The "base" represents
+the root directory of your build (either source or destination), while the "fragment" represents
+the relative path from the base directory. Thus, given a source path object, you can easily
+generate a new path object with a different base but keeping the same fragment.
+
+Note that the "base" is optional; if it is not specified, then the fragment is treated as a single
+absolute path.
+
 The canonical way to construct a Path is via `Path.from()`. This has two forms, one which takes
 a single argument which is a complete path (either absolute or relative to the current directory),
-and the other form which accepts two parameters, a "base" path and a "fragment" which is relative
-to the base. The method `.withBase(newBase)` can be used construct a copy of the current path
-but with a different base path.
+and the other form which accepts a base and a fragment path. The method `.withBase(newBase)` can be used construct a copy of the current path but with a different base path.
 
 # Build file commands
+
+This section describes the various build commands that can be invoked from within the build
+configuration file.
+
+Note that it is not necessary to import the various commands from overrun, but it does not
+hurt to do so either. Overrun will inject these definitions into the runtime environment if
+they are not explicitly imported.
 
 ## `target(name, pipeline)`
 
 Defines a new build target. The `name` argument is a string indicating the name of the target.
-This is used when printing build status; it can also be used to build a subset of all targets.
+The name is used when printing build status; it can also be used to build a subset of all targets.
 
 The `pipeline` parameter is a chain of tasks, the last of which must be an output task or an
-array of output tasks.
+array of output tasks. The pipeline parameter should contain a chain of build commands, starting
+with either `source()` or `directory()`.
 
 ## `source(base, fragment?)`
 
@@ -140,9 +160,9 @@ and provides subsequent tasks with a `Buffer` object containing the file data.
 
 The two arguments are:
 
-* `base` - either the whole path, or the base portion of the path (see section on paths
-  below).
-* `fragment` - (optional) The relative portion of the path.
+- `base` - either the whole path, or the base portion of the path (see section on paths
+  above).
+- `fragment` - (optional) The relative portion of the path.
 
 ## `directory(base, fragment?)`
 
@@ -151,17 +171,17 @@ further narrowed by calling `.match(pattern)` on the resulting task.
 
 The two arguments are:
 
-* `base` - either the whole path, or the base portion of the path (see section on paths
+- `base` - either the whole path, or the base portion of the path (see section on paths
   below).
-* `fragment` - (optional) The relative portion of the path.
+- `fragment` - (optional) The relative portion of the path.
 
 ## `output({ base?, path? })`
 
 Creates an output task, which accepts either a `string` or `Buffer` as input, and writes it
 to a file. It accepts an object which has several optional properties:
 
-* `base` - Replaces the `base` part of the path associated with the output task.
-* `path` - Replaces the entire path associated with the output task.
+- `base` - Replaces the `base` part of the path associated with the output task.
+- `path` - Replaces the entire path associated with the output task.
 
 Replacing the path causes the task to write to a different location than the default.
 
@@ -182,7 +202,7 @@ will want to modify the data in some way. The two main ways this is done is via 
 The `.transform(transformer)` method provides a simple way to transform data. It takes as it's
 argument a callback which converts data from one form to another, with the following signature:
 
-  `transformer<In, Out>(input: In) => Out | Promise<Out>`
+`transformer<In, Out>(input: In) => Out | Promise<Out>`
 
 Note that the `In` type must match the output type of the previous task. For a source file task,
 that type will be `Buffer`. Similarly, the `Out` type must match the input type of the next
@@ -199,7 +219,7 @@ The `.pipe(taskGen)` method is more complex, but allows greater flexibility. Ins
 in a simple transformation function, it takes a task constructor callback - that is, a function
 which generates a `Task`. The signature of this function is:
 
-  `taskGen<In, Out>(input: Task<In>) => Task<Out>`
+`taskGen<In, Out>(input: Task<In>) => Task<Out>`
 
 (In fact `.transform()` internally calls `.pipe()`, but automatically creates a `TransformTask`
 to handle the transformation.)
@@ -207,16 +227,16 @@ to handle the transformation.)
 One of the advantages of `.pipe()` is that you can do more than simply convert the data. For
 example, you can:
 
-* Access the data from the input task using `input.read()`.
-* Access the `.path` of the input task.
-* Choose whether or not to read the file data (maybe all you care about is the file's name.)
-* Create multiple tasks, either sequential or operating in parallel.
+- Access the data from the input task using `input.read()`.
+- Access the `.path` of the input task.
+- Choose whether or not to read the file data (maybe all you care about is the file's name.)
+- Create multiple tasks, either sequential or operating in parallel.
 
 Note that any function that conforms to the `taskGen` signature is, for all intents and purposes,
 a plugin. For example, the `output()` function is simply a function which returns another function
 that is a task generator, one that generates an `OutputFileTask`.
 
-# Tssk arrays - map() and reduce()
+# Task arrays - map() and reduce()
 
 For targets that represent multiple files, things work a bit differently. You can still use
 `.transform()` and `.pipe()`, but the data that will be provided to the next stage of the pipeline
@@ -231,7 +251,7 @@ Sometimes you may want to process files one at a time, but combined them togethe
 result. This is where `.reduce()` comes in. It accepts an initial state and a reducer function.
 The reducer function has the following signature:
 
-  `reducer: (acc: Out, next: In) => Out | Promise<Out>`
+`reducer: (acc: Out, next: In) => Out | Promise<Out>`
 
 This is similar to the callback used for `.transform()`, except that it has an additional parameter
 that contains the accumulated value. It is called once for each task in the task array, where
@@ -239,3 +259,5 @@ that contains the accumulated value. It is called once for each task in the task
 
 The `.reduce` function returns a single Task whose output is the accumulation of all of the
 input tasks.
+
+**Next**: [Command Line Arguments](./commandline.md)

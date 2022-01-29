@@ -44,7 +44,7 @@ The filesystem location associated with the build artifact produced by this task
 
 #### Defined in
 
-[Task.ts:15](https://github.com/viridia/overrun/blob/b21a862/src/Task.ts#L15)
+[Task.ts:15](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L15)
 
 ## Methods
 
@@ -68,7 +68,7 @@ be out of date when any of its dependencies are out of date.
 
 #### Defined in
 
-[Task.ts:12](https://github.com/viridia/overrun/blob/b21a862/src/Task.ts#L12)
+[Task.ts:12](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L12)
 
 ___
 
@@ -100,7 +100,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[Task.ts:39](https://github.com/viridia/overrun/blob/b21a862/src/Task.ts#L39)
+[Task.ts:39](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L39)
 
 ___
 
@@ -118,7 +118,7 @@ operators are not required to do this.
 
 #### Defined in
 
-[Task.ts:20](https://github.com/viridia/overrun/blob/b21a862/src/Task.ts#L20)
+[Task.ts:20](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L20)
 
 ___
 
@@ -153,4 +153,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[Task.ts:32](https://github.com/viridia/overrun/blob/b21a862/src/Task.ts#L32)
+[Task.ts:32](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L32)

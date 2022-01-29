@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[output.ts:11](https://github.com/viridia/overrun/blob/b21a862/src/output.ts#L11)
+[output.ts:11](https://github.com/viridia/overrun/blob/20a7ff0/src/output.ts#L11)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[output.ts:10](https://github.com/viridia/overrun/blob/b21a862/src/output.ts#L10)
+[output.ts:10](https://github.com/viridia/overrun/blob/20a7ff0/src/output.ts#L10)

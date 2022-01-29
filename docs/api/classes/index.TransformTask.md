@@ -64,7 +64,7 @@ Construct a new transform task.
 
 #### Defined in
 
-[AbstractTask.ts:36](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L36)
+[AbstractTask.ts:36](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L36)
 
 ## Accessors
 
@@ -82,7 +82,7 @@ AbstractTask.path
 
 #### Defined in
 
-[AbstractTask.ts:45](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L45)
+[AbstractTask.ts:45](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L45)
 
 ## Methods
 
@@ -110,7 +110,7 @@ be out of date when any of its dependencies are out of date.
 
 #### Defined in
 
-[AbstractTask.ts:40](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L40)
+[AbstractTask.ts:40](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L40)
 
 ___
 
@@ -145,7 +145,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L24)
+[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L24)
 
 ___
 
@@ -167,7 +167,7 @@ operators are not required to do this.
 
 #### Defined in
 
-[AbstractTask.ts:49](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L49)
+[AbstractTask.ts:49](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L49)
 
 ___
 
@@ -201,4 +201,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L16)
+[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L16)

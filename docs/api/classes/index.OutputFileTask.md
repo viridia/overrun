@@ -54,7 +54,7 @@ A task which reads a source file and returns a buffer.
 
 #### Defined in
 
-[OutputFileTask.ts:22](https://github.com/viridia/overrun/blob/b21a862/src/OutputFileTask.ts#L22)
+[OutputFileTask.ts:22](https://github.com/viridia/overrun/blob/20a7ff0/src/OutputFileTask.ts#L22)
 
 ## Accessors
 
@@ -72,7 +72,7 @@ AbstractTask.path
 
 #### Defined in
 
-[OutputFileTask.ts:42](https://github.com/viridia/overrun/blob/b21a862/src/OutputFileTask.ts#L42)
+[OutputFileTask.ts:42](https://github.com/viridia/overrun/blob/20a7ff0/src/OutputFileTask.ts#L42)
 
 ## Methods
 
@@ -99,7 +99,7 @@ Add a task as a dependent of this task.
 
 #### Defined in
 
-[OutputFileTask.ts:51](https://github.com/viridia/overrun/blob/b21a862/src/OutputFileTask.ts#L51)
+[OutputFileTask.ts:51](https://github.com/viridia/overrun/blob/20a7ff0/src/OutputFileTask.ts#L51)
 
 ___
 
@@ -125,7 +125,7 @@ Run all tasks and generate the file.
 
 #### Defined in
 
-[OutputFileTask.ts:79](https://github.com/viridia/overrun/blob/b21a862/src/OutputFileTask.ts#L79)
+[OutputFileTask.ts:79](https://github.com/viridia/overrun/blob/20a7ff0/src/OutputFileTask.ts#L79)
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[OutputFileTask.ts:46](https://github.com/viridia/overrun/blob/b21a862/src/OutputFileTask.ts#L46)
+[OutputFileTask.ts:46](https://github.com/viridia/overrun/blob/20a7ff0/src/OutputFileTask.ts#L46)
 
 ___
 
@@ -178,7 +178,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L24)
+[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L24)
 
 ___
 
@@ -198,7 +198,7 @@ Return a conduit containing the file path, which lazily reads the file.
 
 #### Defined in
 
-[OutputFileTask.ts:74](https://github.com/viridia/overrun/blob/b21a862/src/OutputFileTask.ts#L74)
+[OutputFileTask.ts:74](https://github.com/viridia/overrun/blob/20a7ff0/src/OutputFileTask.ts#L74)
 
 ___
 
@@ -232,4 +232,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/b21a862/src/AbstractTask.ts#L16)
+[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L16)
