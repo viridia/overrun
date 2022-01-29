@@ -11,8 +11,9 @@
     "demo": "ts-node ./test/pipelines.ts --cwd ./test/",
     "lint": "eslint ./src",
     "prepublish": "npm run build",
-    "test": "npm run test:unit",
-    "test:unit": "jest",
+    "test": "npm run test:compile && npm run test:unit",
+    "test:compile": "tsc --noEmit --project ./src/tsconfig.json",
+    "test:unit": "jest --coverage",
     "test:watch": "jest --watch"
   },
   "author": "Talin <viridia@gmail.com>",
