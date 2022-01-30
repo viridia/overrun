@@ -1,17 +1,17 @@
-/// <reference path="../overrun.d.ts" />
+target(source('./source', 'demo.txt').dest('./output', null));
 
-target(source('./source', 'demo.txt').pipe(output({ base: './output' })));
 target(
   'source.text',
   directory('./source', '.')
     .match('*.txt')
-    .map(src => src.pipe(output({ base: './output' })))
+    .map(src => src.dest('./output', null))
 );
+
 target(
   'source.index',
   directory('./source')
     .match('*.txt')
     .reduce<string[]>([], (acc, next) => [...acc, next.path.filename])
     .transform(json => JSON.stringify(json))
-    .pipe(output({ base: './output', path: 'index.json' }))
+    .dest('./output/index.json')
 );
