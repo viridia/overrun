@@ -1,7 +1,7 @@
 {
   "name": "overrun",
   "description": "Overrun is a framework for setting up asset pipelines in Node.js.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc --project ./src/tsconfig.json",
