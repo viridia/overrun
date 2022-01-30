@@ -1,25 +1,42 @@
-import { Task } from './Task';
-import { Path } from './Paths';
-import { TaskArray } from "./TaskArray";
+import { Path } from './Path';
+import type { TaskArray } from "./TaskArray";
 import { OutputFileTask } from './OutputFileTask';
+import { WritableTask } from './Task';
 
-/** @internal */
-export type WritableTask = Task<Buffer | string>;
-
-export interface WriteOptions {
+/** @deprecated */
+interface OutputOptions {
   path?: string | Path;
   base?: string | Path;
 }
 
-export function output(options?: WriteOptions): (source: WritableTask) => OutputFileTask;
-export function output(options?: WriteOptions): (source: WritableTask[]) => OutputFileTask[];
-export function output(options?: WriteOptions): (source: TaskArray<WritableTask>) => OutputFileTask[];
-export function output(options?: WriteOptions): (source: any) => OutputFileTask | OutputFileTask[] {
+function combinePaths(src: Path, options?: OutputOptions): Path {
+  if (!options) {
+    return src;
+  } else if (typeof options.base === 'string' && typeof options.path === 'string') {
+    return Path.from(options.base, options.path);
+  } else if (options.path) {
+    return Path.from(options.path);
+  } else if (typeof options.base === 'string') {
+    return src.withBase(options.base)
+  } else if (options.base) {
+    return src.withBase(options.base)
+  } else {
+    return src;
+  }
+}
+
+/** Task generator function that generates an output task.
+    @deprecated Prefer `task.writeTo()`.
+ */
+export function output(options?: OutputOptions): (source: WritableTask) => OutputFileTask;
+export function output(options?: OutputOptions): (source: WritableTask[]) => OutputFileTask[];
+export function output(options?: OutputOptions): (source: TaskArray<WritableTask>) => OutputFileTask[];
+export function output(options?: OutputOptions): (source: any) => OutputFileTask | OutputFileTask[] {
   return (source: WritableTask | WritableTask[]) => {
     if (Array.isArray(source)) {
-      return source.map(s => new OutputFileTask(s, options));
+      return source.map(s => new OutputFileTask(s, combinePaths(s.path, options)));
     } else {
-      return new OutputFileTask(source, options);
+      return new OutputFileTask(source, combinePaths(source.path, options));
     }
   };
 }

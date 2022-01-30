@@ -1,6 +1,6 @@
-import { Path } from './Paths';
-import { SourceTask, Task } from './Task';
+import { Path } from './Path';
 import { AbstractTask } from "./AbstractTask";
+import type { SourceTask, Task } from './Task';
 import { open, stat } from 'fs/promises';
 import { BuildError } from './errors';
 import { Stats } from 'fs';
@@ -9,9 +9,8 @@ import { Stats } from 'fs';
 export class SourceFileTask extends AbstractTask<Buffer> {
   private readonly dependants = new Set<Task<unknown>>();
   private stats?: Promise<Stats>;
-  private lastModified = new Date();
 
-  constructor(private filePath: Path, stats?: Stats) {
+  constructor(public readonly path: Path, stats?: Stats) {
     super();
     if (stats) {
       this.stats = Promise.resolve(stats);
@@ -21,10 +20,6 @@ export class SourceFileTask extends AbstractTask<Buffer> {
   public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {
     this.dependants.add(dependent);
     dependencies.add(this);
-  }
-
-  public get path(): Path {
-    return this.filePath;
   }
 
   /** Return the modification date of this source file. */
@@ -52,7 +47,6 @@ export class SourceFileTask extends AbstractTask<Buffer> {
           if (!st.isFile()) {
             throw new BuildError(`'${srcPath}' is not a regular file.`);
           }
-          this.lastModified = st.mtime;
           return st;
         },
         err => {
@@ -74,7 +68,7 @@ export class SourceFileTask extends AbstractTask<Buffer> {
       fh.close();
       return buffer;
     } catch (e) {
-      if (e.code === 'ENOENT') {
+      if ((e as any).code === 'ENOENT') {
         throw new BuildError(`Input file '${srcPath}' not found.`);
       }
       console.error(e);

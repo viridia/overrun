@@ -1,14 +1,15 @@
-/// <reference types="node" />
-import { Task } from './Task';
-import { Path } from './Paths';
-import { TaskArray } from "./TaskArray";
+import { Path } from './Path';
+import type { TaskArray } from "./TaskArray";
 import { OutputFileTask } from './OutputFileTask';
-/** @internal */
-export declare type WritableTask = Task<Buffer | string>;
-export interface WriteOptions {
+import { WritableTask } from './Task';
+interface OutputOptions {
     path?: string | Path;
     base?: string | Path;
 }
-export declare function output(options?: WriteOptions): (source: WritableTask) => OutputFileTask;
-export declare function output(options?: WriteOptions): (source: WritableTask[]) => OutputFileTask[];
-export declare function output(options?: WriteOptions): (source: TaskArray<WritableTask>) => OutputFileTask[];
+/** Task generator function that generates an output task.
+    @deprecated Prefer `task.writeTo()`.
+ */
+export declare function output(options?: OutputOptions): (source: WritableTask) => OutputFileTask;
+export declare function output(options?: OutputOptions): (source: WritableTask[]) => OutputFileTask[];
+export declare function output(options?: OutputOptions): (source: TaskArray<WritableTask>) => OutputFileTask[];
+export {};

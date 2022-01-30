@@ -1,5 +1,7 @@
 import path from 'path';
 
+export type PathMapping = (path: Path) => Path;
+
 /**
     A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
     Python `pathlib` module.
@@ -118,6 +120,13 @@ export class Path {
     return new Path(this.frag, base);
   }
 
+  /** Return a copy of this Path object, but with the fragment replaced by `base`.
+      @param fragment The new path fragment.
+  */
+  public withFragment(fragment: string): Path {
+    return new Path(fragment, this.base);
+  }
+
   /** Return a copy of this Path object, but with the file extension replaced by `ext`.
       @param newExt The new file extension.
   */
@@ -141,5 +150,47 @@ export class Path {
   public withFilename(newFilename: string): Path {
     const parsed = path.parse(this.frag);
     return new Path(path.format({ ...parsed, base: newFilename }), this.basepath);
+  }
+
+  /** Combine two paths, replacing either the base or the fragment or both.
+      @param newBaseOrPath Either a function which transforms the path, or the new base
+        of the path. If there is no second argument, then this represents the complete path.
+      @param newFragment The new fragment. If this is `null` it means we want to keep the
+        existing fragment. If it's a string, it means we want to replace it.
+   */
+  public compose(
+    newBaseOrPath: Path | PathMapping | string | null,
+    newFragment?: string | null
+  ): Path {
+    if (typeof newBaseOrPath === 'function') {
+      if (newFragment !== undefined) {
+        throw new Error(
+          'Invalid path combination: may not provide both fragment and transform function.'
+        );
+      } else {
+        return newBaseOrPath(this);
+      }
+    }
+
+    if (newFragment === undefined) {
+      // We're replacing the entire path
+      if (newBaseOrPath instanceof Path) {
+        return newBaseOrPath;
+      } else if (typeof newBaseOrPath === 'string') {
+        return Path.from(newBaseOrPath);
+      } else {
+        return this;
+      }
+    } else {
+      // We're replacing the fragment, and possibly the base.
+      const frag = typeof newFragment === 'string' ? newFragment : this.fragment;
+      if (newBaseOrPath instanceof Path) {
+        return newBaseOrPath.withFragment(frag);
+      } else if (typeof newBaseOrPath === 'string') {
+        return new Path(frag, newBaseOrPath);
+      } else {
+        return this.withFragment(frag);
+      }
+    }
   }
 }

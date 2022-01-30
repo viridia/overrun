@@ -50,10 +50,12 @@ The canonical way to construct a Path is via `Path.from()`, which has two forms:
 
 ### Methods
 
+- [compose](index.Path.md#compose)
 - [resolve](index.Path.md#resolve)
 - [withBase](index.Path.md#withbase)
 - [withExtension](index.Path.md#withextension)
 - [withFilename](index.Path.md#withfilename)
+- [withFragment](index.Path.md#withfragment)
 - [withStem](index.Path.md#withstem)
 - [from](index.Path.md#from)
 
@@ -74,7 +76,7 @@ Construct a new path from a string. Note: this normalizes the path.
 
 #### Defined in
 
-[Paths.ts:58](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L58)
+Path.ts:60
 
 ## Accessors
 
@@ -90,7 +92,7 @@ Return the base path.
 
 #### Defined in
 
-[Paths.ts:74](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L74)
+Path.ts:76
 
 ___
 
@@ -106,7 +108,7 @@ The complete path, including both base and fragment.
 
 #### Defined in
 
-[Paths.ts:69](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L69)
+Path.ts:71
 
 ___
 
@@ -122,7 +124,7 @@ The filename extension, including the leading '.'
 
 #### Defined in
 
-[Paths.ts:79](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L79)
+Path.ts:81
 
 ___
 
@@ -138,7 +140,7 @@ The filename part of the path, including the filename extension.
 
 #### Defined in
 
-[Paths.ts:89](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L89)
+Path.ts:91
 
 ___
 
@@ -154,7 +156,7 @@ The part of the path relative to the base.
 
 #### Defined in
 
-[Paths.ts:64](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L64)
+Path.ts:66
 
 ___
 
@@ -170,7 +172,7 @@ Returns true if this is an absolute path, false otherwise.
 
 #### Defined in
 
-[Paths.ts:104](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L104)
+Path.ts:106
 
 ___
 
@@ -186,7 +188,7 @@ Return a new Path object representing the parent directory of this path.
 
 #### Defined in
 
-[Paths.ts:94](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L94)
+Path.ts:96
 
 ___
 
@@ -202,7 +204,7 @@ Return a string containing the parent directory of this path.
 
 #### Defined in
 
-[Paths.ts:99](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L99)
+Path.ts:101
 
 ___
 
@@ -218,9 +220,32 @@ The filename, without the directory or file extension.
 
 #### Defined in
 
-[Paths.ts:84](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L84)
+Path.ts:86
 
 ## Methods
+
+### compose
+
+▸ **compose**(`newBaseOrPath`, `newFragment?`): [`Path`](index.Path.md)
+
+Combine two paths, replacing either the base or the fragment or both.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `newBaseOrPath` | ``null`` \| `string` \| [`Path`](index.Path.md) \| [`PathMapping`](../modules/index.md#pathmapping) | Either a function which transforms the path, or the new base of the path. If there is no second argument, then this represents the complete path. |
+| `newFragment?` | ``null`` \| `string` | The new fragment. If this is `null` it means we want to keep the existing fragment. If it's a string, it means we want to replace it. |
+
+#### Returns
+
+[`Path`](index.Path.md)
+
+#### Defined in
+
+Path.ts:161
+
+___
 
 ### resolve
 
@@ -241,7 +266,7 @@ more relative paths.
 
 #### Defined in
 
-[Paths.ts:110](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L110)
+Path.ts:112
 
 ___
 
@@ -263,7 +288,7 @@ Return a copy of this Path object, but with the base replaced by `base`.
 
 #### Defined in
 
-[Paths.ts:117](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L117)
+Path.ts:119
 
 ___
 
@@ -285,7 +310,7 @@ Return a copy of this Path object, but with the file extension replaced by `ext`
 
 #### Defined in
 
-[Paths.ts:124](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L124)
+Path.ts:133
 
 ___
 
@@ -308,7 +333,29 @@ by 'newFilename'.
 
 #### Defined in
 
-[Paths.ts:141](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L141)
+Path.ts:150
+
+___
+
+### withFragment
+
+▸ **withFragment**(`fragment`): [`Path`](index.Path.md)
+
+Return a copy of this Path object, but with the fragment replaced by `base`.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `fragment` | `string` | The new path fragment. |
+
+#### Returns
+
+[`Path`](index.Path.md)
+
+#### Defined in
+
+Path.ts:126
 
 ___
 
@@ -330,7 +377,7 @@ Return a copy of this Path object, but with the stem replaced by 'newStem'.
 
 #### Defined in
 
-[Paths.ts:132](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L132)
+Path.ts:141
 
 ___
 
@@ -358,7 +405,7 @@ the order of arguments is reversed, making the second parameter the optional one
 
 #### Defined in
 
-[Paths.ts:42](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L42)
+Path.ts:44
 
 ▸ `Static` **from**(`base`, `fragment?`): [`Path`](index.Path.md)
 
@@ -375,4 +422,4 @@ the order of arguments is reversed, making the second parameter the optional one
 
 #### Defined in
 
-[Paths.ts:43](https://github.com/viridia/overrun/blob/20a7ff0/src/Paths.ts#L43)
+Path.ts:45

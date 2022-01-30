@@ -5,7 +5,7 @@
 [index](../modules/index.md).AbstractTask
 
 An abstract base class useful for defining custom tasks. It implements most of the methods
-of the `Task` interface.
+of the [Task](../interfaces/index.Task.md) interface.
 
 ## Type parameters
 
@@ -17,11 +17,7 @@ of the `Task` interface.
 
 - **`AbstractTask`**
 
-  ↳ [`TransformTask`](index.TransformTask.md)
-
   ↳ [`DirectoryTask`](index.DirectoryTask.md)
-
-  ↳ [`OutputFileTask`](index.OutputFileTask.md)
 
   ↳ [`SourceFileTask`](index.SourceFileTask.md)
 
@@ -37,13 +33,14 @@ of the `Task` interface.
 
 - [constructor](index.AbstractTask.md#constructor)
 
-### Accessors
+### Properties
 
 - [path](index.AbstractTask.md#path)
 
 ### Methods
 
 - [addDependent](index.AbstractTask.md#adddependent)
+- [dest](index.AbstractTask.md#dest)
 - [pipe](index.AbstractTask.md#pipe)
 - [read](index.AbstractTask.md#read)
 - [transform](index.AbstractTask.md#transform)
@@ -60,23 +57,21 @@ of the `Task` interface.
 | :------ |
 | `T` |
 
-## Accessors
+## Properties
 
 ### path
 
-• `Abstract` `get` **path**(): `undefined` \| [`Path`](index.Path.md)
+• `Readonly` `Abstract` **path**: [`Path`](index.Path.md)
 
-#### Returns
-
-`undefined` \| [`Path`](index.Path.md)
+The filesystem location associated with the build artifact produced by this task.
 
 #### Implementation of
 
-Task.path
+[Task](../interfaces/index.Task.md).[path](../interfaces/index.Task.md#path)
 
 #### Defined in
 
-[AbstractTask.ts:9](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L9)
+[AbstractTask.ts:13](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L13)
 
 ## Methods
 
@@ -104,7 +99,44 @@ be out of date when any of its dependencies are out of date.
 
 #### Defined in
 
-[AbstractTask.ts:8](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L8)
+[AbstractTask.ts:12](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L12)
+
+___
+
+### dest
+
+▸ **dest**(`baseOrPath`, `fragment?`): `OutputFileTask`
+
+Create an output task that writes to a specified location. This method is only
+valid if the output type of the task is a string or Buffer object.
+
+Examples:
+
+```ts
+path.dest(newPath);
+path.dest(newBase, null);
+path.dest(null, newFragment);
+path.dest(path => path.withBase(newBase));
+```
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `baseOrPath` | ``null`` \| `string` \| [`Path`](index.Path.md) \| [`PathMapping`](../modules/index.md#pathmapping) |
+| `fragment?` | ``null`` \| `string` |
+
+#### Returns
+
+`OutputFileTask`
+
+#### Implementation of
+
+[Task](../interfaces/index.Task.md).[dest](../interfaces/index.Task.md#dest)
+
+#### Defined in
+
+[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L24)
 
 ___
 
@@ -112,7 +144,8 @@ ___
 
 ▸ **pipe**<`Out`, `Dependant`\>(`taskGen`): `Dependant`
 
-Pipe the output of this task through another task.
+Pipe the output of this task through another task. Similar to `transform()`, except that
+it allows more flexibility in processing.
 
 #### Type parameters
 
@@ -123,15 +156,13 @@ Pipe the output of this task through another task.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `taskGen` | (`input`: [`AbstractTask`](index.AbstractTask.md)<`T`\>) => `Dependant` | A function which creates a task, given a reference to this task. |
+| Name | Type |
+| :------ | :------ |
+| `taskGen` | (`input`: [`AbstractTask`](index.AbstractTask.md)<`T`\>) => `Dependant` |
 
 #### Returns
 
 `Dependant`
-
-A new Task which transforms the output when run.
 
 #### Implementation of
 
@@ -139,7 +170,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L24)
+[AbstractTask.ts:20](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L20)
 
 ___
 
@@ -161,7 +192,7 @@ operators are not required to do this.
 
 #### Defined in
 
-[AbstractTask.ts:10](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L10)
+[AbstractTask.ts:14](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L14)
 
 ___
 
@@ -169,7 +200,12 @@ ___
 
 ▸ **transform**<`Out`\>(`transform`): [`Task`](../interfaces/index.Task.md)<`Out`\>
 
-Transform the output of this task through a function.
+Creates a new task which transforms the output of this task's data. The `transform`
+argument is a function which accepts the task's output as an argument, and which returns
+either the transformed data or a promise which resolves to that data.
+
+The task created will list the current task as a dependency, so if the source file is changed
+the transform task will be re-run.
 
 #### Type parameters
 
@@ -179,15 +215,13 @@ Transform the output of this task through a function.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `transform` | (`input`: `T`) => `Out` \| `Promise`<`Out`\> | A function which accepts the input type and returns the output type. |
+| Name | Type |
+| :------ | :------ |
+| `transform` | (`input`: `T`) => `Out` \| `Promise`<`Out`\> |
 
 #### Returns
 
 [`Task`](../interfaces/index.Task.md)<`Out`\>
-
-A new Task which transforms the output when run.
 
 #### Implementation of
 
@@ -195,4 +229,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L16)
+[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L16)

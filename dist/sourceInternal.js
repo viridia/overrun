@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getWatchDirs = exports.getSource = exports.getOrCreateSourceTask = exports.addSource = exports.isSource = exports.sources = void 0;
+exports.getWatchDirs = exports.clearSources = exports.getSource = exports.getOrCreateSourceTask = exports.isSource = exports.sources = void 0;
 const path_1 = __importDefault(require("path"));
 const rootPaths_1 = require("./rootPaths");
 const SourceFileTask_1 = require("./SourceFileTask");
@@ -15,12 +15,7 @@ function isSource(path) {
     return exports.sources.has(fullPath);
 }
 exports.isSource = isSource;
-function addSource(task) {
-    const srcPathFull = task.path.complete;
-    exports.sources.set(srcPathFull, task);
-    directories.add(path_1.default.dirname(srcPathFull));
-}
-exports.addSource = addSource;
+// TODO: This has a bug: source files might have different base/fragment combos.
 function getOrCreateSourceTask(srcPath) {
     const srcPathFull = srcPath.complete;
     let srcTask = exports.sources.get(srcPathFull);
@@ -32,11 +27,19 @@ function getOrCreateSourceTask(srcPath) {
     return srcTask;
 }
 exports.getOrCreateSourceTask = getOrCreateSourceTask;
-/** Return true if `path` is a source file. */
+/** Return the cached source file.
+    @internal
+*/
 function getSource(path) {
     return exports.sources.get(path);
 }
 exports.getSource = getSource;
+/** Remove all cached source files, used for testing. */
+function clearSources() {
+    exports.sources.clear();
+}
+exports.clearSources = clearSources;
+/** @internal */
 function getWatchDirs() {
     return rootPaths_1.rootPaths(Array.from(directories));
 }

@@ -1,4 +1,4 @@
-import { Path } from './Paths';
+import { Path } from './Path';
 
 describe('Path', () => {
   describe('no base path', () => {
@@ -95,6 +95,22 @@ describe('Path', () => {
       const path = new Path('work/index.html', '/home').withExtension('.png');
       expect(path.complete).toBe('/home/work/index.png');
       expect(path.fragment).toBe('work/index.png');
+    });
+
+    test('.withFragment', () => {
+      const path = new Path('work/index.html', '/home').withFragment('play/icon.svg');
+      expect(path.complete).toBe('/home/play/icon.svg');
+      expect(path.fragment).toBe('play/icon.svg');
+    });
+
+    test('.compose', () => {
+      const path = new Path('work/index.html', '/home');
+      expect(path.compose('/office/foo.txt').complete).toBe('/office/foo.txt');
+      expect(path.compose('/office', null).complete).toBe('/office/work/index.html');
+      expect(path.compose(null, 'icon.svg').complete).toBe('/home/icon.svg');
+      expect(path.compose(Path.from('/office/foo.txt')).complete).toBe('/office/foo.txt');
+      expect(path.compose(Path.from('/office', '.'), null).complete).toBe('/office/work/index.html');
+      expect(path.compose(p => p.withExtension('.ico')).complete).toBe('/home/work/index.ico');
     });
   });
 

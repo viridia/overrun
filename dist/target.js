@@ -3,12 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildTargets = exports.target = void 0;
+exports.clearTargets = exports.buildTargets = exports.target = void 0;
 const ansi_colors_1 = __importDefault(require("ansi-colors"));
 const TaskArray_1 = require("./TaskArray");
 const errors_1 = require("./errors");
 const chokidar_1 = __importDefault(require("chokidar"));
 const sourceInternal_1 = require("./sourceInternal");
+require("./TransformTask");
+require("./OutputFileTask");
 const targets = [];
 function target(nameOrBuilder, builder) {
     if (typeof nameOrBuilder === 'string') {
@@ -173,3 +175,8 @@ async function buildTargets(options = {}) {
     return true;
 }
 exports.buildTargets = buildTargets;
+/** Remove all targets. Mainly used for testing. */
+function clearTargets() {
+    targets.length = 0;
+}
+exports.clearTargets = clearTargets;

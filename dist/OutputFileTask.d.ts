@@ -1,18 +1,19 @@
 /// <reference types="node" />
-import { SourceTask, Task } from './Task';
-import { Path } from './Paths';
-import { Builder, BuilderOptions } from './target';
-import { AbstractTask } from './AbstractTask';
-import { WritableTask, WriteOptions } from './output';
 import { Stats } from 'fs';
-/** A task which reads a source file and returns a buffer. */
+import { AbstractTask } from './AbstractTask';
+import type { Path } from './Path';
+import type { Builder, BuilderOptions, SourceTask, Task, WritableTask } from './Task';
+/** A task which writes to an putput file. */
 export declare class OutputFileTask extends AbstractTask<Buffer | string> implements Builder {
     private source;
-    private filePath;
+    readonly path: Path;
     private dependencies;
     private stats?;
-    constructor(source: WritableTask, options?: WriteOptions);
-    get path(): Path;
+    /** Construct a new OutputFileTask.
+        @param source The input task that provides the data to output.
+        @param path The location of where to write the data.
+     */
+    constructor(source: WritableTask, path: Path);
     getName(): string;
     /** Add a task as a dependent of this task. */
     addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;

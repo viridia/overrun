@@ -18,13 +18,14 @@ A task which reads a source file and returns a buffer.
 
 - [constructor](index.SourceFileTask.md#constructor)
 
-### Accessors
+### Properties
 
 - [path](index.SourceFileTask.md#path)
 
 ### Methods
 
 - [addDependent](index.SourceFileTask.md#adddependent)
+- [dest](index.SourceFileTask.md#dest)
 - [getModTime](index.SourceFileTask.md#getmodtime)
 - [pipe](index.SourceFileTask.md#pipe)
 - [read](index.SourceFileTask.md#read)
@@ -34,13 +35,13 @@ A task which reads a source file and returns a buffer.
 
 ### constructor
 
-• **new SourceFileTask**(`filePath`, `stats?`)
+• **new SourceFileTask**(`path`, `stats?`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `filePath` | [`Path`](index.Path.md) |
+| `path` | [`Path`](index.Path.md) |
 | `stats?` | `Stats` |
 
 #### Overrides
@@ -49,25 +50,19 @@ A task which reads a source file and returns a buffer.
 
 #### Defined in
 
-[SourceFileTask.ts:14](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L14)
+[SourceFileTask.ts:13](https://github.com/viridia/overrun/blob/2973034/src/SourceFileTask.ts#L13)
 
-## Accessors
+## Properties
 
 ### path
 
-• `get` **path**(): [`Path`](index.Path.md)
+• `Readonly` **path**: [`Path`](index.Path.md)
 
-#### Returns
+The filesystem location associated with the build artifact produced by this task.
 
-[`Path`](index.Path.md)
+#### Inherited from
 
-#### Overrides
-
-AbstractTask.path
-
-#### Defined in
-
-[SourceFileTask.ts:26](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L26)
+[AbstractTask](index.AbstractTask.md).[path](index.AbstractTask.md#path)
 
 ## Methods
 
@@ -95,7 +90,44 @@ be out of date when any of its dependencies are out of date.
 
 #### Defined in
 
-[SourceFileTask.ts:21](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L21)
+[SourceFileTask.ts:20](https://github.com/viridia/overrun/blob/2973034/src/SourceFileTask.ts#L20)
+
+___
+
+### dest
+
+▸ **dest**(`baseOrPath`, `fragment?`): `OutputFileTask`
+
+Create an output task that writes to a specified location. This method is only
+valid if the output type of the task is a string or Buffer object.
+
+Examples:
+
+```ts
+path.dest(newPath);
+path.dest(newBase, null);
+path.dest(null, newFragment);
+path.dest(path => path.withBase(newBase));
+```
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `baseOrPath` | ``null`` \| `string` \| [`Path`](index.Path.md) \| [`PathMapping`](../modules/index.md#pathmapping) |
+| `fragment?` | ``null`` \| `string` |
+
+#### Returns
+
+`OutputFileTask`
+
+#### Inherited from
+
+[AbstractTask](index.AbstractTask.md).[dest](index.AbstractTask.md#dest)
+
+#### Defined in
+
+[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L24)
 
 ___
 
@@ -111,7 +143,7 @@ Return the modification date of this source file.
 
 #### Defined in
 
-[SourceFileTask.ts:31](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L31)
+[SourceFileTask.ts:26](https://github.com/viridia/overrun/blob/2973034/src/SourceFileTask.ts#L26)
 
 ___
 
@@ -119,7 +151,8 @@ ___
 
 ▸ **pipe**<`Out`, `Dependant`\>(`taskGen`): `Dependant`
 
-Pipe the output of this task through another task.
+Pipe the output of this task through another task. Similar to `transform()`, except that
+it allows more flexibility in processing.
 
 #### Type parameters
 
@@ -130,15 +163,13 @@ Pipe the output of this task through another task.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `taskGen` | (`input`: [`SourceFileTask`](index.SourceFileTask.md)) => `Dependant` | A function which creates a task, given a reference to this task. |
+| Name | Type |
+| :------ | :------ |
+| `taskGen` | (`input`: [`SourceFileTask`](index.SourceFileTask.md)) => `Dependant` |
 
 #### Returns
 
 `Dependant`
-
-A new Task which transforms the output when run.
 
 #### Inherited from
 
@@ -146,7 +177,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L24)
+[AbstractTask.ts:20](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L20)
 
 ___
 
@@ -166,7 +197,7 @@ Return the output of the task.
 
 #### Defined in
 
-[SourceFileTask.ts:36](https://github.com/viridia/overrun/blob/20a7ff0/src/SourceFileTask.ts#L36)
+[SourceFileTask.ts:31](https://github.com/viridia/overrun/blob/2973034/src/SourceFileTask.ts#L31)
 
 ___
 
@@ -174,7 +205,12 @@ ___
 
 ▸ **transform**<`Out`\>(`transform`): [`Task`](../interfaces/index.Task.md)<`Out`\>
 
-Transform the output of this task through a function.
+Creates a new task which transforms the output of this task's data. The `transform`
+argument is a function which accepts the task's output as an argument, and which returns
+either the transformed data or a promise which resolves to that data.
+
+The task created will list the current task as a dependency, so if the source file is changed
+the transform task will be re-run.
 
 #### Type parameters
 
@@ -184,15 +220,13 @@ Transform the output of this task through a function.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `transform` | (`input`: `Buffer`) => `Out` \| `Promise`<`Out`\> | A function which accepts the input type and returns the output type. |
+| Name | Type |
+| :------ | :------ |
+| `transform` | (`input`: `Buffer`) => `Out` \| `Promise`<`Out`\> |
 
 #### Returns
 
 [`Task`](../interfaces/index.Task.md)<`Out`\>
-
-A new Task which transforms the output when run.
 
 #### Inherited from
 
@@ -200,4 +234,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L16)
+[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L16)

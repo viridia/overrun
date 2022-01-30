@@ -99,6 +99,12 @@ class Path {
     withBase(base) {
         return new Path(this.frag, base);
     }
+    /** Return a copy of this Path object, but with the fragment replaced by `base`.
+        @param fragment The new path fragment.
+    */
+    withFragment(fragment) {
+        return new Path(fragment, this.base);
+    }
     /** Return a copy of this Path object, but with the file extension replaced by `ext`.
         @param newExt The new file extension.
     */
@@ -120,6 +126,47 @@ class Path {
     withFilename(newFilename) {
         const parsed = path_1.default.parse(this.frag);
         return new Path(path_1.default.format({ ...parsed, base: newFilename }), this.basepath);
+    }
+    /** Combine two paths, replacing either the base or the fragment or both.
+        @param newBaseOrPath Either a function which transforms the path, or the new base
+          of the path. If there is no second argument, then this represents the complete path.
+        @param newFragment The new fragment. If this is `null` it means we want to keep the
+          existing fragment. If it's a string, it means we want to replace it.
+     */
+    compose(newBaseOrPath, newFragment) {
+        if (typeof newBaseOrPath === 'function') {
+            if (newFragment !== undefined) {
+                throw new Error('Invalid path combination: may not provide both fragment and transform function.');
+            }
+            else {
+                return newBaseOrPath(this);
+            }
+        }
+        if (typeof newFragment === undefined) {
+            // We're replacing the entire path
+            if (newBaseOrPath instanceof Path) {
+                return newBaseOrPath;
+            }
+            else if (typeof newBaseOrPath === 'string') {
+                return new Path(newBaseOrPath);
+            }
+            else {
+                return this;
+            }
+        }
+        else {
+            // We're replacing the fragment, and possibly the base.
+            const frag = typeof newFragment === 'string' ? newFragment : this.fragment;
+            if (newBaseOrPath instanceof Path) {
+                return newBaseOrPath.withFragment(frag);
+            }
+            else if (typeof newBaseOrPath === 'string') {
+                return new Path(frag, newBaseOrPath);
+            }
+            else {
+                return this.withFragment(frag);
+            }
+        }
     }
 }
 exports.Path = Path;

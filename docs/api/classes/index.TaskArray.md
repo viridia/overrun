@@ -28,14 +28,18 @@ process tasks individually, use the `map()` or `reduce()` methods.
 
 - [constructor](index.TaskArray.md#constructor)
 
+### Properties
+
+- [path](index.TaskArray.md#path)
+
 ### Accessors
 
 - [length](index.TaskArray.md#length)
-- [path](index.TaskArray.md#path)
 
 ### Methods
 
 - [addDependent](index.TaskArray.md#adddependent)
+- [dest](index.TaskArray.md#dest)
 - [find](index.TaskArray.md#find)
 - [items](index.TaskArray.md#items)
 - [map](index.TaskArray.md#map)
@@ -48,7 +52,7 @@ process tasks individually, use the `map()` or `reduce()` methods.
 
 ### constructor
 
-• **new TaskArray**<`T2`\>(`sources`, `dirPath?`)
+• **new TaskArray**<`T2`\>(`sources`, `path`)
 
 #### Type parameters
 
@@ -61,7 +65,7 @@ process tasks individually, use the `map()` or `reduce()` methods.
 | Name | Type |
 | :------ | :------ |
 | `sources` | `T2`[] |
-| `dirPath?` | [`Path`](index.Path.md) |
+| `path` | [`Path`](index.Path.md) |
 
 #### Overrides
 
@@ -69,7 +73,19 @@ process tasks individually, use the `map()` or `reduce()` methods.
 
 #### Defined in
 
-[TaskArray.ts:12](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L12)
+[TaskArray.ts:13](https://github.com/viridia/overrun/blob/2973034/src/TaskArray.ts#L13)
+
+## Properties
+
+### path
+
+• `Readonly` **path**: [`Path`](index.Path.md)
+
+The filesystem location associated with the build artifact produced by this task.
+
+#### Inherited from
+
+[AbstractTask](index.AbstractTask.md).[path](index.AbstractTask.md#path)
 
 ## Accessors
 
@@ -85,27 +101,7 @@ Returns the number of tasks in this `TaskArray`.
 
 #### Defined in
 
-[TaskArray.ts:39](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L39)
-
-___
-
-### path
-
-• `get` **path**(): `undefined` \| [`Path`](index.Path.md)
-
-The filesystem location associated with the build artifact produced by this task.
-
-#### Returns
-
-`undefined` \| [`Path`](index.Path.md)
-
-#### Overrides
-
-AbstractTask.path
-
-#### Defined in
-
-[TaskArray.ts:20](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L20)
+[TaskArray.ts:36](https://github.com/viridia/overrun/blob/2973034/src/TaskArray.ts#L36)
 
 ## Methods
 
@@ -133,7 +129,44 @@ be out of date when any of its dependencies are out of date.
 
 #### Defined in
 
-[TaskArray.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L16)
+[TaskArray.ts:17](https://github.com/viridia/overrun/blob/2973034/src/TaskArray.ts#L17)
+
+___
+
+### dest
+
+▸ **dest**(`baseOrPath`, `fragment?`): `OutputFileTask`
+
+Create an output task that writes to a specified location. This method is only
+valid if the output type of the task is a string or Buffer object.
+
+Examples:
+
+```ts
+path.dest(newPath);
+path.dest(newBase, null);
+path.dest(null, newFragment);
+path.dest(path => path.withBase(newBase));
+```
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `baseOrPath` | ``null`` \| `string` \| [`Path`](index.Path.md) \| [`PathMapping`](../modules/index.md#pathmapping) |
+| `fragment?` | ``null`` \| `string` |
+
+#### Returns
+
+`OutputFileTask`
+
+#### Inherited from
+
+[AbstractTask](index.AbstractTask.md).[dest](index.AbstractTask.md#dest)
+
+#### Defined in
+
+[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L24)
 
 ___
 
@@ -155,7 +188,7 @@ Find a task by some predicate.
 
 #### Defined in
 
-[TaskArray.ts:44](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L44)
+[TaskArray.ts:41](https://github.com/viridia/overrun/blob/2973034/src/TaskArray.ts#L41)
 
 ___
 
@@ -171,7 +204,7 @@ The array of tasks contained in this `TaskArray`.
 
 #### Defined in
 
-[TaskArray.ts:25](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L25)
+[TaskArray.ts:22](https://github.com/viridia/overrun/blob/2973034/src/TaskArray.ts#L22)
 
 ___
 
@@ -200,7 +233,7 @@ Works like Array.map(), except that the elements are tasks.
 
 #### Defined in
 
-[TaskArray.ts:34](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L34)
+[TaskArray.ts:31](https://github.com/viridia/overrun/blob/2973034/src/TaskArray.ts#L31)
 
 ___
 
@@ -208,7 +241,8 @@ ___
 
 ▸ **pipe**<`Out`, `Dependant`\>(`taskGen`): `Dependant`
 
-Pipe the output of this task through another task.
+Pipe the output of this task through another task. Similar to `transform()`, except that
+it allows more flexibility in processing.
 
 #### Type parameters
 
@@ -219,15 +253,13 @@ Pipe the output of this task through another task.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `taskGen` | (`input`: [`TaskArray`](index.TaskArray.md)<`T2`\>) => `Dependant` | A function which creates a task, given a reference to this task. |
+| Name | Type |
+| :------ | :------ |
+| `taskGen` | (`input`: [`TaskArray`](index.TaskArray.md)<`T2`\>) => `Dependant` |
 
 #### Returns
 
 `Dependant`
-
-A new Task which transforms the output when run.
 
 #### Inherited from
 
@@ -235,7 +267,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L24)
+[AbstractTask.ts:20](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L20)
 
 ___
 
@@ -257,7 +289,7 @@ operators are not required to do this.
 
 #### Defined in
 
-[TaskArray.ts:29](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L29)
+[TaskArray.ts:26](https://github.com/viridia/overrun/blob/2973034/src/TaskArray.ts#L26)
 
 ___
 
@@ -289,7 +321,7 @@ A new Task which produces the combined output of the reduction.
 
 #### Defined in
 
-[TaskArray.ts:54](https://github.com/viridia/overrun/blob/20a7ff0/src/TaskArray.ts#L54)
+[TaskArray.ts:51](https://github.com/viridia/overrun/blob/2973034/src/TaskArray.ts#L51)
 
 ___
 
@@ -297,7 +329,12 @@ ___
 
 ▸ **transform**<`Out`\>(`transform`): [`Task`](../interfaces/index.Task.md)<`Out`\>
 
-Transform the output of this task through a function.
+Creates a new task which transforms the output of this task's data. The `transform`
+argument is a function which accepts the task's output as an argument, and which returns
+either the transformed data or a promise which resolves to that data.
+
+The task created will list the current task as a dependency, so if the source file is changed
+the transform task will be re-run.
 
 #### Type parameters
 
@@ -307,15 +344,13 @@ Transform the output of this task through a function.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `transform` | (`input`: `T2`[]) => `Out` \| `Promise`<`Out`\> | A function which accepts the input type and returns the output type. |
+| Name | Type |
+| :------ | :------ |
+| `transform` | (`input`: `T2`[]) => `Out` \| `Promise`<`Out`\> |
 
 #### Returns
 
 [`Task`](../interfaces/index.Task.md)<`Out`\>
-
-A new Task which transforms the output when run.
 
 #### Inherited from
 
@@ -323,4 +358,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L16)
+[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L16)

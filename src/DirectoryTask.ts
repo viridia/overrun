@@ -1,24 +1,20 @@
-import { Path } from './Paths';
-import { SourceTask, Task } from './Task';
-import { AbstractTask } from './AbstractTask';
-import { SourceFileTask } from './SourceFileTask';
-import { TaskArray } from './TaskArray';
 import fg from 'fast-glob';
 import path from 'path';
+import { AbstractTask } from './AbstractTask';
+import { Path } from './Path';
+import type { SourceFileTask } from './SourceFileTask';
 import { getOrCreateSourceTask } from './sourceInternal';
+import type { SourceTask, Task } from './Task';
+import { TaskArray } from './TaskArray';
 
 /** A task which reads the contents of a directory. */
 export class DirectoryTask extends AbstractTask<Path[]> {
-  constructor(private dirPath: Path) {
+  constructor(public readonly path: Path) {
     super();
   }
 
   // No-op: we don't support recompilation based on directory changes.
   public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {}
-
-  public get path(): Path {
-    return this.dirPath;
-  }
 
   /** Create a task for every file in the directory. */
   public files(): TaskArray<SourceFileTask> {
@@ -27,8 +23,8 @@ export class DirectoryTask extends AbstractTask<Path[]> {
 
   /** Create a task for every file that matches the glob. */
   public match(pattern: string): TaskArray<SourceFileTask> {
-    const base = this.dirPath.base;
-    const files = fg.sync(path.join(this.dirPath.fragment, pattern), {
+    const base = this.path.base;
+    const files = fg.sync(path.join(this.path.fragment, pattern), {
       cwd: base && path.resolve(base),
       onlyFiles: true,
       globstar: true,
@@ -36,21 +32,23 @@ export class DirectoryTask extends AbstractTask<Path[]> {
 
     return new TaskArray(
       files.map(file => {
-        return getOrCreateSourceTask(
-          new Path(file, path.join(this.dirPath.fragment, path.basename(file)))
-        );
+        return getOrCreateSourceTask(Path.from(base!, file));
       }),
-      this.dirPath
+      this.path
     );
   }
 
   public read(): Promise<Path[]> {
-    const base = this.dirPath.base;
-    return fg(path.join(this.dirPath.fragment, '*'), {
-      cwd: base,
+    const base = this.path.base;
+    return fg(path.join(this.path.fragment, '*'), {
+      cwd: base && path.resolve(base),
       onlyFiles: true,
       globstar: true,
       dot: true,
-    }).then(files => files.map(file => new Path(file, base)));
+    }).then(files =>
+      files.map(file => {
+        return Path.from(base!, file);
+      })
+    );
   }
 }

@@ -8,7 +8,7 @@ A task that has a "last modified" date.
 
 ## Table of contents
 
-### Accessors
+### Properties
 
 - [path](index.SourceTask.md#path)
 
@@ -16,21 +16,17 @@ A task that has a "last modified" date.
 
 - [getModTime](index.SourceTask.md#getmodtime)
 
-## Accessors
+## Properties
 
 ### path
 
-• `get` **path**(): [`Path`](../classes/index.Path.md)
+• `Readonly` **path**: [`Path`](../classes/index.Path.md)
 
 Location of this file in the source tree.
 
-#### Returns
-
-[`Path`](../classes/index.Path.md)
-
 #### Defined in
 
-[Task.ts:45](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L45)
+[Task.ts:70](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L70)
 
 ## Methods
 
@@ -46,4 +42,4 @@ Return true if the last modified time of this file is newer than the given date.
 
 #### Defined in
 
-[Task.ts:48](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L48)
+[Task.ts:73](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L73)

@@ -1,14 +1,13 @@
-import { Path } from './Paths';
-import { SourceTask, Task } from './Task';
-import { AbstractTask } from "./AbstractTask";
-import { SourceFileTask } from "./SourceFileTask";
-import { TaskArray } from "./TaskArray";
+import { AbstractTask } from './AbstractTask';
+import { Path } from './Path';
+import type { SourceFileTask } from './SourceFileTask';
+import type { SourceTask, Task } from './Task';
+import { TaskArray } from './TaskArray';
 /** A task which reads the contents of a directory. */
 export declare class DirectoryTask extends AbstractTask<Path[]> {
-    private dirPath;
-    constructor(dirPath: Path);
+    readonly path: Path;
+    constructor(path: Path);
     addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
-    get path(): Path;
     /** Create a task for every file in the directory. */
     files(): TaskArray<SourceFileTask>;
     /** Create a task for every file that matches the glob. */

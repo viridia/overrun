@@ -1,11 +1,10 @@
-[overrun](../README.md) / [index](../modules/index.md) / Task
+[overrun](../README.md) / [index](../modules/index.md) / OutputTask
 
-# Interface: Task<T\>
+# Interface: OutputTask<T\>
 
-[index](../modules/index.md).Task
+[index](../modules/index.md).OutputTask
 
-A TypeScript interface representing an object which produces data asynchronously. It
-has a single template parameter, which represents the type of data produced.
+A task that has a "last modified" date.
 
 ## Type parameters
 
@@ -15,27 +14,28 @@ has a single template parameter, which represents the type of data produced.
 
 ## Hierarchy
 
-- **`Task`**
+- [`Task`](index.Task.md)<`T`\>
 
-  ↳ [`OutputTask`](index.OutputTask.md)
+- [`Builder`](index.Builder.md)
 
-## Implemented by
-
-- [`AbstractTask`](../classes/index.AbstractTask.md)
+  ↳ **`OutputTask`**
 
 ## Table of contents
 
 ### Properties
 
-- [path](index.Task.md#path)
+- [path](index.OutputTask.md#path)
 
 ### Methods
 
-- [addDependent](index.Task.md#adddependent)
-- [dest](index.Task.md#dest)
-- [pipe](index.Task.md#pipe)
-- [read](index.Task.md#read)
-- [transform](index.Task.md#transform)
+- [addDependent](index.OutputTask.md#adddependent)
+- [build](index.OutputTask.md#build)
+- [dest](index.OutputTask.md#dest)
+- [getName](index.OutputTask.md#getname)
+- [isModified](index.OutputTask.md#ismodified)
+- [pipe](index.OutputTask.md#pipe)
+- [read](index.OutputTask.md#read)
+- [transform](index.OutputTask.md#transform)
 
 ## Properties
 
@@ -44,6 +44,10 @@ has a single template parameter, which represents the type of data produced.
 • `Readonly` **path**: [`Path`](../classes/index.Path.md)
 
 The filesystem location associated with the build artifact produced by this task.
+
+#### Inherited from
+
+[Task](index.Task.md).[path](index.Task.md#path)
 
 #### Defined in
 
@@ -69,9 +73,37 @@ be out of date when any of its dependencies are out of date.
 
 `void`
 
+#### Inherited from
+
+[Task](index.Task.md).[addDependent](index.Task.md#adddependent)
+
 #### Defined in
 
 [Task.ts:12](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L12)
+
+___
+
+### build
+
+▸ **build**(`options`): `Promise`<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `options` | [`BuilderOptions`](index.BuilderOptions.md) |
+
+#### Returns
+
+`Promise`<`void`\>
+
+#### Inherited from
+
+[Builder](index.Builder.md).[build](index.Builder.md#build)
+
+#### Defined in
+
+[Task.ts:86](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L86)
 
 ___
 
@@ -102,9 +134,49 @@ path.dest(path => path.withBase(newBase));
 
 [`OutputTask`](index.OutputTask.md)<`string` \| `Buffer`\>
 
+#### Inherited from
+
+[Task](index.Task.md).[dest](index.Task.md#dest)
+
 #### Defined in
 
 [Task.ts:60](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L60)
+
+___
+
+### getName
+
+▸ **getName**(): `string`
+
+#### Returns
+
+`string`
+
+#### Inherited from
+
+[Builder](index.Builder.md).[getName](index.Builder.md#getname)
+
+#### Defined in
+
+[Task.ts:88](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L88)
+
+___
+
+### isModified
+
+▸ **isModified**(): `Promise`<`boolean`\>
+
+#### Returns
+
+`Promise`<`boolean`\>
+
+#### Inherited from
+
+[Builder](index.Builder.md).[isModified](index.Builder.md#ismodified)
+
+#### Defined in
+
+[Task.ts:87](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L87)
 
 ___
 
@@ -126,13 +198,17 @@ it allows more flexibility in processing.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `taskGen` | (`input`: [`Task`](index.Task.md)<`T`\>) => `Dependant` | A function which creates a new task, given a reference to this task. |
+| `taskGen` | (`input`: [`OutputTask`](index.OutputTask.md)<`T`\>) => `Dependant` | A function which creates a new task, given a reference to this task. |
 
 #### Returns
 
 `Dependant`
 
 A new Task which transforms the output when run.
+
+#### Inherited from
+
+[Task](index.Task.md).[pipe](index.Task.md#pipe)
 
 #### Defined in
 
@@ -151,6 +227,10 @@ operators are not required to do this.
 #### Returns
 
 `Promise`<`T`\>
+
+#### Inherited from
+
+[Task](index.Task.md).[read](index.Task.md#read)
 
 #### Defined in
 
@@ -186,6 +266,10 @@ the transform task will be re-run.
 [`Task`](index.Task.md)<`Out`\>
 
 A new Task which transforms the output when run.
+
+#### Inherited from
+
+[Task](index.Task.md).[transform](index.Task.md#transform)
 
 #### Defined in
 

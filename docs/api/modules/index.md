@@ -8,33 +8,57 @@
 
 - [AbstractTask](../classes/index.AbstractTask.md)
 - [DirectoryTask](../classes/index.DirectoryTask.md)
-- [OutputFileTask](../classes/index.OutputFileTask.md)
 - [Path](../classes/index.Path.md)
 - [SourceFileTask](../classes/index.SourceFileTask.md)
 - [TaskArray](../classes/index.TaskArray.md)
-- [TransformTask](../classes/index.TransformTask.md)
 
 ### Interfaces
 
 - [Builder](../interfaces/index.Builder.md)
 - [BuilderOptions](../interfaces/index.BuilderOptions.md)
+- [OutputTask](../interfaces/index.OutputTask.md)
 - [SourceTask](../interfaces/index.SourceTask.md)
 - [Task](../interfaces/index.Task.md)
-- [WriteOptions](../interfaces/index.WriteOptions.md)
 
 ### Type aliases
 
+- [PathMapping](index.md#pathmapping)
 - [TransformFn](index.md#transformfn)
 - [TransformFnAsync](index.md#transformfnasync)
 
 ### Functions
 
+- [clearTargets](index.md#cleartargets)
 - [directory](index.md#directory)
 - [output](index.md#output)
 - [source](index.md#source)
 - [target](index.md#target)
 
 ## Type aliases
+
+### PathMapping
+
+Ƭ **PathMapping**: (`path`: [`Path`](../classes/index.Path.md)) => [`Path`](../classes/index.Path.md)
+
+#### Type declaration
+
+▸ (`path`): [`Path`](../classes/index.Path.md)
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `path` | [`Path`](../classes/index.Path.md) |
+
+##### Returns
+
+[`Path`](../classes/index.Path.md)
+
+#### Defined in
+
+Path.ts:3
+
+___
 
 ### TransformFn
 
@@ -63,7 +87,7 @@
 
 #### Defined in
 
-[Task.ts:3](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L3)
+[Task.ts:3](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L3)
 
 ___
 
@@ -94,9 +118,25 @@ ___
 
 #### Defined in
 
-[Task.ts:4](https://github.com/viridia/overrun/blob/20a7ff0/src/Task.ts#L4)
+[Task.ts:4](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L4)
 
 ## Functions
+
+### clearTargets
+
+▸ **clearTargets**(): `void`
+
+Remove all targets. Mainly used for testing.
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[target.ts:198](https://github.com/viridia/overrun/blob/2973034/src/target.ts#L198)
+
+___
 
 ### directory
 
@@ -117,25 +157,33 @@ Create a task which reads a source file and returns a buffer.
 
 #### Defined in
 
-[directory.ts:5](https://github.com/viridia/overrun/blob/20a7ff0/src/directory.ts#L5)
+[directory.ts:5](https://github.com/viridia/overrun/blob/2973034/src/directory.ts#L5)
 
 ___
 
 ### output
 
-▸ **output**(`options?`): (`source`: `WritableTask`) => [`OutputFileTask`](../classes/index.OutputFileTask.md)
+▸ **output**(`options?`): (`source`: `WritableTask`) => `OutputFileTask`
+
+Task generator function that generates an output task.
+
+**`deprecated`** Prefer `task.writeTo()`.
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `options?` | [`WriteOptions`](../interfaces/index.WriteOptions.md) |
+| `options?` | `OutputOptions` |
 
 #### Returns
 
 `fn`
 
-▸ (`source`): [`OutputFileTask`](../classes/index.OutputFileTask.md)
+▸ (`source`): `OutputFileTask`
+
+Task generator function that generates an output task.
+
+**`deprecated`** Prefer `task.writeTo()`.
 
 ##### Parameters
 
@@ -145,25 +193,25 @@ ___
 
 ##### Returns
 
-[`OutputFileTask`](../classes/index.OutputFileTask.md)
+`OutputFileTask`
 
 #### Defined in
 
-[output.ts:14](https://github.com/viridia/overrun/blob/20a7ff0/src/output.ts#L14)
+[output.ts:31](https://github.com/viridia/overrun/blob/2973034/src/output.ts#L31)
 
-▸ **output**(`options?`): (`source`: `WritableTask`[]) => [`OutputFileTask`](../classes/index.OutputFileTask.md)[]
+▸ **output**(`options?`): (`source`: `WritableTask`[]) => `OutputFileTask`[]
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `options?` | [`WriteOptions`](../interfaces/index.WriteOptions.md) |
+| `options?` | `OutputOptions` |
 
 #### Returns
 
 `fn`
 
-▸ (`source`): [`OutputFileTask`](../classes/index.OutputFileTask.md)[]
+▸ (`source`): `OutputFileTask`[]
 
 ##### Parameters
 
@@ -173,25 +221,25 @@ ___
 
 ##### Returns
 
-[`OutputFileTask`](../classes/index.OutputFileTask.md)[]
+`OutputFileTask`[]
 
 #### Defined in
 
-[output.ts:15](https://github.com/viridia/overrun/blob/20a7ff0/src/output.ts#L15)
+[output.ts:32](https://github.com/viridia/overrun/blob/2973034/src/output.ts#L32)
 
-▸ **output**(`options?`): (`source`: [`TaskArray`](../classes/index.TaskArray.md)<`WritableTask`\>) => [`OutputFileTask`](../classes/index.OutputFileTask.md)[]
+▸ **output**(`options?`): (`source`: [`TaskArray`](../classes/index.TaskArray.md)<`WritableTask`\>) => `OutputFileTask`[]
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `options?` | [`WriteOptions`](../interfaces/index.WriteOptions.md) |
+| `options?` | `OutputOptions` |
 
 #### Returns
 
 `fn`
 
-▸ (`source`): [`OutputFileTask`](../classes/index.OutputFileTask.md)[]
+▸ (`source`): `OutputFileTask`[]
 
 ##### Parameters
 
@@ -201,11 +249,11 @@ ___
 
 ##### Returns
 
-[`OutputFileTask`](../classes/index.OutputFileTask.md)[]
+`OutputFileTask`[]
 
 #### Defined in
 
-[output.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/output.ts#L16)
+[output.ts:33](https://github.com/viridia/overrun/blob/2973034/src/output.ts#L33)
 
 ___
 
@@ -228,7 +276,7 @@ Create a task which reads a source file and returns a buffer.
 
 #### Defined in
 
-[source.ts:6](https://github.com/viridia/overrun/blob/20a7ff0/src/source.ts#L6)
+[source.ts:6](https://github.com/viridia/overrun/blob/2973034/src/source.ts#L6)
 
 ___
 
@@ -248,7 +296,7 @@ ___
 
 #### Defined in
 
-[target.ts:36](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L36)
+[target.ts:25](https://github.com/viridia/overrun/blob/2973034/src/target.ts#L25)
 
 ▸ **target**(`name`, `builder`): `void`
 
@@ -265,4 +313,4 @@ ___
 
 #### Defined in
 
-[target.ts:37](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L37)
+[target.ts:26](https://github.com/viridia/overrun/blob/2973034/src/target.ts#L26)

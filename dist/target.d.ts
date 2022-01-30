@@ -1,18 +1,7 @@
 import { TaskArray } from './TaskArray';
-import { Task } from './Task';
-export interface BuilderOptions {
-    dryRun?: boolean;
-    watchMode?: boolean;
-    targets?: string[];
-}
-/** A target is anything that can be built.
-    @internal
-*/
-export interface Builder {
-    build(options: BuilderOptions): Promise<void>;
-    isModified(): Promise<boolean>;
-    getName(): string;
-}
+import { Builder, BuilderOptions, Task } from './Task';
+import './TransformTask';
+import './OutputFileTask';
 /** @internal */
 export interface Target {
     name: string;
@@ -28,4 +17,6 @@ export declare function target(builder: Builders): void;
 export declare function target(name: string, builder: Builders): void;
 /** @internal */
 export declare function buildTargets(options?: BuilderOptions): Promise<boolean>;
+/** Remove all targets. Mainly used for testing. */
+export declare function clearTargets(): void;
 export {};

@@ -4,11 +4,14 @@
 
 [index](../modules/index.md).Builder
 
-Represents a chain of pipeline stages that produce some output.
+A 'builder' is the final task of a task pipeline. Only tasks which produce
+artifacts (such as {@link OutputFileTask} can be builders.
 
-## Implemented by
+## Hierarchy
 
-- [`OutputFileTask`](../classes/index.OutputFileTask.md)
+- **`Builder`**
+
+  ↳ [`OutputTask`](index.OutputTask.md)
 
 ## Table of contents
 
@@ -36,7 +39,7 @@ Represents a chain of pipeline stages that produce some output.
 
 #### Defined in
 
-[target.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L16)
+[Task.ts:86](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L86)
 
 ___
 
@@ -50,7 +53,7 @@ ___
 
 #### Defined in
 
-[target.ts:18](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L18)
+[Task.ts:88](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L88)
 
 ___
 
@@ -64,4 +67,4 @@ ___
 
 #### Defined in
 
-[target.ts:17](https://github.com/viridia/overrun/blob/20a7ff0/src/target.ts#L17)
+[Task.ts:87](https://github.com/viridia/overrun/blob/2973034/src/Task.ts#L87)

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransformTask = void 0;
 const AbstractTask_1 = require("./AbstractTask");
+const ctors_1 = require("./ctors");
 /** A simplified transform task which accepts a synchronous transform function. */
 class TransformTask extends AbstractTask_1.AbstractTask {
     source;
@@ -28,3 +29,4 @@ class TransformTask extends AbstractTask_1.AbstractTask {
     }
 }
 exports.TransformTask = TransformTask;
+ctors_1.taskContructors.transform = (source, transform) => new TransformTask(source, transform);

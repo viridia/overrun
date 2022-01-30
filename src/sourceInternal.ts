@@ -1,5 +1,5 @@
 import path from 'path';
-import { Path } from './Paths';
+import { Path } from './Path';
 import { rootPaths } from './rootPaths';
 import { SourceFileTask } from './SourceFileTask';
 
@@ -12,12 +12,7 @@ export function isSource(path: Path): boolean {
   return sources.has(fullPath);
 }
 
-export function addSource(task: SourceFileTask) {
-  const srcPathFull = task.path.complete;
-  sources.set(srcPathFull, task);
-  directories.add(path.dirname(srcPathFull));
-}
-
+// TODO: This has a bug: source files might have different base/fragment combos.
 export function getOrCreateSourceTask(srcPath: Path) {
   const srcPathFull = srcPath.complete;
   let srcTask = sources.get(srcPathFull);
@@ -30,11 +25,19 @@ export function getOrCreateSourceTask(srcPath: Path) {
   return srcTask;
 }
 
-/** Return true if `path` is a source file. */
+/** Return the cached source file.
+    @internal
+*/
 export function getSource(path: string): SourceFileTask | undefined {
   return sources.get(path);
 }
 
+/** Remove all cached source files, used for testing. */
+export function clearSources(): void {
+  sources.clear();
+}
+
+/** @internal */
 export function getWatchDirs() {
   return rootPaths(Array.from(directories));
 }

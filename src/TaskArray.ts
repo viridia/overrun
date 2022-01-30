@@ -1,6 +1,7 @@
-import { Path } from './Paths';
+import { Path } from './Path';
 import { SourceTask, Task } from './Task';
-import { AbstractTask, TransformTask } from "./AbstractTask";
+import { AbstractTask } from "./AbstractTask";
+import { taskContructors } from './ctors';
 
 /** Represents an array of tasks. These are usually created when operating on collections of
     source files.
@@ -9,16 +10,12 @@ import { AbstractTask, TransformTask } from "./AbstractTask";
     process tasks individually, use the `map()` or `reduce()` methods.
  */
 export class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
-  constructor(private sources: T2[], private dirPath?: Path) {
+  constructor(private sources: T2[], public readonly path: Path) {
     super();
   }
 
   public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {
     this.sources.forEach(src => src.addDependent(dependent, dependencies));
-  }
-
-  public get path(): Path | undefined {
-    return this.dirPath;
   }
 
   /** The array of tasks contained in this `TaskArray`. */
@@ -32,7 +29,7 @@ export class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
 
   /** Works like Array.map(), except that the elements are tasks. */
   public map<Out, Depends extends Task<Out>>(fn: (input: T2) => Depends): TaskArray<Depends> {
-    return new TaskArray(this.sources.map(fn), this.dirPath);
+    return new TaskArray(this.sources.map(fn), this.path);
   }
 
   /** Returns the number of tasks in this `TaskArray`. */
@@ -52,7 +49,7 @@ export class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
       @returns A new Task which produces the combined output of the reduction.
   */
   public reduce<Out>(init: Out, reducer: (acc: Out, next: T2) => Out | Promise<Out>): Task<Out> {
-    return new TransformTask<unknown, Out>(this, async () => {
+    return taskContructors.transform<unknown, Out>(this, async () => {
       let result = init;
       for (let task of this.sources) {
         result = await Promise.resolve(reducer(result, task));

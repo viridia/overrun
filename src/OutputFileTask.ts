@@ -1,46 +1,29 @@
-import { open, stat } from 'fs/promises';
-import { SourceTask, Task } from './Task';
-import { Path } from './Paths';
-import { Builder, BuilderOptions } from './target';
-import { isSource } from './sourceInternal';
-import { BuildError } from './errors';
-import { AbstractTask } from './AbstractTask';
-import { WritableTask, WriteOptions } from './output';
-import path from 'path';
 import fs, { Stats } from 'fs';
+import { open, stat } from 'fs/promises';
+import path from 'path';
 import util from 'util';
+import { AbstractTask } from './AbstractTask';
+import { taskContructors } from './ctors';
+import { BuildError } from './errors';
+import type { Path } from './Path';
+import { isSource } from './sourceInternal';
+import type { Builder, BuilderOptions, SourceTask, Task, WritableTask } from './Task';
 
 const mkdir = util.promisify(fs.mkdir);
 const exists = util.promisify(fs.exists);
 
-/** A task which reads a source file and returns a buffer. */
+/** A task which writes to an output file. */
 export class OutputFileTask extends AbstractTask<Buffer | string> implements Builder {
-  private filePath: Path;
   private dependencies = new Set<SourceTask>();
   private stats?: Promise<Stats | null>;
 
-  constructor(private source: WritableTask, options?: WriteOptions) {
+  /** Construct a new {@link OutputFileTask}.
+      @param source The input task that provides the data to output.
+      @param path The location of where to write the data.
+   */
+  constructor(private source: WritableTask, public readonly path: Path) {
     super();
     source.addDependent(this, this.dependencies);
-    if (options?.path) {
-      if (typeof options.path === 'string') {
-        this.filePath = new Path(options.path, options?.base);
-      } else if (options.base) {
-        this.filePath = options.path.withBase(options.base);
-      } else {
-        this.filePath = options.path;
-      }
-    } else if (options?.base && this.source.path) {
-      this.filePath = this.source.path.withBase(options.base);
-    } else if (this.source.path) {
-      this.filePath = this.source.path;
-    } else {
-      throw new BuildError('Write task must specify an output path.');
-    }
-  }
-
-  public get path(): Path {
-    return this.filePath;
   }
 
   public getName(): string {
@@ -78,8 +61,8 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
   /** Run all tasks and generate the file. */
   public async build(options: BuilderOptions): Promise<void> {
     // Don't allow overwriting of source files.
-    const fullPath = this.filePath.complete;
-    if (isSource(this.filePath)) {
+    const fullPath = this.path.complete;
+    if (isSource(this.path)) {
       throw new BuildError(`Cannot overwrite source file '${fullPath}'.`);
     }
 
@@ -126,3 +109,5 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
     return this.stats;
   }
 }
+
+taskContructors.output = (source, path) => new OutputFileTask(source, path);

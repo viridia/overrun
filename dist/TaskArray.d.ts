@@ -1,4 +1,4 @@
-import { Path } from './Paths';
+import { Path } from './Path';
 import { SourceTask, Task } from './Task';
 import { AbstractTask } from "./AbstractTask";
 /** Represents an array of tasks. These are usually created when operating on collections of
@@ -9,10 +9,9 @@ import { AbstractTask } from "./AbstractTask";
  */
 export declare class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
     private sources;
-    private dirPath?;
-    constructor(sources: T2[], dirPath?: Path | undefined);
+    readonly path: Path;
+    constructor(sources: T2[], path: Path);
     addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
-    get path(): Path | undefined;
     /** The array of tasks contained in this `TaskArray`. */
     items(): T2[];
     read(): Promise<T2[]>;

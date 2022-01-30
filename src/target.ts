@@ -1,22 +1,11 @@
 import c from 'ansi-colors';
 import { TaskArray } from './TaskArray';
 import { BuildError } from './errors';
-import { Task } from './Task';
+import { Builder, BuilderOptions, Task } from './Task';
 import chokidar from 'chokidar';
 import { getSource, getWatchDirs } from './sourceInternal';
-
-export interface BuilderOptions {
-  dryRun?: boolean;
-  watchMode?: boolean;
-  targets?: string[];
-}
-
-/** Represents a chain of pipeline stages that produce some output. */
-export interface Builder {
-  build(options: BuilderOptions): Promise<void>;
-  isModified(): Promise<boolean>;
-  getName(): string;
-}
+import './TransformTask';
+import './OutputFileTask';
 
 /** @internal */
 export interface Target {
@@ -203,4 +192,9 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
   }
 
   return true;
+}
+
+/** Remove all targets. Mainly used for testing. */
+export function clearTargets() {
+  targets.length = 0;
 }

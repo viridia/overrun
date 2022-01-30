@@ -56,4 +56,5 @@ export async function build() {
   }
 }
 
-//   --tasks, -T             Print the task dependency tree for the loaded
+// --tasks, -T        Print the task dependency tree for the loaded
+// --incremental, -i  Only build targets that are out of date

@@ -1,4 +1,4 @@
-import { Path } from './Paths';
+import { Path } from './Path';
 import { SourceFileTask } from './SourceFileTask';
 import { sources, getOrCreateSourceTask } from './sourceInternal';
 

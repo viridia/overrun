@@ -18,13 +18,14 @@ A task which reads the contents of a directory.
 
 - [constructor](index.DirectoryTask.md#constructor)
 
-### Accessors
+### Properties
 
 - [path](index.DirectoryTask.md#path)
 
 ### Methods
 
 - [addDependent](index.DirectoryTask.md#adddependent)
+- [dest](index.DirectoryTask.md#dest)
 - [files](index.DirectoryTask.md#files)
 - [match](index.DirectoryTask.md#match)
 - [pipe](index.DirectoryTask.md#pipe)
@@ -35,13 +36,13 @@ A task which reads the contents of a directory.
 
 ### constructor
 
-• **new DirectoryTask**(`dirPath`)
+• **new DirectoryTask**(`path`)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `dirPath` | [`Path`](index.Path.md) |
+| `path` | [`Path`](index.Path.md) |
 
 #### Overrides
 
@@ -49,25 +50,19 @@ A task which reads the contents of a directory.
 
 #### Defined in
 
-[DirectoryTask.ts:12](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L12)
+[DirectoryTask.ts:12](https://github.com/viridia/overrun/blob/2973034/src/DirectoryTask.ts#L12)
 
-## Accessors
+## Properties
 
 ### path
 
-• `get` **path**(): [`Path`](index.Path.md)
+• `Readonly` **path**: [`Path`](index.Path.md)
 
-#### Returns
+The filesystem location associated with the build artifact produced by this task.
 
-[`Path`](index.Path.md)
+#### Inherited from
 
-#### Overrides
-
-AbstractTask.path
-
-#### Defined in
-
-[DirectoryTask.ts:19](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L19)
+[AbstractTask](index.AbstractTask.md).[path](index.AbstractTask.md#path)
 
 ## Methods
 
@@ -95,7 +90,44 @@ be out of date when any of its dependencies are out of date.
 
 #### Defined in
 
-[DirectoryTask.ts:17](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L17)
+[DirectoryTask.ts:17](https://github.com/viridia/overrun/blob/2973034/src/DirectoryTask.ts#L17)
+
+___
+
+### dest
+
+▸ **dest**(`baseOrPath`, `fragment?`): `OutputFileTask`
+
+Create an output task that writes to a specified location. This method is only
+valid if the output type of the task is a string or Buffer object.
+
+Examples:
+
+```ts
+path.dest(newPath);
+path.dest(newBase, null);
+path.dest(null, newFragment);
+path.dest(path => path.withBase(newBase));
+```
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `baseOrPath` | ``null`` \| `string` \| [`Path`](index.Path.md) \| [`PathMapping`](../modules/index.md#pathmapping) |
+| `fragment?` | ``null`` \| `string` |
+
+#### Returns
+
+`OutputFileTask`
+
+#### Inherited from
+
+[AbstractTask](index.AbstractTask.md).[dest](index.AbstractTask.md#dest)
+
+#### Defined in
+
+[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L24)
 
 ___
 
@@ -111,7 +143,7 @@ Create a task for every file in the directory.
 
 #### Defined in
 
-[DirectoryTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L24)
+[DirectoryTask.ts:20](https://github.com/viridia/overrun/blob/2973034/src/DirectoryTask.ts#L20)
 
 ___
 
@@ -133,7 +165,7 @@ Create a task for every file that matches the glob.
 
 #### Defined in
 
-[DirectoryTask.ts:29](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L29)
+[DirectoryTask.ts:25](https://github.com/viridia/overrun/blob/2973034/src/DirectoryTask.ts#L25)
 
 ___
 
@@ -141,7 +173,8 @@ ___
 
 ▸ **pipe**<`Out`, `Dependant`\>(`taskGen`): `Dependant`
 
-Pipe the output of this task through another task.
+Pipe the output of this task through another task. Similar to `transform()`, except that
+it allows more flexibility in processing.
 
 #### Type parameters
 
@@ -152,15 +185,13 @@ Pipe the output of this task through another task.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `taskGen` | (`input`: [`DirectoryTask`](index.DirectoryTask.md)) => `Dependant` | A function which creates a task, given a reference to this task. |
+| Name | Type |
+| :------ | :------ |
+| `taskGen` | (`input`: [`DirectoryTask`](index.DirectoryTask.md)) => `Dependant` |
 
 #### Returns
 
 `Dependant`
-
-A new Task which transforms the output when run.
 
 #### Inherited from
 
@@ -168,7 +199,7 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:24](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L24)
+[AbstractTask.ts:20](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L20)
 
 ___
 
@@ -190,7 +221,7 @@ operators are not required to do this.
 
 #### Defined in
 
-[DirectoryTask.ts:47](https://github.com/viridia/overrun/blob/20a7ff0/src/DirectoryTask.ts#L47)
+[DirectoryTask.ts:41](https://github.com/viridia/overrun/blob/2973034/src/DirectoryTask.ts#L41)
 
 ___
 
@@ -198,7 +229,12 @@ ___
 
 ▸ **transform**<`Out`\>(`transform`): [`Task`](../interfaces/index.Task.md)<`Out`\>
 
-Transform the output of this task through a function.
+Creates a new task which transforms the output of this task's data. The `transform`
+argument is a function which accepts the task's output as an argument, and which returns
+either the transformed data or a promise which resolves to that data.
+
+The task created will list the current task as a dependency, so if the source file is changed
+the transform task will be re-run.
 
 #### Type parameters
 
@@ -208,15 +244,13 @@ Transform the output of this task through a function.
 
 #### Parameters
 
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `transform` | (`input`: [`Path`](index.Path.md)[]) => `Out` \| `Promise`<`Out`\> | A function which accepts the input type and returns the output type. |
+| Name | Type |
+| :------ | :------ |
+| `transform` | (`input`: [`Path`](index.Path.md)[]) => `Out` \| `Promise`<`Out`\> |
 
 #### Returns
 
 [`Task`](../interfaces/index.Task.md)<`Out`\>
-
-A new Task which transforms the output when run.
 
 #### Inherited from
 
@@ -224,4 +258,4 @@ A new Task which transforms the output when run.
 
 #### Defined in
 
-[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/20a7ff0/src/AbstractTask.ts#L16)
+[AbstractTask.ts:16](https://github.com/viridia/overrun/blob/2973034/src/AbstractTask.ts#L16)

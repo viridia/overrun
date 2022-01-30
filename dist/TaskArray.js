@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TaskArray = void 0;
 const AbstractTask_1 = require("./AbstractTask");
+const ctors_1 = require("./ctors");
 /** Represents an array of tasks. These are usually created when operating on collections of
     source files.
 
@@ -10,17 +11,14 @@ const AbstractTask_1 = require("./AbstractTask");
  */
 class TaskArray extends AbstractTask_1.AbstractTask {
     sources;
-    dirPath;
-    constructor(sources, dirPath) {
+    path;
+    constructor(sources, path) {
         super();
         this.sources = sources;
-        this.dirPath = dirPath;
+        this.path = path;
     }
     addDependent(dependent, dependencies) {
         this.sources.forEach(src => src.addDependent(dependent, dependencies));
-    }
-    get path() {
-        return this.dirPath;
     }
     /** The array of tasks contained in this `TaskArray`. */
     items() {
@@ -31,7 +29,7 @@ class TaskArray extends AbstractTask_1.AbstractTask {
     }
     /** Works like Array.map(), except that the elements are tasks. */
     map(fn) {
-        return new TaskArray(this.sources.map(fn), this.dirPath);
+        return new TaskArray(this.sources.map(fn), this.path);
     }
     /** Returns the number of tasks in this `TaskArray`. */
     get length() {
@@ -48,7 +46,7 @@ class TaskArray extends AbstractTask_1.AbstractTask {
         @returns A new Task which produces the combined output of the reduction.
     */
     reduce(init, reducer) {
-        return new AbstractTask_1.TransformTask(this, async () => {
+        return ctors_1.taskContructors.transform(this, async () => {
             let result = init;
             for (let task of this.sources) {
                 result = await Promise.resolve(reducer(result, task));

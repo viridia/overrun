@@ -1,4 +1,4 @@
-/// <reference path="../dist/index.d.ts" />
+/// <reference path="../overrun.d.ts" />
 
 target(source('./source', 'demo.txt').pipe(output({ base: './output' })));
 target(

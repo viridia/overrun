@@ -4,49 +4,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OutputFileTask = void 0;
-const promises_1 = require("fs/promises");
-const Paths_1 = require("./Paths");
-const sourceInternal_1 = require("./sourceInternal");
-const errors_1 = require("./errors");
-const AbstractTask_1 = require("./AbstractTask");
-const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+const promises_1 = require("fs/promises");
+const path_1 = __importDefault(require("path"));
 const util_1 = __importDefault(require("util"));
+const AbstractTask_1 = require("./AbstractTask");
+const ctors_1 = require("./ctors");
+const errors_1 = require("./errors");
+const sourceInternal_1 = require("./sourceInternal");
 const mkdir = util_1.default.promisify(fs_1.default.mkdir);
 const exists = util_1.default.promisify(fs_1.default.exists);
-/** A task which reads a source file and returns a buffer. */
+/** A task which writes to an putput file. */
+// Note: This is in the same module to avoid circular dependencies.
 class OutputFileTask extends AbstractTask_1.AbstractTask {
     source;
-    filePath;
+    path;
     dependencies = new Set();
     stats;
-    constructor(source, options) {
+    /** Construct a new OutputFileTask.
+        @param source The input task that provides the data to output.
+        @param path The location of where to write the data.
+     */
+    constructor(source, path) {
         super();
         this.source = source;
+        this.path = path;
         source.addDependent(this, this.dependencies);
-        if (options?.path) {
-            if (typeof options.path === 'string') {
-                this.filePath = new Paths_1.Path(options.path, options?.base);
-            }
-            else if (options.base) {
-                this.filePath = options.path.withBase(options.base);
-            }
-            else {
-                this.filePath = options.path;
-            }
-        }
-        else if (options?.base && this.source.path) {
-            this.filePath = this.source.path.withBase(options.base);
-        }
-        else if (this.source.path) {
-            this.filePath = this.source.path;
-        }
-        else {
-            throw new errors_1.BuildError('Write task must specify an output path.');
-        }
-    }
-    get path() {
-        return this.filePath;
     }
     getName() {
         return (this.path ?? this.source.path).fragment;
@@ -80,8 +63,8 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
     /** Run all tasks and generate the file. */
     async build(options) {
         // Don't allow overwriting of source files.
-        const fullPath = this.filePath.complete;
-        if (sourceInternal_1.isSource(this.filePath)) {
+        const fullPath = this.path.complete;
+        if (sourceInternal_1.isSource(this.path)) {
             throw new errors_1.BuildError(`Cannot overwrite source file '${fullPath}'.`);
         }
         // Ensure output directory exists.
@@ -124,3 +107,4 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
     }
 }
 exports.OutputFileTask = OutputFileTask;
+ctors_1.taskContructors.output = (source, path) => new OutputFileTask(source, path);

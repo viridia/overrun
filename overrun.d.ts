@@ -1,1 +1,1 @@
-export * from './dist';
+/// <reference path="./dist/index.d.ts" />

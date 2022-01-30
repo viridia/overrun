@@ -15,7 +15,7 @@ target(
   'images',
   directory(__dirname, 'images')
     .match('*.png')
-    .map(src => src.pipe(output({ base: 'output' })))
+    .map(src => src.dest('output', null))
 );
 ```
 
@@ -36,7 +36,7 @@ target(
   'images',
   directory(__dirname, 'images')
     .match('*.png')
-    .map(src => src.pipe(output({ base: 'output' })))
+    .map(src => src.dest('output', null))
 );
 
 build();
@@ -67,7 +67,7 @@ target(
           await gltf.transform(resample(), dedup());
           return Buffer.from(io.writeBinary(gltf));
         })
-        .pipe(output({ base: dstBase }))
+        .dest(dstBase, null)
     )
 );
 
@@ -96,12 +96,9 @@ The source task can represent either a single source file (specified with the `s
 directive), or it can represent a source directory containing multiple source files (specified via
 `directory()`).
 
-Subsequent tasks can be defined by calling either `.transform()`, `.pipe()` or `.reduce()` on
+Subsequent tasks can be defined by calling either `.transform()`, `.pipe()` or `.dest()` on
 the previous task. Each of these methods generates a new task definition, which depends on
 the previous task.
-
-Finally, the transformed data can be written to an output file by piping it to an `output()`
-task.
 
 ## Concepts: Path objects
 
@@ -119,9 +116,9 @@ directory structure; and it is frequently the case that these two hierarchies ar
 other, or at least share some structural similarities.
 
 As such, it is often convenient to be able to manipulate paths by swapping out the `source` part of
-the path and replacing it with the `output` location, while leaving the rest of the path unchanged.
-`Path` objects provide a means to do this easily, although it is not required that they be used
-this way.
+the path and replacing it with the destination directory, while leaving the rest of the
+path unchanged. `Path` objects provide a means to do this easily, although it is not required
+that they be used this way.
 
 Internally, a `Path` object contains two strings: a "base" and a "fragment". The "base" represents
 the root directory of your build (either source or destination), while the "fragment" represents
@@ -134,6 +131,19 @@ absolute path.
 The canonical way to construct a Path is via `Path.from()`. This has two forms, one which takes
 a single argument which is a complete path (either absolute or relative to the current directory),
 and the other form which accepts a base and a fragment path. The method `.withBase(newBase)` can be used construct a copy of the current path but with a different base path.
+
+## Controlling output locations
+
+The `.dest()` method of a Task creates a new output task which writes the result of the previous
+task to a file. This method accepts parameters which modify the output path, using the path
+of the original source file as a basis. It has several forms:
+
+* `.dest(<path>)` - replace the entire source path with `path`.
+* `.dest(<base>, null)` - replace only the base portion of the path.
+* `.dest(null, <fragment>)` - replace only the fragment portion of the path.
+* `.dest(<base>, <fragment>)` - replace both the base and fragment portions of the path.
+* `.dest(<callback>)` - transform the path using a function, for
+  example: `task.dest(path => path.withExtension('.jpg'))` uses the original source path, but with the file extension changed to be `.jpg`.
 
 # Build file commands
 
@@ -223,7 +233,7 @@ target(
     .transform(str => JSON.parse(str))
     .transform(sortKeys) // Some function that changes the JSON
     .transform(json => JSON.stringify(json))
-    .pipe(output({ base: dstBase }))
+    .dest(dstBase, null)
 );
 ```
 
@@ -272,7 +282,7 @@ target(
       });
     });
     .transform(json => JSON.stringify(json))
-    .pipe(output({ base: dstBase }))
+    .dest(dstBase, null)
 );
 ```
 
@@ -292,14 +302,12 @@ target(
       });
     })
     .transform(json => JSON.stringify(json))
-    .pipe(output({ base: dstBase }))
+    .dest(dstBase, null)
 );
 ```
 
 Note that any function that conforms to the `taskGen` signature - that is, takes in one task and
-returns another - is for all intents and purposes a plugin. For example, the `output()` function
-is simply a function which returns another function that is a task generator, one that
-generates an `OutputFileTask`.
+returns another - is for all intents and purposes a plugin.
 
 # Task arrays - map() and reduce()
 
@@ -327,7 +335,7 @@ target(
   "records",
   directory(srcBase, '')
     .match("*.json")
-    .map((src) => src.pipe(output({ base: dstBase })))
+    .map((src) => src.dest(dstBase, null))
 );
 ```
 
@@ -355,7 +363,7 @@ target(
   directory(srcBase, '')
     .match("*.json")
     .reduce('', (acc, src) => src + acc)
-    .pipe(output({ base: dstBase, path: 'combined.txt' }))
+    .dest(dstBase, 'combined.txt')
 );
 ```
 

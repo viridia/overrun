@@ -1,17 +1,15 @@
 /// <reference types="node" />
-import { Path } from './Paths';
-import { SourceTask, Task } from './Task';
+import { Path } from './Path';
 import { AbstractTask } from "./AbstractTask";
+import type { SourceTask, Task } from './Task';
 import { Stats } from 'fs';
 /** A task which reads a source file and returns a buffer. */
 export declare class SourceFileTask extends AbstractTask<Buffer> {
-    private filePath;
+    readonly path: Path;
     private readonly dependants;
     private stats?;
-    private lastModified;
-    constructor(filePath: Path, stats?: Stats);
+    constructor(path: Path, stats?: Stats);
     addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
-    get path(): Path;
     /** Return the modification date of this source file. */
     getModTime(): Promise<Date>;
     /** Return the output of the task. */

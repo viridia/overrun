@@ -11,17 +11,17 @@ nav_order: 4
 This example simply copies audio files with the extension `.ogg`.
 
 ```ts
-import path from "path";
-import { directory, target, output, DirectoryTask } from "overrun";
+import path from 'path';
+import { directory, target, output, DirectoryTask } from 'overrun';
 
-const srcBase = path.resolve(__dirname, "../myproject/assets");
-const dstBase = path.resolve(__dirname, "../myproject/dist/assets");
+const srcBase = path.resolve(__dirname, '../myproject/assets');
+const dstBase = path.resolve(__dirname, '../myproject/dist/assets');
 
 target(
-  "audio",
-  directory(`${srcBase}/audio`, "")
-    .match("*.ogg")
-    .map((src) => src.pipe(output({ base: `${dstBase}/audio/fx` })))
+  'audio',
+  directory(`${srcBase}/audio`, '')
+    .match('*.ogg')
+    .map((src) => src.dest(`${dstBase}/audio/fx`))
 );
 ```
 
@@ -31,11 +31,11 @@ This example collects source files using a wildcard match and then generates a J
 file with the names of all the source files found.
 
 ```ts
-import path from "path";
-import { directory, target, output } from "overrun";
+import path from 'path';
+import { directory, target, output } from 'overrun';
 
-const srcBase = path.resolve(__dirname, "../myproject/assets");
-const dstBase = path.resolve(__dirname, "../myproject/dist/assets");
+const srcBase = path.resolve(__dirname, '../myproject/assets');
+const dstBase = path.resolve(__dirname, '../myproject/dist/assets');
 
 // Helper to build catalog index.
 const catalogIndex = (pattern: string) => {
@@ -49,10 +49,10 @@ const catalogIndex = (pattern: string) => {
 
 // Scenery index file.
 target(
-  "scenery-index",
-  directory(srcBase, "scenery")
-    .pipe(catalogIndex("*.glb"))
-    .pipe(output({ base: dstBase, path: "scenery/index.json" }))
+  'scenery-index',
+  directory(srcBase, 'scenery')
+    .pipe(catalogIndex('*.glb'))
+    .dest(dstBase, 'scenery/index.json')
 );
 
 ```
@@ -63,13 +63,13 @@ This example finds GLTF files with the extendion `.glb` and runs a number of opt
 passes on them, using the `transform()` method.
 
 ```ts
-import path from "path";
-import { directory, target, output } from "overrun";
-import { NodeIO, Document, Logger } from "@gltf-transform/core";
-import { resample, dedup } from "@gltf-transform/functions";
+import path from 'path';
+import { directory, target, output } from 'overrun';
+import { NodeIO, Document, Logger } from '@gltf-transform/core';
+import { resample, dedup } from '@gltf-transform/functions';
 
-const srcBase = path.resolve(__dirname, "../myproject/assets");
-const dstBase = path.resolve(__dirname, "../myproject/dist/assets");
+const srcBase = path.resolve(__dirname, '../myproject/assets');
+const dstBase = path.resolve(__dirname, '../myproject/dist/assets');
 
 const io = new NodeIO();
 io.setLogger(new Logger(Logger.Verbosity.ERROR));
@@ -81,10 +81,10 @@ const modelOpt = async (src: Buffer): Promise<Buffer> => {
 };
 
 target(
-  "characters",
-  directory(srcBase, "characters")
-    .match("*.glb")
-    .map((src) => src.transform(modelOpt).pipe(output({ base: dstBase })))
+  'characters',
+  directory(srcBase, 'characters')
+    .match('*.glb')
+    .map((src) => src.transform(modelOpt).dest(dstBase, null))
 );
 ```
 
@@ -94,19 +94,19 @@ This example optimizes icons using SVGO. Because SVGO wants to know the file pat
 merely its contents, we make a `pipe()` operator rather than the simpler `transform()` method.
 
 ```ts
-import path from "path";
-import { directory, target, output, SourceFileTask, WritableTask} from "overrun";
-import { optimize } from "svgo";
+import path from 'path';
+import { directory, target, output, SourceFileTask, WritableTask} from 'overrun';
+import { optimize } from 'svgo';
 
-const srcBase = path.resolve(__dirname, "../myproject/assets");
-const dstBase = path.resolve(__dirname, "../myproject/dist/assets");
+const srcBase = path.resolve(__dirname, '../myproject/assets');
+const dstBase = path.resolve(__dirname, '../myproject/dist/assets');
 
 const svgConvert = () => {
   return (src: SourceFileTask): WritableTask => {
     return src.transform<string>((srcBuff) => {
       return optimize(srcBuff.toString(), {
         path: src.path,
-        plugins: ["preset-default", "prefixIds"],
+        plugins: ['preset-default', 'prefixIds'],
       }).data;
     });
   };
@@ -114,10 +114,10 @@ const svgConvert = () => {
 
 // SVG files.
 target(
-  "svg/modifiers",
-  directory(srcBase, "modifiers")
-    .match("*.svg")
-    .map((src) => src.pipe(svgConvert()).pipe(output({ base: dstBase })))
+  'svg/modifiers',
+  directory(srcBase, 'modifiers')
+    .match('*.svg')
+    .map((src) => src.pipe(svgConvert()).dest(dstBase, null))
 );
 ```
 

@@ -6,13 +6,12 @@ const promises_1 = require("fs/promises");
 const errors_1 = require("./errors");
 /** A task which reads a source file and returns a buffer. */
 class SourceFileTask extends AbstractTask_1.AbstractTask {
-    filePath;
+    path;
     dependants = new Set();
     stats;
-    lastModified = new Date();
-    constructor(filePath, stats) {
+    constructor(path, stats) {
         super();
-        this.filePath = filePath;
+        this.path = path;
         if (stats) {
             this.stats = Promise.resolve(stats);
         }
@@ -20,9 +19,6 @@ class SourceFileTask extends AbstractTask_1.AbstractTask {
     addDependent(dependent, dependencies) {
         this.dependants.add(dependent);
         dependencies.add(this);
-    }
-    get path() {
-        return this.filePath;
     }
     /** Return the modification date of this source file. */
     getModTime() {
@@ -45,7 +41,6 @@ class SourceFileTask extends AbstractTask_1.AbstractTask {
                 if (!st.isFile()) {
                     throw new errors_1.BuildError(`'${srcPath}' is not a regular file.`);
                 }
-                this.lastModified = st.mtime;
                 return st;
             }, err => {
                 if (err.code === 'ENOENT') {
