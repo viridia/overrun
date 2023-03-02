@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AbstractTask = void 0;
 const ctors_1 = require("./ctors");
 /** An abstract base class useful for defining custom tasks. It implements most of the methods
-    of the `Task` interface.
+    of the {@link Task} interface.
  */
 class AbstractTask {
     transform(transform) {

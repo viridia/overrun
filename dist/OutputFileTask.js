@@ -14,14 +14,13 @@ const errors_1 = require("./errors");
 const sourceInternal_1 = require("./sourceInternal");
 const mkdir = util_1.default.promisify(fs_1.default.mkdir);
 const exists = util_1.default.promisify(fs_1.default.exists);
-/** A task which writes to an putput file. */
-// Note: This is in the same module to avoid circular dependencies.
+/** A task which writes to an output file. */
 class OutputFileTask extends AbstractTask_1.AbstractTask {
     source;
     path;
     dependencies = new Set();
     stats;
-    /** Construct a new OutputFileTask.
+    /** Construct a new {@link OutputFileTask}.
         @param source The input task that provides the data to output.
         @param path The location of where to write the data.
      */

@@ -142,13 +142,13 @@ class Path {
                 return newBaseOrPath(this);
             }
         }
-        if (typeof newFragment === undefined) {
+        if (newFragment === undefined) {
             // We're replacing the entire path
             if (newBaseOrPath instanceof Path) {
                 return newBaseOrPath;
             }
             else if (typeof newBaseOrPath === 'string') {
-                return new Path(newBaseOrPath);
+                return Path.from(newBaseOrPath);
             }
             else {
                 return this;

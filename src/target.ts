@@ -3,7 +3,7 @@ import { TaskArray } from './TaskArray';
 import { BuildError } from './errors';
 import { Builder, BuilderOptions, Task } from './Task';
 import chokidar from 'chokidar';
-import { getSource, getWatchDirs } from './sourceInternal';
+import { getDirectoryTask, getSourceTask, getWatchDirs } from './sourceInternal';
 import './TransformTask';
 import './OutputFileTask';
 
@@ -108,20 +108,20 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
     targetsToBuild.map(async ({ name, builders }) => {
       // const toBuild = await checkOutOfDateTargets(builders);
       // if (toBuild.size > 0) {
-        const promises = builders.map(b =>
-          b.build(options).catch(err => {
-            if (err instanceof BuildError) {
-              console.error(`${c.blue('Target')} ${c.magentaBright(name)}: ${c.red(err.message)}`);
-            } else {
-              console.log(`Not a build error?`);
-              console.error(err);
-            }
-            throw err;
-          })
-        );
-        return Promise.all(promises).then(() => {
-          console.log(`${c.greenBright('Finished')}: ${name}`);
-        });
+      const promises = builders.map(b =>
+        b.build(options).catch(err => {
+          if (err instanceof BuildError) {
+            console.error(`${c.blue('Target')} ${c.magentaBright(name)}: ${c.red(err.message)}`);
+          } else {
+            console.log(`Not a build error?`);
+            console.error(err);
+          }
+          throw err;
+        })
+      );
+      return Promise.all(promises).then(() => {
+        console.log(`${c.greenBright('Finished')}: ${name}`);
+      });
       // } else {
       //   console.log(`${c.cyanBright('Already up to date')}: ${name}`);
       //   return Promise.resolve();
@@ -179,12 +179,23 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
 
     watcher.on('change', (path, stats) => {
       if (path && stats) {
-        const source = getSource(path);
-        if (source) {
-          source.updateStats(stats);
-          isChanged = true;
-          if (!debounceTimer) {
-            debounceTimer = global.setTimeout(rebuild, 300);
+        if (stats.isFile()) {
+          const task = getSourceTask(path);
+          if (task) {
+            task.updateStats(stats);
+            isChanged = true;
+            if (!debounceTimer) {
+              debounceTimer = global.setTimeout(rebuild, 300);
+            }
+          }
+        } else if (stats.isDirectory()) {
+          const task = getDirectoryTask(path);
+          if (task) {
+            task.updateStats(stats);
+            isChanged = true;
+            if (!debounceTimer) {
+              debounceTimer = global.setTimeout(rebuild, 300);
+            }
           }
         }
       }

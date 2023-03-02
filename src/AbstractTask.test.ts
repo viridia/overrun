@@ -1,3 +1,4 @@
+import { describe, beforeEach, test, expect } from 'vitest';
 import { AbstractTask } from './AbstractTask';
 import { Path } from './Path';
 import { SourceTask, Task } from './Task';

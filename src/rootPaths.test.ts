@@ -1,3 +1,4 @@
+import { test, expect } from 'vitest';
 import { rootPaths } from "./rootPaths"
 
 test('rootPaths', () => {

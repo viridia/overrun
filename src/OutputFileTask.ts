@@ -6,7 +6,7 @@ import { AbstractTask } from './AbstractTask';
 import { taskContructors } from './ctors';
 import { BuildError } from './errors';
 import type { Path } from './Path';
-import { isSource } from './sourceInternal';
+import { hasSourceTask } from './sourceInternal';
 import type { Builder, BuilderOptions, SourceTask, Task, WritableTask } from './Task';
 
 const mkdir = util.promisify(fs.mkdir);
@@ -62,7 +62,7 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
   public async build(options: BuilderOptions): Promise<void> {
     // Don't allow overwriting of source files.
     const fullPath = this.path.complete;
-    if (isSource(this.path)) {
+    if (hasSourceTask(this.path)) {
       throw new BuildError(`Cannot overwrite source file '${fullPath}'.`);
     }
 

@@ -1,4 +1,5 @@
 import fg from 'fast-glob';
+import type { Stats } from 'fs';
 import path from 'path';
 import { AbstractTask } from './AbstractTask';
 import { Path } from './Path';
@@ -6,9 +7,13 @@ import type { SourceFileTask } from './SourceFileTask';
 import { getOrCreateSourceTask } from './sourceInternal';
 import type { SourceTask, Task } from './Task';
 import { TaskArray } from './TaskArray';
+import { stat } from 'fs/promises';
+import { BuildError } from './errors';
 
 /** A task which reads the contents of a directory. */
 export class DirectoryTask extends AbstractTask<Path[]> {
+  private stats?: Promise<Stats>;
+
   constructor(public readonly path: Path) {
     super();
   }
@@ -38,17 +43,46 @@ export class DirectoryTask extends AbstractTask<Path[]> {
     );
   }
 
-  public read(): Promise<Path[]> {
+  public async read(): Promise<Path[]> {
     const base = this.path.base;
-    return fg(path.join(this.path.fragment, '*'), {
+    await this.prep();
+    const files = await fg(path.join(this.path.fragment, '*'), {
       cwd: base && path.resolve(base),
       onlyFiles: true,
       globstar: true,
       dot: true,
-    }).then(files =>
-      files.map(file => {
-        return Path.from(base!, file);
-      })
-    );
+    });
+
+    return files.map(file => {
+      return Path.from(base!, file);
+    });
+  }
+
+  /** Used when we detect the file is modified.
+      @internal
+  */
+  public updateStats(stats: Stats) {
+    this.stats = Promise.resolve(stats);
+  }
+
+  private prep(): Promise<Stats> {
+    const srcPath = this.path.complete;
+    if (!this.stats) {
+      this.stats = stat(srcPath).then(
+        st => {
+          if (!st.isDirectory()) {
+            throw new BuildError(`'${srcPath}' is not a directory.`);
+          }
+          return st;
+        },
+        err => {
+          if (err.code === 'ENOENT') {
+            throw new BuildError(`Input file '${srcPath}' not found.`);
+          }
+          throw err;
+        }
+      );
+    }
+    return this.stats;
   }
 }

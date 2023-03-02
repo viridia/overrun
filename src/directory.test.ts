@@ -1,10 +1,11 @@
+import { describe, beforeEach, test, expect } from 'vitest';
 import path from 'path';
 import { directory } from './directory';
-import { clearSources } from './sourceInternal';
+import { clearSourceTasks } from './sourceInternal';
 
 describe('directory', () => {
   beforeEach(() => {
-    clearSources();
+    clearSourceTasks();
   });
 
   test('files()', async () => {

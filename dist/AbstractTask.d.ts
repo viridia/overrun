@@ -4,7 +4,7 @@ import type { Path, PathMapping } from './Path';
 import type { SourceTask, Task, WritableTask } from './Task';
 declare type OutputType<T> = T extends string | Buffer ? OutputFileTask : never;
 /** An abstract base class useful for defining custom tasks. It implements most of the methods
-    of the `Task` interface.
+    of the {@link Task} interface.
  */
 export declare abstract class AbstractTask<T> implements Task<T> {
     abstract addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;

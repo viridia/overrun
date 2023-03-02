@@ -2,6 +2,7 @@ import { Path } from './Path';
 import type { TaskArray } from "./TaskArray";
 import { OutputFileTask } from './OutputFileTask';
 import { WritableTask } from './Task';
+/** @deprecated */
 interface OutputOptions {
     path?: string | Path;
     base?: string | Path;
