@@ -13,6 +13,8 @@ export abstract class AbstractTask<T> implements Task<T> {
   public abstract readonly path: Path;
   public abstract read(): Promise<T>;
 
+  public dispose(): void {}
+
   public transform<Out>(transform: (input: T) => Promise<Out> | Out): Task<Out> {
     return taskContructors.transform<T, Out>(this, transform);
   }

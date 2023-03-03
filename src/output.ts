@@ -30,7 +30,7 @@ function combinePaths(src: Path, options?: OutputOptions): Path {
  */
 export function output(options?: OutputOptions): (source: WritableTask) => OutputFileTask;
 export function output(options?: OutputOptions): (source: WritableTask[]) => OutputFileTask[];
-export function output(options?: OutputOptions): (source: TaskArray<WritableTask>) => OutputFileTask[];
+export function output(options?: OutputOptions): (source: TaskArray<any, WritableTask>) => OutputFileTask[];
 export function output(options?: OutputOptions): (source: any) => OutputFileTask | OutputFileTask[] {
   return (source: WritableTask | WritableTask[]) => {
     if (Array.isArray(source)) {

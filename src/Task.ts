@@ -7,6 +7,9 @@ export type TransformFnAsync<In, Out> = (input: In) => Promise<Out> | Out;
     has a single template parameter, which represents the type of data produced.
   */
 export interface Task<T> {
+  /** Dispose of this task - this may be called if a file within a directory was deleted. */
+  dispose(): void;
+
   /** Mark a task as being dependent on this task, meaning that the target is considered to
       be out of date when any of its dependencies are out of date. */
   addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;

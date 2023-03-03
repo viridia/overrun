@@ -8,7 +8,7 @@
     "strict": true,
     "strictNullChecks": true,
     "lib": ["esnext"],
-    "types": ["node", "jest"],
+    "types": ["node"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true

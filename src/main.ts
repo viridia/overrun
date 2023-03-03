@@ -37,18 +37,20 @@ export const argv = yargs(hideBin(process.argv))
   })
   .describe('no-color', 'Disable colored output.').argv;
 
-if (argv.color !== undefined) {
-  c.enabled = argv.color;
-}
-
-if (argv.cwd !== undefined) {
-  process.chdir(argv.cwd);
-}
-
 export async function build() {
-  const dryRun = argv['dry-run'];
-  const watchMode = argv['w'];
-  const success = await buildTargets({ dryRun, watchMode, targets: argv._.map(s => String(s)) });
+  const args = await argv;
+
+  if (args.color !== undefined) {
+    c.enabled = args.color;
+  }
+
+  if (args.cwd !== undefined) {
+    process.chdir(args.cwd);
+  }
+
+  const dryRun = args['dry-run'];
+  const watchMode = args['w'];
+  const success = await buildTargets({ dryRun, watchMode, targets: args._.map(s => String(s)) });
   if (!watchMode || !success) {
     process.exit(success ? 0 : 1);
   } else {

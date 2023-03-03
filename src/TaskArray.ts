@@ -1,6 +1,6 @@
 import { Path } from './Path';
 import { SourceTask, Task } from './Task';
-import { AbstractTask } from "./AbstractTask";
+import { AbstractTask } from './AbstractTask';
 import { taskContructors } from './ctors';
 
 /** Represents an array of tasks. These are usually created when operating on collections of
@@ -9,8 +9,15 @@ import { taskContructors } from './ctors';
     The `transform()` and `pipe()` methods operate on the entire collection of tasks. To
     process tasks individually, use the `map()` or `reduce()` methods.
  */
-export class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
-  constructor(private sources: T2[], public readonly path: Path) {
+export class TaskArray<Input, T2 extends Task<any>> extends AbstractTask<T2[]> {
+  private inputsModified = true;
+  private cachedTasks = new Map<Input, T2>();
+
+  constructor(
+    private entries: () => ReadonlyArray<Input>,
+    private factory: (input: Input) => T2,
+    public readonly path: Path
+  ) {
     super();
   }
 
@@ -28,8 +35,11 @@ export class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
   }
 
   /** Works like Array.map(), except that the elements are tasks. */
-  public map<Out, Depends extends Task<Out>>(fn: (input: T2) => Depends): TaskArray<Depends> {
-    return new TaskArray(this.sources.map(fn), this.path);
+  public map<Out, Depends extends Task<Out>>(fn: (input: T2) => Depends): TaskArray<T2, Depends> {
+    // OK so this needs to change to:
+    // a lazy function which produces the list of sources, and which only constructs the new
+    // derived task when the list changes. Or do we care? Can we simply dispose?
+    return new TaskArray(() => this.sources, fn, this.path);
   }
 
   /** Returns the number of tasks in this `TaskArray`. */
@@ -56,5 +66,35 @@ export class TaskArray<T2 extends Task<any>> extends AbstractTask<T2[]> {
       }
       return result;
     });
+  }
+
+  /** Signal that the list of inputs has changed. */
+  public setInputsModified() {
+    this.inputsModified = true;
+  }
+
+  // Lazily comput the list of sources. This may change in cases where a new file was
+  // added to a source directory.
+  private get sources(): T2[] {
+    if (this.inputsModified) {
+      this.inputsModified = false;
+
+      // Recompute the list of tasks from the entries.
+      // TODO: Reconcile changes to entries.
+      const entries = this.entries();
+      const tasksToDelete = new Set(this.cachedTasks.keys());
+      for (const entry of entries) {
+        tasksToDelete.delete(entry);
+        if (!this.cachedTasks.has(entry)) {
+          this.cachedTasks.set(entry, this.factory(entry));
+        }
+      }
+
+      for (const entry of tasksToDelete) {
+        this.cachedTasks.delete(entry);
+      }
+    }
+
+    return Array.from(this.cachedTasks.values());
   }
 }

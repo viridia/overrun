@@ -15,7 +15,7 @@ export interface Target {
 
 const targets: Target[] = [];
 
-type Builders = Builder | Builder[] | TaskArray<Builder & Task<unknown>>;
+type Builders = Builder | Builder[] | TaskArray<any, Builder & Task<unknown>>;
 
 /**
  *

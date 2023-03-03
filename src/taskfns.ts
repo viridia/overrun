@@ -7,10 +7,11 @@ import { TaskArray } from './TaskArray';
   */
 export function tee<In, Out, Dependant extends Task<Out>>(
   taskGens: ReadonlyArray<(input: Task<In>) => Dependant>
-): (input: Task<In>) => TaskArray<Task<Out>> {
+): (input: Task<In>) => TaskArray<(input: Task<In>) => Dependant, Task<Out>> {
   return input =>
     new TaskArray(
-      taskGens.map(t => t(input)),
+      () => taskGens,
+      t => t(input),
       input.path
     );
 }

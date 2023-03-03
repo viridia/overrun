@@ -22,25 +22,27 @@ export class DirectoryTask extends AbstractTask<Path[]> {
   public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {}
 
   /** Create a task for every file in the directory. */
-  public files(): TaskArray<SourceFileTask> {
+  public files(): TaskArray<string, SourceFileTask> {
     return this.match('*');
   }
 
   /** Create a task for every file that matches the glob. */
-  public match(pattern: string): TaskArray<SourceFileTask> {
+  public match(pattern: string): TaskArray<string, SourceFileTask> {
     const base = this.path.base;
-    const files = fg.sync(path.join(this.path.fragment, pattern), {
-      cwd: base && path.resolve(base),
-      onlyFiles: true,
-      globstar: true,
-    });
-
     return new TaskArray(
-      files.map(file => {
-        return getOrCreateSourceTask(Path.from(base!, file));
+      () => fg.sync(path.join(this.path.fragment, pattern), {
+        cwd: base && path.resolve(base),
+        onlyFiles: true,
+        globstar: true,
       }),
+      file => getOrCreateSourceTask(Path.from(base!, file)),
       this.path
     );
+  }
+
+  /** Return the modification date of this directory. */
+  public getModTime(): Promise<Date> {
+    return this.prep().then(st => st.mtime);
   }
 
   public async read(): Promise<Path[]> {
@@ -77,7 +79,7 @@ export class DirectoryTask extends AbstractTask<Path[]> {
         },
         err => {
           if (err.code === 'ENOENT') {
-            throw new BuildError(`Input file '${srcPath}' not found.`);
+            throw new BuildError(`Input directory '${srcPath}' not found.`);
           }
           throw err;
         }

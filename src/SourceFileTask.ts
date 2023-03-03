@@ -17,6 +17,10 @@ export class SourceFileTask extends AbstractTask<Buffer> {
     }
   }
 
+  public dispose(): void {
+    this.dependants.clear();
+  }
+
   public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {
     this.dependants.add(dependent);
     dependencies.add(this);
