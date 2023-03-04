@@ -9,4 +9,3 @@ export * from './target';
 export * from './Task';
 export * from './TransformTask';
 export * from './TaskArray';
-export * from './output';

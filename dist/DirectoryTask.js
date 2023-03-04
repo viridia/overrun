@@ -28,12 +28,12 @@ class DirectoryTask extends AbstractTask_1.AbstractTask {
     }
     /** Create a task for every file that matches the glob. */
     match(pattern) {
-        const base = this.path.base;
+        const root = this.path.root;
         return new TaskArray_1.TaskArray(() => fast_glob_1.default.sync(path_1.default.join(this.path.fragment, pattern), {
-            cwd: base && path_1.default.resolve(base),
+            cwd: root && path_1.default.resolve(root),
             onlyFiles: true,
             globstar: true,
-        }), file => sourceInternal_1.getOrCreateSourceTask(Path_1.Path.from(base, file)), this.path, this);
+        }), file => sourceInternal_1.getOrCreateSourceTask(Path_1.Path.from(root, file)), this.path, this);
     }
     getVersion() {
         return this.version;
@@ -42,15 +42,15 @@ class DirectoryTask extends AbstractTask_1.AbstractTask {
         this.version = version_1.nextVersion();
     }
     async read() {
-        const base = this.path.base;
+        const root = this.path.root;
         const files = await fast_glob_1.default(path_1.default.join(this.path.fragment, '*'), {
-            cwd: base && path_1.default.resolve(base),
+            cwd: root && path_1.default.resolve(root),
             onlyFiles: true,
             globstar: true,
             dot: true,
         });
         return files.map(file => {
-            return Path_1.Path.from(base, file);
+            return Path_1.Path.from(root, file);
         });
     }
 }

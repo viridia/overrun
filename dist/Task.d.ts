@@ -40,19 +40,21 @@ export interface Task<T> {
   
         ```ts
           path.dest(newPath);
-          path.dest(newBase, null);
+          path.dest(newRoot, null);
           path.dest(null, newFragment);
-          path.dest(path => path.withBase(newBase));
+          path.dest({ root: newRoot });
+          path.dest({ root: newRoot, fragment: newFragment });
+          path.dest(path => path.withRoot(newRoot));
         ```
   
-        @param baseOrPath New base path; if this is the sole argument, then the source path
+        @param rootOrPath New root path; if this is the sole argument, then the source path
           will be replaced entirely by this path. You can also pass in a callback function
-          which transforms the path. If null or undefined is passed, then the base path
+          which transforms the path. If null or undefined is passed, then the root path
           is unmodified.
-        @param fragment New fragment. This is appended to the base path. This is required
+        @param fragment New fragment. This is appended to the root path. This is required
           if the first argument is null or undefined.
     */
-    dest(this: Task<WritableData>, baseOrPath: Path | PathSpec | PathMapping | string | null, fragment?: string | null): OutputTask<string | Buffer>;
+    dest(this: Task<WritableData>, rootOrPath: Path | PathSpec | PathMapping | string | null, fragment?: string | null): OutputTask<string | Buffer>;
     /** Collect builders which need to be rebuilt.
         @param force If true, returns all builders regardless of whether they are out of date.
         @returns A promise which resolves to an array of builders to be built.

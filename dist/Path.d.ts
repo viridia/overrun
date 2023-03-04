@@ -1,6 +1,6 @@
 export declare type PathMapping = (path: Path) => Path;
 export interface PathSpec {
-    base?: string;
+    root?: string;
     fragment?: string;
 }
 /**
@@ -16,48 +16,44 @@ export interface PathSpec {
     path unchanged. `Path` objects provide a means to do this easily, although it is not required
     that they be used this way.
 
-    The `Path` object actually contains two path strings, known as the `base` and the `fragment`.
-    The `base` represents either the source or destination directory, while the `fragment`
-    represents the location of a file or directory within the base. The complete path is simply the
-    concatenation of `base` and `fragment` together.
+    The `Path` object actually contains two path strings, known as the `root` and the `fragment`.
+    The `root` represents either the source or destination directory, while the `fragment`
+    represents the location of a file or directory within the root. The complete path is simply the
+    concatenation of `root` and `fragment` together.
 
-    The `base` part of the path is optional; if not present then the `fragment` represents the
+    The `root` part of the path is optional; if not present then the `fragment` represents the
     complete path. (If the fragment is a relative path, it will be relative to the current working
     directory.)
 
-    The `base` path need not be an absolute path, although it often is. If it is a relative path,
+    The `root` path need not be an absolute path, although it often is. If it is a relative path,
     it will be resolved relative to the current working directory.
 
     The canonical way to construct a Path is via `Path.from()`, which has two forms:
  */
 export declare class Path {
+    /** The base portion of the path. */
+    readonly root: string | undefined;
     private readonly frag;
-    private readonly basepath;
     /** Create a path from a string or Path. This method has two overloaded forms:
   
         If supplied with a single argument, that argument represents the `fragment` part of the path.
-        Otherwise, the first argument is the `base` and the second argument is the `fragment`.
+        Otherwise, the first argument is the `root` and the second argument is the `fragment`.
   
-        You can also construct a `Path` object direcly by calling the constructor, however note that
-        the order of arguments is reversed, making the second parameter the optional one.
+        You can also construct a `Path` object direcly by calling the constructor.
     */
     static from(path: string | Path | PathSpec): Path;
-    static from(base: string | Path | PathSpec, fragment?: string): Path;
+    static from(path: string | Path | PathSpec, fragment?: string): Path;
     /** Construct a new path from a string. Note: this normalizes the path.
         @param fragment A string representing the file path.
-        @param base Optional base path, which `value` is relative to.
-  
-        If `base` is not present and value is a Path, it will use value.base as the base.
+        @param root Optional root path, which `value` is relative to.
     */
-    constructor(fragment: string, base?: string | Path);
-    /** The part of the path relative to the base. */
+    constructor(root: string | Path | undefined, fragment: string);
+    /** The part of the path relative to the root. */
     get fragment(): string;
-    /** The complete path, including both base and fragment. */
+    /** The complete path, including both root and fragment. Does not make the path absolute. */
     get complete(): string;
-    /** The complete absolute path, including both base and fragment. */
+    /** The complete absolute path, including both root and fragment. */
     get full(): string;
-    /** Return the base path. */
-    get base(): string | undefined;
     /** The filename extension, including the leading '.' */
     get ext(): string;
     /** The filename, without the directory or file extension. */
@@ -73,11 +69,11 @@ export declare class Path {
     /** Return a new Path object representing the concatenation of this path with one or
         more relative paths. */
     resolve(...fragment: string[]): Path;
-    /** Return a copy of this Path object, but with the base replaced by `base`.
-        @param ext The new base path.
+    /** Return a copy of this Path object, but with the root replaced by `root`.
+        @param ext The new root path.
     */
-    withBase(base: string | Path): Path;
-    /** Return a copy of this Path object, but with the fragment replaced by `base`.
+    withRoot(root: string | Path): Path;
+    /** Return a copy of this Path object, but with the fragment replaced by `fragment`.
         @param fragment The new path fragment.
     */
     withFragment(fragment: string): Path;
@@ -94,11 +90,11 @@ export declare class Path {
         @param newFilename The new filename, with extension.
     */
     withFilename(newFilename: string): Path;
-    /** Combine two paths, replacing either the base or the fragment or both.
-        @param newBaseOrPath Either a function which transforms the path, or the new base
+    /** Combine two paths, replacing either the root or the fragment or both.
+        @param newRootOrPath Either a function which transforms the path, or the new root
           of the path. If there is no second argument, then this represents the complete path.
         @param newFragment The new fragment. If this is `null` it means we want to keep the
           existing fragment. If it's a string, it means we want to replace it.
      */
-    compose(newBaseOrPath: Path | PathSpec | PathMapping | string | null, newFragment?: string | null): Path;
+    compose(newRootOrPath: Path | PathSpec | PathMapping | string | null, newFragment?: string | null): Path;
 }

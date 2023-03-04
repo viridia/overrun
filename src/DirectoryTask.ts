@@ -27,15 +27,15 @@ export class DirectoryTask extends AbstractTask<Path[]> {
 
   /** Create a task for every file that matches the glob. */
   public match(pattern: string): TaskArray<string, SourceFileTask> {
-    const base = this.path.base;
+    const root = this.path.root;
     return new TaskArray(
       () =>
         fg.sync(path.join(this.path.fragment, pattern), {
-          cwd: base && path.resolve(base),
+          cwd: root && path.resolve(root),
           onlyFiles: true,
           globstar: true,
         }),
-      file => getOrCreateSourceTask(Path.from(base!, file)),
+      file => getOrCreateSourceTask(Path.from(root!, file)),
       this.path,
       this
     );
@@ -50,16 +50,16 @@ export class DirectoryTask extends AbstractTask<Path[]> {
   }
 
   public async read(): Promise<Path[]> {
-    const base = this.path.base;
+    const root = this.path.root;
     const files = await fg(path.join(this.path.fragment, '*'), {
-      cwd: base && path.resolve(base),
+      cwd: root && path.resolve(root),
       onlyFiles: true,
       globstar: true,
       dot: true,
     });
 
     return files.map(file => {
-      return Path.from(base!, file);
+      return Path.from(root!, file);
     });
   }
 }

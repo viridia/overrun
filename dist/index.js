@@ -21,4 +21,3 @@ __exportStar(require("./target"), exports);
 __exportStar(require("./Task"), exports);
 __exportStar(require("./TransformTask"), exports);
 __exportStar(require("./TaskArray"), exports);
-__exportStar(require("./output"), exports);

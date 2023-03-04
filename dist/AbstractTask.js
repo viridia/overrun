@@ -13,8 +13,8 @@ class AbstractTask {
     pipe(taskGen) {
         return taskGen(this);
     }
-    dest(baseOrPath, fragment) {
-        return ctors_1.taskContructors.output(this, this.path.compose(baseOrPath, fragment));
+    dest(rootOrPath, fragment) {
+        return ctors_1.taskContructors.output(this, this.path.compose(rootOrPath, fragment));
     }
     async gatherOutOfDate(force) {
         return [];

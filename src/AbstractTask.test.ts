@@ -26,7 +26,7 @@ describe('AbstractTask', () => {
   });
 
   test('path', async () => {
-    expect(task.path.base).toBe('/a/b');
+    expect(task.path.root).toBe('/a/b');
     expect(task.path.fragment).toBe('c');
   });
 
@@ -36,14 +36,14 @@ describe('AbstractTask', () => {
 
   test('transform', async () => {
     const transform = task.transform(s => s.toUpperCase());
-    expect(transform.path.base).toBe('/a/b');
+    expect(transform.path.root).toBe('/a/b');
     expect(transform.path.fragment).toBe('c');
     expect(transform.read()).resolves.toBe('TEST');
   });
 
   test('dest', async () => {
     const output = task.dest('/f', null);
-    expect(output.path.base).toBe('/f');
+    expect(output.path.root).toBe('/f');
     expect(output.path.fragment).toBe('c');
 
     expect(task.dest('/c').path.complete).toBe('/c');

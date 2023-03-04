@@ -15,6 +15,6 @@ export declare abstract class AbstractTask<T> implements Task<T> {
     dispose(): void;
     transform<Out>(transform: (input: T) => Promise<Out> | Out): Task<Out>;
     pipe<Out, Dependant extends Task<Out>>(taskGen: (input: this) => Dependant): Dependant;
-    dest(this: Task<WritableData>, baseOrPath: Path | PathSpec | PathMapping | string | null, fragment?: string | null): OutputType<string | Buffer>;
+    dest(this: Task<WritableData>, rootOrPath: Path | PathSpec | PathMapping | string | null, fragment?: string | null): OutputType<string | Buffer>;
     gatherOutOfDate(force: boolean): Promise<Builder[]>;
 }

@@ -26,10 +26,10 @@ export abstract class AbstractTask<T> implements Task<T> {
 
   public dest(
     this: Task<WritableData>,
-    baseOrPath: Path | PathSpec | PathMapping | string | null,
+    rootOrPath: Path | PathSpec | PathMapping | string | null,
     fragment?: string | null
   ): OutputType<string | Buffer> {
-    return taskContructors.output(this, this.path.compose(baseOrPath, fragment)) as any;
+    return taskContructors.output(this, this.path.compose(rootOrPath, fragment)) as any;
   }
 
   public async gatherOutOfDate(force: boolean): Promise<Builder[]> {
