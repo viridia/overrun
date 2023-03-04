@@ -152,6 +152,9 @@ class Path {
             else if (typeof newRootOrPath === 'string') {
                 return Path.from(newRootOrPath);
             }
+            else if (newRootOrPath && typeof newRootOrPath == 'object') {
+                return new Path(newRootOrPath.root ?? this.root, newRootOrPath.fragment ?? this.frag);
+            }
             else {
                 return this;
             }
@@ -161,6 +164,9 @@ class Path {
             const frag = typeof newFragment === 'string' ? newFragment : this.fragment;
             if (newRootOrPath instanceof Path) {
                 return newRootOrPath.withFragment(frag);
+            }
+            else if (newRootOrPath && typeof newRootOrPath == 'object') {
+                return new Path(newRootOrPath.root ?? this.root, newFragment ?? newRootOrPath.fragment ?? this.frag);
             }
             else if (typeof newRootOrPath === 'string') {
                 return new Path(newRootOrPath, frag);
