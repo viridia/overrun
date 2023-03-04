@@ -114,6 +114,11 @@ describe('Path', () => {
         '/office/work/index.html'
       );
       expect(path.compose(p => p.withExtension('.ico')).complete).toBe('/home/work/index.ico');
+
+      expect(path.compose({ root: '/work' }).complete).toBe('/work/work/index.html');
+      expect(path.compose({ fragment: 'school/index.html' }).complete).toBe(
+        '/home/school/index.html'
+      );
     });
   });
 
