@@ -1,13 +1,13 @@
 import { Path } from './Path';
 import { AbstractTask } from "./AbstractTask";
-import type { SourceTask, Task } from './Task';
+import type { DependencySet } from './Task';
 import { open, stat } from 'fs/promises';
 import { BuildError } from './errors';
 import { Stats } from 'fs';
 
 /** A task which reads a source file and returns a buffer. */
 export class SourceFileTask extends AbstractTask<Buffer> {
-  private readonly dependants = new Set<Task<unknown>>();
+  private modTime: Date | null = null;
   private stats?: Promise<Stats>;
 
   constructor(public readonly path: Path, stats?: Stats) {
@@ -18,17 +18,21 @@ export class SourceFileTask extends AbstractTask<Buffer> {
   }
 
   public dispose(): void {
-    this.dependants.clear();
+    // this.dependants.clear();
   }
 
-  public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {
-    this.dependants.add(dependent);
-    dependencies.add(this);
+  public addDependencies(trackingSet: DependencySet): void {
+    trackingSet.add(this);
   }
 
   /** Return the modification date of this source file. */
   public getModTime(): Promise<Date> {
     return this.prep().then(st => st.mtime);
+  }
+
+  /** Used when we detect the file has been modified. */
+  public updateModTime(modTime: Date) {
+    this.modTime = modTime;
   }
 
   /** Return the output of the task. */

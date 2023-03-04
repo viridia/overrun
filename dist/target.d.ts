@@ -1,13 +1,13 @@
 import { TaskArray } from './TaskArray';
-import { Builder, BuilderOptions, Task } from './Task';
+import { Builder, BuilderContainer, BuilderOptions, Task } from './Task';
 import './TransformTask';
 import './OutputFileTask';
 /** @internal */
 export interface Target {
     name: string;
-    builders: Builder[];
+    builders: BuilderContainer[];
 }
-declare type Builders = Builder | Builder[] | TaskArray<Builder & Task<unknown>>;
+declare type Builders = BuilderContainer | BuilderContainer[] | TaskArray<any, Builder & Task<unknown>>;
 /**
  *
  * @param name

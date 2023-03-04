@@ -1,6 +1,6 @@
 import { AbstractTask } from './AbstractTask';
 import type { Path } from './Path';
-import type { SourceTask, Task } from './Task';
+import type { DependencySet, Task } from './Task';
 /** A simplified transform task which accepts a synchronous transform function. */
 export declare class TransformTask<In, Out> extends AbstractTask<Out> {
     private source;
@@ -11,7 +11,7 @@ export declare class TransformTask<In, Out> extends AbstractTask<Out> {
           value. This function will be called during the build, once the input data is ready.
      */
     constructor(source: Task<In>, transformer: (input: In) => Out | Promise<Out>);
-    addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
+    addDependencies(out: DependencySet): void;
     get path(): Path;
     read(): Promise<Out>;
 }

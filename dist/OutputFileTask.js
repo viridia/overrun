@@ -12,6 +12,8 @@ const AbstractTask_1 = require("./AbstractTask");
 const ctors_1 = require("./ctors");
 const errors_1 = require("./errors");
 const sourceInternal_1 = require("./sourceInternal");
+const Task_1 = require("./Task");
+const version_1 = require("./version");
 const mkdir = util_1.default.promisify(fs_1.default.mkdir);
 const exists = util_1.default.promisify(fs_1.default.exists);
 /** A task which writes to an output file. */
@@ -20,6 +22,7 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
     path;
     dependencies = new Set();
     stats;
+    version;
     /** Construct a new {@link OutputFileTask}.
         @param source The input task that provides the data to output.
         @param path The location of where to write the data.
@@ -28,14 +31,15 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
         super();
         this.source = source;
         this.path = path;
-        source.addDependent(this, this.dependencies);
+        source.addDependencies(this.dependencies);
+        this.version = Math.max(0, ...Array.from(this.dependencies).map(dep => Task_1.isDirectoryDependency(dep) ? dep.getVersion() : 0));
     }
     getName() {
         return (this.path ?? this.source.path).fragment;
     }
     /** Add a task as a dependent of this task. */
-    addDependent(dependent, dependencies) {
-        this.source.addDependent(dependent, dependencies);
+    addDependencies(out) {
+        this.source.addDependencies(out);
     }
     /** True if any sources of this file are newer than the file.
         @internal
@@ -47,8 +51,16 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
         }
         else {
             for (const dep of this.dependencies) {
-                const depTime = await dep.getModTime();
-                if (depTime > stats.mtime) {
+                if (Task_1.isFileDependency(dep)) {
+                    const depTime = await dep.getModTime();
+                    if (depTime > stats.mtime) {
+                        return true;
+                    }
+                }
+                else if (Task_1.isDirectoryDependency(dep)) {
+                    if (this.version < dep.getVersion()) {
+                        return true;
+                    }
                     return true;
                 }
             }
@@ -59,13 +71,20 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
     read() {
         return this.source.read();
     }
+    async gatherOutOfDate(force) {
+        if (force || (await this.isModified())) {
+            return [this];
+        }
+        return [];
+    }
     /** Run all tasks and generate the file. */
     async build(options) {
         // Don't allow overwriting of source files.
         const fullPath = this.path.complete;
-        if (sourceInternal_1.isSource(this.path)) {
+        if (sourceInternal_1.hasSourceTask(this.path)) {
             throw new errors_1.BuildError(`Cannot overwrite source file '${fullPath}'.`);
         }
+        this.version = version_1.currentVersion();
         // Ensure output directory exists.
         if (options.dryRun) {
             await this.source.read();

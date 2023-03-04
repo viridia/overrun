@@ -6,9 +6,10 @@ export declare type TransformFnAsync<In, Out> = (input: In) => Promise<Out> | Ou
     has a single template parameter, which represents the type of data produced.
   */
 export interface Task<T> {
-    /** Mark a task as being dependent on this task, meaning that the target is considered to
-        be out of date when any of its dependencies are out of date. */
-    addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
+    /** Dispose of this task - this may be called if a file within a directory was deleted. */
+    dispose(): void;
+    /** Add this task (or its ultimate sources) to a set of dependencies. */
+    addDependencies(out: DependencySet): void;
     /** The filesystem location associated with the build artifact produced by this task. */
     readonly path: Path;
     /** Returns a Promise that resolves to the data output by this task. This is
@@ -51,30 +52,48 @@ export interface Task<T> {
         @param fragment New fragment. This is appended to the base path. This is required
           if the first argument is null or undefined.
     */
-    dest(this: WritableTask, baseOrPath: Path | PathMapping | string | null, fragment?: string | null): OutputTask<string | Buffer>;
+    dest(this: Task<WritableData>, baseOrPath: Path | PathMapping | string | null, fragment?: string | null): OutputTask<string | Buffer>;
+    /** Collect builders which need to be rebuilt.
+        @param force If true, returns all builders regardless of whether they are out of date.
+        @returns A promise which resolves to an array of builders to be built.
+     */
+    gatherOutOfDate(force: boolean): Promise<Builder[]>;
 }
-/** A task that has a "last modified" date. */
-export interface SourceTask {
-    /** Location of this file in the source tree. */
-    readonly path: Path;
-    /** Return true if the last modified time of this file is newer than the given date. */
+/** A dependency on a file. */
+export interface FileDependency {
     getModTime(): Promise<Date>;
 }
+/** A dependency on a directory hierarchy. In such a case, a modification time is meaningless
+    so we use an internal version counter instead.
+ */
+export interface DirectoryDependency {
+    /** Return true if the last modified time of this file is newer than the given date. */
+    getVersion(): number;
+}
+export declare type Dependency = FileDependency | DirectoryDependency;
+export declare type DependencySet = Set<Dependency>;
+export declare function isFileDependency(dep: Dependency): dep is FileDependency;
+export declare function isDirectoryDependency(dep: Dependency): dep is DirectoryDependency;
 export interface BuilderOptions {
     dryRun?: boolean;
     watchMode?: boolean;
     targets?: string[];
 }
-/** A 'builder' is the final task of a task pipeline. Only tasks which produce
+/** A 'BuilderContainer' is a task which is either a build, or contains an array of builders.
+ */
+export interface BuilderContainer {
+    gatherOutOfDate(force: boolean): Promise<Builder[]>;
+    getName(): string;
+}
+/** A 'Builder' is the final task of a task pipeline. Only tasks which produce
     artifacts (such as {@link OutputFileTask} can be builders.
  */
 export interface Builder {
     build(options: BuilderOptions): Promise<void>;
-    isModified(): Promise<boolean>;
     getName(): string;
 }
 /** A task that has a "last modified" date. */
 export interface OutputTask<T> extends Task<T>, Builder {
 }
 /** @internal */
-export declare type WritableTask = Task<Buffer | string>;
+export declare type WritableData = Buffer | string;

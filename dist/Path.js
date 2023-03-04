@@ -43,22 +43,22 @@ class Path {
                 : base;
     }
     /** Construct a new path from a string. Note: this normalizes the path.
-        @param value A string representing the file path.
+        @param fragment A string representing the file path.
         @param base Optional base path, which `value` is relative to.
   
         If `base` is not present and value is a Path, it will use value.base as the base.
     */
-    constructor(value, base) {
-        this.frag = path_1.default.normalize(value);
+    constructor(fragment, base) {
+        this.frag = path_1.default.normalize(fragment);
         this.basepath = typeof base === 'string' ? path_1.default.normalize(base) : base?.complete;
     }
     /** The part of the path relative to the base. */
     get fragment() {
         return this.frag;
     }
-    /** The complete path, including both base and fragment. */
+    /** The complete absolute path, including both base and fragment. */
     get complete() {
-        return this.basepath ? path_1.default.resolve(this.basepath, this.frag) : this.frag;
+        return this.basepath ? path_1.default.resolve(this.basepath, this.frag) : path_1.default.resolve(this.frag);
     }
     /** Return the base path. */
     get base() {

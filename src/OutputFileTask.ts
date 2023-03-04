@@ -7,23 +7,40 @@ import { taskContructors } from './ctors';
 import { BuildError } from './errors';
 import type { Path } from './Path';
 import { hasSourceTask } from './sourceInternal';
-import type { Builder, BuilderOptions, SourceTask, Task, WritableTask } from './Task';
+import {
+  Builder,
+  BuilderOptions,
+  Dependency,
+  DependencySet,
+  isDirectoryDependency,
+  isFileDependency,
+  Task,
+  WritableData,
+} from './Task';
+import { currentVersion } from './version';
 
 const mkdir = util.promisify(fs.mkdir);
 const exists = util.promisify(fs.exists);
 
 /** A task which writes to an output file. */
 export class OutputFileTask extends AbstractTask<Buffer | string> implements Builder {
-  private dependencies = new Set<SourceTask>();
+  private dependencies = new Set<Dependency>();
   private stats?: Promise<Stats | null>;
+  private version: number;
 
   /** Construct a new {@link OutputFileTask}.
       @param source The input task that provides the data to output.
       @param path The location of where to write the data.
    */
-  constructor(private source: WritableTask, public readonly path: Path) {
+  constructor(private source: Task<WritableData>, public readonly path: Path) {
     super();
-    source.addDependent(this, this.dependencies);
+    source.addDependencies(this.dependencies);
+    this.version = Math.max(
+      0,
+      ...Array.from(this.dependencies).map(dep =>
+        isDirectoryDependency(dep) ? dep.getVersion() : 0
+      )
+    );
   }
 
   public getName(): string {
@@ -31,8 +48,8 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
   }
 
   /** Add a task as a dependent of this task. */
-  public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {
-    this.source.addDependent(dependent, dependencies);
+  public addDependencies(out: DependencySet): void {
+    this.source.addDependencies(out);
   }
 
   /** True if any sources of this file are newer than the file.
@@ -44,8 +61,15 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
       return true;
     } else {
       for (const dep of this.dependencies) {
-        const depTime = await dep.getModTime();
-        if (depTime > stats.mtime) {
+        if (isFileDependency(dep)) {
+          const depTime = await dep.getModTime();
+          if (depTime > stats.mtime) {
+            return true;
+          }
+        } else if (isDirectoryDependency(dep)) {
+          if (this.version < dep.getVersion()) {
+            return true;
+          }
           return true;
         }
       }
@@ -58,6 +82,13 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
     return this.source.read();
   }
 
+  public async gatherOutOfDate(force: boolean): Promise<Builder[]> {
+    if (force || (await this.isModified())) {
+      return [this];
+    }
+    return [];
+  }
+
   /** Run all tasks and generate the file. */
   public async build(options: BuilderOptions): Promise<void> {
     // Don't allow overwriting of source files.
@@ -65,6 +96,8 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
     if (hasSourceTask(this.path)) {
       throw new BuildError(`Cannot overwrite source file '${fullPath}'.`);
     }
+
+    this.version = currentVersion();
 
     // Ensure output directory exists.
     if (options.dryRun) {

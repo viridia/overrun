@@ -8,7 +8,9 @@
     "build:doc": "typedoc --plugin typedoc-plugin-markdown",
     "clean": "rm -r dist",
     "clean:doc": "rm -r docs/api",
-    "demo": "ts-node ./test/pipelines.ts --cwd ./test/",
+    "demo": "./bin/overrun.js -f ./pipeline.ts --cwd ./test/",
+    "demo:watch": "./bin/overrun.js -f ./pipeline.ts --cwd ./test/ --watch",
+    "format": "prettier --write src",
     "lint": "eslint ./src",
     "prepublish": "npm run build",
     "test": "npm run test:compile && npm run test:unit",
@@ -46,7 +48,7 @@
   },
   "dependencies": {
     "ansi-colors": "^4.1.1",
-    "chokidar": "^3.5.2",
+    "chokidar": "^3.5.3",
     "fast-glob": "^3.2.7",
     "yargs": "^16.2.0"
   },

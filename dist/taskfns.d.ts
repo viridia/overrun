@@ -4,4 +4,4 @@ import { TaskArray } from './TaskArray';
     @param taskGens An array of functions which generate tasks.
     @returns A TaskArray representing all of the .
   */
-export declare function tee<In, Out, Dependant extends Task<Out>>(taskGens: ReadonlyArray<(input: Task<In>) => Dependant>): (input: Task<In>) => TaskArray<Task<Out>>;
+export declare function tee<In, Out, Dependant extends Task<Out>>(taskGens: ReadonlyArray<(input: Task<In>) => Dependant>): (input: Task<In>) => TaskArray<(input: Task<In>) => Dependant, Task<Out>>;

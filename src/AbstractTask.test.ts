@@ -1,7 +1,7 @@
 import { describe, beforeEach, test, expect } from 'vitest';
 import { AbstractTask } from './AbstractTask';
 import { Path } from './Path';
-import { SourceTask, Task } from './Task';
+import { DependencySet } from './Task';
 import './TransformTask';
 import './OutputFileTask';
 
@@ -10,7 +10,7 @@ export class MockTask extends AbstractTask<string> {
     super();
   }
 
-  public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {}
+  public addDependencies(dependencies: DependencySet): void {}
 
   /** Return the output of the task. */
   public read(): Promise<string> {

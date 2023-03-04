@@ -10,15 +10,18 @@ const AbstractTask_1 = require("./AbstractTask");
 const Path_1 = require("./Path");
 const sourceInternal_1 = require("./sourceInternal");
 const TaskArray_1 = require("./TaskArray");
+const version_1 = require("./version");
 /** A task which reads the contents of a directory. */
 class DirectoryTask extends AbstractTask_1.AbstractTask {
     path;
+    version = version_1.currentVersion();
     constructor(path) {
         super();
         this.path = path;
     }
-    // No-op: we don't support recompilation based on directory changes.
-    addDependent(dependent, dependencies) { }
+    addDependencies(dependencies) {
+        dependencies.add(this);
+    }
     /** Create a task for every file in the directory. */
     files() {
         return this.match('*');
@@ -26,25 +29,29 @@ class DirectoryTask extends AbstractTask_1.AbstractTask {
     /** Create a task for every file that matches the glob. */
     match(pattern) {
         const base = this.path.base;
-        const files = fast_glob_1.default.sync(path_1.default.join(this.path.fragment, pattern), {
+        return new TaskArray_1.TaskArray(() => fast_glob_1.default.sync(path_1.default.join(this.path.fragment, pattern), {
             cwd: base && path_1.default.resolve(base),
             onlyFiles: true,
             globstar: true,
-        });
-        return new TaskArray_1.TaskArray(files.map(file => {
-            return sourceInternal_1.getOrCreateSourceTask(Path_1.Path.from(base, file));
-        }), this.path);
+        }), file => sourceInternal_1.getOrCreateSourceTask(Path_1.Path.from(base, file)), this.path, this);
     }
-    read() {
+    getVersion() {
+        return this.version;
+    }
+    bumpVersion() {
+        this.version = version_1.nextVersion();
+    }
+    async read() {
         const base = this.path.base;
-        return fast_glob_1.default(path_1.default.join(this.path.fragment, '*'), {
+        const files = await fast_glob_1.default(path_1.default.join(this.path.fragment, '*'), {
             cwd: base && path_1.default.resolve(base),
             onlyFiles: true,
             globstar: true,
             dot: true,
-        }).then(files => files.map(file => {
+        });
+        return files.map(file => {
             return Path_1.Path.from(base, file);
-        }));
+        });
     }
 }
 exports.DirectoryTask = DirectoryTask;

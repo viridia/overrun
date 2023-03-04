@@ -1,5 +1,5 @@
 import { Path } from './Path';
-import { SourceTask, Task } from './Task';
+import { Builder, DependencySet, DirectoryDependency, Task } from './Task';
 import { AbstractTask } from './AbstractTask';
 import { taskContructors } from './ctors';
 
@@ -10,19 +10,23 @@ import { taskContructors } from './ctors';
     process tasks individually, use the `map()` or `reduce()` methods.
  */
 export class TaskArray<Input, T2 extends Task<any>> extends AbstractTask<T2[]> {
-  private inputsModified = true;
   private cachedTasks = new Map<Input, T2>();
+  private version = -1;
 
   constructor(
     private entries: () => ReadonlyArray<Input>,
     private factory: (input: Input) => T2,
-    public readonly path: Path
+    public readonly path: Path,
+    protected dependsOn?: DirectoryDependency
   ) {
     super();
   }
 
-  public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {
-    this.sources.forEach(src => src.addDependent(dependent, dependencies));
+  public addDependencies(out: DependencySet): void {
+    if (this.dependsOn) {
+      out.add(this.dependsOn);
+    }
+    this.sources.forEach(src => src.addDependencies(out));
   }
 
   /** The array of tasks contained in this `TaskArray`. */
@@ -34,12 +38,16 @@ export class TaskArray<Input, T2 extends Task<any>> extends AbstractTask<T2[]> {
     return Promise.resolve(this.sources);
   }
 
-  /** Works like Array.map(), except that the elements are tasks. */
+  /** Works like Array.map(), except that the elements are tasks.
+      @param fn A transform which is applied to each task in the task array.
+      @returns A `TaskArray` containing the transformed task outputs.
+   */
   public map<Out, Depends extends Task<Out>>(fn: (input: T2) => Depends): TaskArray<T2, Depends> {
-    // OK so this needs to change to:
-    // a lazy function which produces the list of sources, and which only constructs the new
-    // derived task when the list changes. Or do we care? Can we simply dispose?
-    return new TaskArray(() => this.sources, fn, this.path);
+    return new TaskArray(() => this.sources, fn, this.path, this.dependsOn);
+  }
+
+  public getName(): string {
+    return this.path.fragment;
   }
 
   /** Returns the number of tasks in this `TaskArray`. */
@@ -68,19 +76,27 @@ export class TaskArray<Input, T2 extends Task<any>> extends AbstractTask<T2[]> {
     });
   }
 
-  /** Signal that the list of inputs has changed. */
-  public setInputsModified() {
-    this.inputsModified = true;
+  public async gatherOutOfDate(force: boolean): Promise<Builder[]> {
+    return (await Promise.all(this.sources.map(src => src.gatherOutOfDate(force)))).flat();
   }
 
   // Lazily comput the list of sources. This may change in cases where a new file was
   // added to a source directory.
   private get sources(): T2[] {
-    if (this.inputsModified) {
-      this.inputsModified = false;
+    let modified = false;
+    if (this.dependsOn) {
+      const version = this.dependsOn.getVersion();
+      if (version > this.version) {
+        this.version = version;
+        modified = true;
+      }
+    } else {
+      modified = true;
+    }
 
+    if (modified) {
       // Recompute the list of tasks from the entries.
-      // TODO: Reconcile changes to entries.
+      // Keep the list the same as much as possible.
       const entries = this.entries();
       const tasksToDelete = new Set(this.cachedTasks.keys());
       for (const entry of entries) {

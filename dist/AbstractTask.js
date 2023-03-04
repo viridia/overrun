@@ -6,6 +6,7 @@ const ctors_1 = require("./ctors");
     of the {@link Task} interface.
  */
 class AbstractTask {
+    dispose() { }
     transform(transform) {
         return ctors_1.taskContructors.transform(this, transform);
     }
@@ -14,6 +15,9 @@ class AbstractTask {
     }
     dest(baseOrPath, fragment) {
         return ctors_1.taskContructors.output(this, this.path.compose(baseOrPath, fragment));
+    }
+    async gatherOutOfDate(force) {
+        return [];
     }
 }
 exports.AbstractTask = AbstractTask;

@@ -10,15 +10,24 @@ const ctors_1 = require("./ctors");
     process tasks individually, use the `map()` or `reduce()` methods.
  */
 class TaskArray extends AbstractTask_1.AbstractTask {
-    sources;
+    entries;
+    factory;
     path;
-    constructor(sources, path) {
+    dependsOn;
+    cachedTasks = new Map();
+    version = -1;
+    constructor(entries, factory, path, dependsOn) {
         super();
-        this.sources = sources;
+        this.entries = entries;
+        this.factory = factory;
         this.path = path;
+        this.dependsOn = dependsOn;
     }
-    addDependent(dependent, dependencies) {
-        this.sources.forEach(src => src.addDependent(dependent, dependencies));
+    addDependencies(out) {
+        if (this.dependsOn) {
+            out.add(this.dependsOn);
+        }
+        this.sources.forEach(src => src.addDependencies(out));
     }
     /** The array of tasks contained in this `TaskArray`. */
     items() {
@@ -27,9 +36,15 @@ class TaskArray extends AbstractTask_1.AbstractTask {
     read() {
         return Promise.resolve(this.sources);
     }
-    /** Works like Array.map(), except that the elements are tasks. */
+    /** Works like Array.map(), except that the elements are tasks.
+        @param fn A transform which is applied to each task in the task array.
+        @returns A `TaskArray` containing the transformed task outputs.
+     */
     map(fn) {
-        return new TaskArray(this.sources.map(fn), this.path);
+        return new TaskArray(() => this.sources, fn, this.path, this.dependsOn);
+    }
+    getName() {
+        return this.path.fragment;
     }
     /** Returns the number of tasks in this `TaskArray`. */
     get length() {
@@ -53,6 +68,40 @@ class TaskArray extends AbstractTask_1.AbstractTask {
             }
             return result;
         });
+    }
+    async gatherOutOfDate(force) {
+        return (await Promise.all(this.sources.map(src => src.gatherOutOfDate(force)))).flat();
+    }
+    // Lazily comput the list of sources. This may change in cases where a new file was
+    // added to a source directory.
+    get sources() {
+        let modified = false;
+        if (this.dependsOn) {
+            const version = this.dependsOn.getVersion();
+            if (version > this.version) {
+                this.version = version;
+                modified = true;
+            }
+        }
+        else {
+            modified = true;
+        }
+        if (modified) {
+            // Recompute the list of tasks from the entries.
+            // Keep the list the same as much as possible.
+            const entries = this.entries();
+            const tasksToDelete = new Set(this.cachedTasks.keys());
+            for (const entry of entries) {
+                tasksToDelete.delete(entry);
+                if (!this.cachedTasks.has(entry)) {
+                    this.cachedTasks.set(entry, this.factory(entry));
+                }
+            }
+            for (const entry of tasksToDelete) {
+                this.cachedTasks.delete(entry);
+            }
+        }
+        return Array.from(this.cachedTasks.values());
     }
 }
 exports.TaskArray = TaskArray;

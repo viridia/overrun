@@ -1,7 +1,7 @@
 import { Path } from './Path';
 import type { TaskArray } from "./TaskArray";
 import { OutputFileTask } from './OutputFileTask';
-import { WritableTask } from './Task';
+import { WritableData, Task } from './Task';
 
 /** @deprecated */
 interface OutputOptions {
@@ -28,11 +28,11 @@ function combinePaths(src: Path, options?: OutputOptions): Path {
 /** Task generator function that generates an output task.
     @deprecated Prefer `task.writeTo()`.
  */
-export function output(options?: OutputOptions): (source: WritableTask) => OutputFileTask;
-export function output(options?: OutputOptions): (source: WritableTask[]) => OutputFileTask[];
-export function output(options?: OutputOptions): (source: TaskArray<any, WritableTask>) => OutputFileTask[];
+export function output(options?: OutputOptions): (source: Task<WritableData>) => OutputFileTask;
+export function output(options?: OutputOptions): (source: Task<WritableData>[]) => OutputFileTask[];
+export function output(options?: OutputOptions): (source: TaskArray<any, Task<WritableData>>) => OutputFileTask[];
 export function output(options?: OutputOptions): (source: any) => OutputFileTask | OutputFileTask[] {
-  return (source: WritableTask | WritableTask[]) => {
+  return (source: Task<WritableData> | Task<WritableData>[]) => {
     if (Array.isArray(source)) {
       return source.map(s => new OutputFileTask(s, combinePaths(s.path, options)));
     } else {

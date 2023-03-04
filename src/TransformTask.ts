@@ -1,7 +1,7 @@
 import { AbstractTask } from './AbstractTask';
 import { taskContructors } from './ctors';
 import type { Path } from './Path';
-import type { SourceTask, Task } from './Task';
+import type { DependencySet, Task } from './Task';
 
 /** A simplified transform task which accepts a synchronous transform function. */
 export class TransformTask<In, Out> extends AbstractTask<Out> {
@@ -14,9 +14,9 @@ export class TransformTask<In, Out> extends AbstractTask<Out> {
     super();
   }
 
-  public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>) {
+  public addDependencies(out: DependencySet) {
     // For transforms, just add a dependency directly on the source.
-    this.source.addDependent(dependent, dependencies);
+    this.source.addDependencies(out);
   }
 
   public get path(): Path {

@@ -1,20 +1,28 @@
-import { describe, test, expect, beforeEach } from 'vitest';
+import { describe, test, expect, beforeEach, vi, Mocked } from 'vitest';
 import { TaskArray } from './TaskArray';
 import { Path } from './Path';
 import { AbstractTask } from './AbstractTask';
-import type { SourceTask, Task } from './Task';
+import type { DependencySet, DirectoryDependency } from './Task';
 import './TransformTask';
 
+export function incompleteMock<T>(obj: Partial<T>): Mocked<T> {
+  return obj as unknown as Mocked<T>;
+}
+
+const directory = incompleteMock<DirectoryDependency>({
+  getVersion: vi.fn().mockReturnValue(0),
+});
+
 /** A task which simply produces a constant value. */
-export class ConstantValueTask extends AbstractTask<string> {
-  private readonly dependants = new Set<Task<unknown>>();
+class ConstantValueTask extends AbstractTask<string> {
+  // private readonly dependants = new Set<Task<unknown>>();
 
   constructor(private value: string, public readonly path: Path) {
     super();
   }
 
-  public addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void {
-    this.dependants.add(dependent);
+  public addDependencies(dependencies: DependencySet): void {
+    // this.dependants.add(dependent);
     // dependencies.add(this);
   }
 
@@ -28,6 +36,7 @@ describe('TaskArray', () => {
   let files: string[] = [];
 
   beforeEach(() => {
+    vi.clearAllMocks();
     files = ['one', 'two', 'three'];
   });
 
@@ -77,15 +86,17 @@ describe('TaskArray', () => {
 
   describe('should recompute generated tasks when array of inputs changes', () => {
     test('basic', () => {
+      directory.getVersion.mockReturnValue(0);
       const ta = new TaskArray(
         () => files,
         a => new ConstantValueTask(a, Path.from('xx', a)),
-        Path.from('yy')
+        Path.from('yy'),
+        directory
       );
       expect(ta.length).toBe(3);
 
       files.push('four');
-      ta.setInputsModified();
+      directory.getVersion.mockReturnValue(1);
 
       expect(ta.length).toBe(4);
       expect(ta.items()).toHaveLength(4);
@@ -99,16 +110,18 @@ describe('TaskArray', () => {
     });
 
     test('.map()', () => {
+      directory.getVersion.mockReturnValue(0);
       const ta = new TaskArray(
         () => files,
         a => new ConstantValueTask(a, Path.from('xx', a)),
-        Path.from('yy')
+        Path.from('yy'),
+        directory
       );
       const mapTask = ta.map(input => input.transform(str => `${str}some`));
       expect(ta.length).toBe(3);
 
       files.push('four');
-      ta.setInputsModified();
+      directory.getVersion.mockReturnValue(1);
 
       expect(
         mapTask.read().then(tasks => {
@@ -118,16 +131,18 @@ describe('TaskArray', () => {
     });
 
     test('.reduce()', () => {
+      directory.getVersion.mockReturnValue(0);
       const ta = new TaskArray(
         () => files,
         a => new ConstantValueTask(a, Path.from('xx', a)),
-        Path.from('yy')
+        Path.from('yy'),
+        directory
       );
       const reduceTask = ta.reduce('', async (acc, out) => `${acc}, ${await out.read()}`);
       expect(ta.length).toBe(3);
 
       files.push('four');
-      ta.setInputsModified();
+      directory.getVersion.mockReturnValue(1);
 
       expect(reduceTask.read()).resolves.toEqual(', one, two, three, four');
     });

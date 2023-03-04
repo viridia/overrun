@@ -3,44 +3,90 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getWatchDirs = exports.clearSources = exports.getSource = exports.getOrCreateSourceTask = exports.isSource = exports.sources = void 0;
+exports.getWatchDirs = exports.clearSourceTasks = exports.getDirectoryTasks = exports.createDirectoryTask = exports.hasDirectoryTask = exports.getSourceTask = exports.getOrCreateSourceTask = exports.hasSourceTask = void 0;
 const path_1 = __importDefault(require("path"));
 const rootPaths_1 = require("./rootPaths");
 const SourceFileTask_1 = require("./SourceFileTask");
-exports.sources = new Map();
-const directories = new Set();
+const DirectoryTask_1 = require("./DirectoryTask");
+const sourceTasks = new Map();
+const directoryTasks = new Map();
+const watchDirs = new Set();
 /** Return true if `path` is a source file. */
-function isSource(path) {
+function hasSourceTask(path) {
     const fullPath = path.complete;
-    return exports.sources.has(fullPath);
+    return sourceTasks.has(fullPath);
 }
-exports.isSource = isSource;
-// TODO: This has a bug: source files might have different base/fragment combos.
+exports.hasSourceTask = hasSourceTask;
+// Source file tasks are uniquely associated with a filesystem location. That is, even if
+// multiple `source` directives appear in a build configuration, those that point to the
+// same file will be merged to a single definition.
 function getOrCreateSourceTask(srcPath) {
-    const srcPathFull = srcPath.complete;
-    let srcTask = exports.sources.get(srcPathFull);
-    if (!srcTask) {
-        srcTask = new SourceFileTask_1.SourceFileTask(srcPath);
-        directories.add(path_1.default.dirname(srcPathFull));
-        exports.sources.set(srcPathFull, srcTask);
+    const fullPath = path_1.default.resolve(srcPath.complete);
+    let task = sourceTasks.get(fullPath);
+    if (!task) {
+        task = new SourceFileTask_1.SourceFileTask(srcPath);
+        watchDirs.add(path_1.default.dirname(fullPath));
+        sourceTasks.set(fullPath, task);
     }
-    return srcTask;
+    return task;
 }
 exports.getOrCreateSourceTask = getOrCreateSourceTask;
-/** Return the cached source file.
+/** Return the task for the given source file.
     @internal
 */
-function getSource(path) {
-    return exports.sources.get(path);
+function getSourceTask(path) {
+    return sourceTasks.get(path);
 }
-exports.getSource = getSource;
+exports.getSourceTask = getSourceTask;
+/** Return true if `path` is a source file. */
+function hasDirectoryTask(path) {
+    const fullPath = path.complete;
+    return directoryTasks.has(fullPath);
+}
+exports.hasDirectoryTask = hasDirectoryTask;
+function createDirectoryTask(srcPath) {
+    const fullPath = path_1.default.resolve(srcPath.complete);
+    watchDirs.add(fullPath);
+    const task = new DirectoryTask_1.DirectoryTask(srcPath);
+    const taskList = directoryTasks.get(fullPath);
+    if (taskList) {
+        taskList.push(task);
+    }
+    else {
+        directoryTasks.set(fullPath, [task]);
+    }
+    return task;
+}
+exports.createDirectoryTask = createDirectoryTask;
+/** Return list of directory tasks which are observing the given path.
+
+    Because DirectoryTasks can glob subdirectories, we can't know for sure whether
+    a change to a directory will require a rebuild or not. This takes a conservative
+    approach and assumes that any change at a given filesystem location will trigger
+    a rebuild of all directory rules that encompass that location within it.
+    @internal
+*/
+function getDirectoryTasks(dirPath) {
+    const tasks = [];
+    while (dirPath && dirPath !== '/') {
+        const dirTasks = directoryTasks.get(dirPath);
+        if (dirTasks) {
+            // console.log(dirTasks);
+            tasks.push(...dirTasks);
+        }
+        dirPath = path_1.default.dirname(dirPath);
+    }
+    return tasks;
+}
+exports.getDirectoryTasks = getDirectoryTasks;
 /** Remove all cached source files, used for testing. */
-function clearSources() {
-    exports.sources.clear();
+function clearSourceTasks() {
+    sourceTasks.clear();
+    directoryTasks.clear();
 }
-exports.clearSources = clearSources;
+exports.clearSourceTasks = clearSourceTasks;
 /** @internal */
 function getWatchDirs() {
-    return rootPaths_1.rootPaths(Array.from(directories));
+    return rootPaths_1.rootPaths(Array.from(watchDirs));
 }
 exports.getWatchDirs = getWatchDirs;

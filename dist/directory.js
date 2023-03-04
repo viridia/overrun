@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.directory = void 0;
 const Path_1 = require("./Path");
-const DirectoryTask_1 = require("./DirectoryTask");
+const sourceInternal_1 = require("./sourceInternal");
 /** Create a task which reads a source file and returns a buffer. */
 function directory(baseOrPath, fragment) {
     const srcPath = Path_1.Path.from(baseOrPath, fragment);
     // TODO: stat - see if it's a dir
-    return new DirectoryTask_1.DirectoryTask(srcPath);
+    return sourceInternal_1.createDirectoryTask(srcPath);
 }
 exports.directory = directory;

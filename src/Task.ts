@@ -10,9 +10,8 @@ export interface Task<T> {
   /** Dispose of this task - this may be called if a file within a directory was deleted. */
   dispose(): void;
 
-  /** Mark a task as being dependent on this task, meaning that the target is considered to
-      be out of date when any of its dependencies are out of date. */
-  addDependent(dependent: Task<unknown>, dependencies: Set<SourceTask>): void;
+  /** Add this task (or its ultimate sources) to a set of dependencies. */
+  addDependencies(out: DependencySet): void;
 
   /** The filesystem location associated with the build artifact produced by this task. */
   readonly path: Path;
@@ -61,19 +60,40 @@ export interface Task<T> {
         if the first argument is null or undefined.
   */
   dest(
-    this: WritableTask,
+    this: Task<WritableData>,
     baseOrPath: Path | PathMapping | string | null,
     fragment?: string | null
   ): OutputTask<string | Buffer>;
+
+  /** Collect builders which need to be rebuilt.
+      @param force If true, returns all builders regardless of whether they are out of date.
+      @returns A promise which resolves to an array of builders to be built.
+   */
+  gatherOutOfDate(force: boolean): Promise<Builder[]>;
 }
 
-/** A task that has a "last modified" date. */
-export interface SourceTask {
-  /** Location of this file in the source tree. */
-  readonly path: Path;
-
-  /** Return true if the last modified time of this file is newer than the given date. */
+/** A dependency on a file. */
+export interface FileDependency {
   getModTime(): Promise<Date>;
+}
+
+/** A dependency on a directory hierarchy. In such a case, a modification time is meaningless
+    so we use an internal version counter instead.
+ */
+export interface DirectoryDependency {
+  /** Return true if the last modified time of this file is newer than the given date. */
+  getVersion(): number;
+}
+
+export type Dependency = FileDependency | DirectoryDependency;
+export type DependencySet = Set<Dependency>;
+
+export function isFileDependency(dep: Dependency): dep is FileDependency {
+  return typeof (dep as FileDependency).getModTime === 'function';
+}
+
+export function isDirectoryDependency(dep: Dependency): dep is DirectoryDependency {
+  return typeof (dep as DirectoryDependency).getVersion === 'function';
 }
 
 export interface BuilderOptions {
@@ -82,12 +102,18 @@ export interface BuilderOptions {
   targets?: string[];
 }
 
-/** A 'builder' is the final task of a task pipeline. Only tasks which produce
+/** A 'BuilderContainer' is a task which is either a build, or contains an array of builders.
+ */
+export interface BuilderContainer {
+  gatherOutOfDate(force: boolean): Promise<Builder[]>;
+  getName(): string;
+}
+
+/** A 'Builder' is the final task of a task pipeline. Only tasks which produce
     artifacts (such as {@link OutputFileTask} can be builders.
  */
 export interface Builder {
   build(options: BuilderOptions): Promise<void>;
-  isModified(): Promise<boolean>;
   getName(): string;
 }
 
@@ -95,4 +121,4 @@ export interface Builder {
 export interface OutputTask<T> extends Task<T>, Builder {}
 
 /** @internal */
-export type WritableTask = Task<Buffer | string>;
+export type WritableData = Buffer | string;

@@ -17,9 +17,9 @@ class TransformTask extends AbstractTask_1.AbstractTask {
         this.source = source;
         this.transformer = transformer;
     }
-    addDependent(dependent, dependencies) {
+    addDependencies(out) {
         // For transforms, just add a dependency directly on the source.
-        this.source.addDependent(dependent, dependencies);
+        this.source.addDependencies(out);
     }
     get path() {
         return this.source.path;

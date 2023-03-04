@@ -5,7 +5,7 @@ import { SourceFileTask } from './SourceFileTask';
 import { DirectoryTask } from './DirectoryTask';
 
 const sourceTasks = new Map<string, SourceFileTask>();
-const directoryTasks = new Map<string, DirectoryTask>();
+const directoryTasks = new Map<string, DirectoryTask[]>();
 
 const watchDirs = new Set<string>();
 
@@ -15,9 +15,11 @@ export function hasSourceTask(path: Path): boolean {
   return sourceTasks.has(fullPath);
 }
 
-// TODO: This has a bug: source files might have different base/fragment combos.
+// Source file tasks are uniquely associated with a filesystem location. That is, even if
+// multiple `source` directives appear in a build configuration, those that point to the
+// same file will be merged to a single definition.
 export function getOrCreateSourceTask(srcPath: Path) {
-  const fullPath = srcPath.complete;
+  const fullPath = path.resolve(srcPath.complete);
   let task = sourceTasks.get(fullPath);
   if (!task) {
     task = new SourceFileTask(srcPath);
@@ -41,24 +43,39 @@ export function hasDirectoryTask(path: Path): boolean {
   return directoryTasks.has(fullPath);
 }
 
-// TODO: This has a bug: source files might have different base/fragment combos.
-export function getOrCreateDirectoryTask(srcPath: Path) {
-  const fullPath = srcPath.complete;
-  let task = directoryTasks.get(fullPath);
-  if (!task) {
-    task = new DirectoryTask(srcPath);
-    watchDirs.add(path.dirname(fullPath));
-    directoryTasks.set(fullPath, task);
+export function createDirectoryTask(srcPath: Path) {
+  const fullPath = path.resolve(srcPath.complete);
+  watchDirs.add(fullPath);
+  const task = new DirectoryTask(srcPath);
+  const taskList = directoryTasks.get(fullPath);
+  if (taskList) {
+    taskList.push(task);
+  } else {
+    directoryTasks.set(fullPath, [task])
   }
 
   return task;
 }
 
-/** Return the task for the given source file.
+/** Return list of directory tasks which are observing the given path.
+
+    Because DirectoryTasks can glob subdirectories, we can't know for sure whether
+    a change to a directory will require a rebuild or not. This takes a conservative
+    approach and assumes that any change at a given filesystem location will trigger
+    a rebuild of all directory rules that encompass that location within it.
     @internal
 */
-export function getDirectoryTask(path: string): DirectoryTask | undefined {
-  return directoryTasks.get(path);
+export function getDirectoryTasks(dirPath: string): DirectoryTask[] {
+  const tasks: DirectoryTask[] = [];
+  while (dirPath && dirPath !== '/') {
+    const dirTasks = directoryTasks.get(dirPath);
+    if (dirTasks) {
+      // console.log(dirTasks);
+      tasks.push(...dirTasks);
+    }
+    dirPath = path.dirname(dirPath);
+  }
+  return tasks;
 }
 
 /** Remove all cached source files, used for testing. */

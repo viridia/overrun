@@ -7,6 +7,6 @@ const TaskArray_1 = require("./TaskArray");
     @returns A TaskArray representing all of the .
   */
 function tee(taskGens) {
-    return input => new TaskArray_1.TaskArray(taskGens.map(t => t(input)), input.path);
+    return input => new TaskArray_1.TaskArray(() => taskGens, t => t(input), input.path);
 }
 exports.tee = tee;

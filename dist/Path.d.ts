@@ -40,15 +40,15 @@ export declare class Path {
     static from(path: string | Path): Path;
     static from(base: string | Path, fragment?: string): Path;
     /** Construct a new path from a string. Note: this normalizes the path.
-        @param value A string representing the file path.
+        @param fragment A string representing the file path.
         @param base Optional base path, which `value` is relative to.
   
         If `base` is not present and value is a Path, it will use value.base as the base.
     */
-    constructor(value: string, base?: string | Path);
+    constructor(fragment: string, base?: string | Path);
     /** The part of the path relative to the base. */
     get fragment(): string;
-    /** The complete path, including both base and fragment. */
+    /** The complete absolute path, including both base and fragment. */
     get complete(): string;
     /** Return the base path. */
     get base(): string | undefined;

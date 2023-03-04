@@ -7,7 +7,7 @@ const errors_1 = require("./errors");
 /** A task which reads a source file and returns a buffer. */
 class SourceFileTask extends AbstractTask_1.AbstractTask {
     path;
-    dependants = new Set();
+    modTime = null;
     stats;
     constructor(path, stats) {
         super();
@@ -16,13 +16,19 @@ class SourceFileTask extends AbstractTask_1.AbstractTask {
             this.stats = Promise.resolve(stats);
         }
     }
-    addDependent(dependent, dependencies) {
-        this.dependants.add(dependent);
-        dependencies.add(this);
+    dispose() {
+        // this.dependants.clear();
+    }
+    addDependencies(trackingSet) {
+        trackingSet.add(this);
     }
     /** Return the modification date of this source file. */
     getModTime() {
         return this.prep().then(st => st.mtime);
+    }
+    /** Used when we detect the file has been modified. */
+    updateModTime(modTime) {
+        this.modTime = modTime;
     }
     /** Return the output of the task. */
     read() {
