@@ -1,4 +1,8 @@
 export declare type PathMapping = (path: Path) => Path;
+export interface PathSpec {
+    base?: string;
+    fragment?: string;
+}
 /**
     A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
     Python `pathlib` module.
@@ -37,8 +41,8 @@ export declare class Path {
         You can also construct a `Path` object direcly by calling the constructor, however note that
         the order of arguments is reversed, making the second parameter the optional one.
     */
-    static from(path: string | Path): Path;
-    static from(base: string | Path, fragment?: string): Path;
+    static from(path: string | Path | PathSpec): Path;
+    static from(base: string | Path | PathSpec, fragment?: string): Path;
     /** Construct a new path from a string. Note: this normalizes the path.
         @param fragment A string representing the file path.
         @param base Optional base path, which `value` is relative to.
@@ -48,8 +52,10 @@ export declare class Path {
     constructor(fragment: string, base?: string | Path);
     /** The part of the path relative to the base. */
     get fragment(): string;
-    /** The complete absolute path, including both base and fragment. */
+    /** The complete path, including both base and fragment. */
     get complete(): string;
+    /** The complete absolute path, including both base and fragment. */
+    get full(): string;
     /** Return the base path. */
     get base(): string | undefined;
     /** The filename extension, including the leading '.' */
@@ -94,5 +100,5 @@ export declare class Path {
         @param newFragment The new fragment. If this is `null` it means we want to keep the
           existing fragment. If it's a string, it means we want to replace it.
      */
-    compose(newBaseOrPath: Path | PathMapping | string | null, newFragment?: string | null): Path;
+    compose(newBaseOrPath: Path | PathSpec | PathMapping | string | null, newFragment?: string | null): Path;
 }

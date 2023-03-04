@@ -110,7 +110,9 @@ describe('Path', () => {
       expect(path.compose('/office', null).complete).toBe('/office/work/index.html');
       expect(path.compose(null, 'icon.svg').complete).toBe('/home/icon.svg');
       expect(path.compose(Path.from('/office/foo.txt')).complete).toBe('/office/foo.txt');
-      expect(path.compose(Path.from('/office', '.'), null).complete).toBe('/office/work/index.html');
+      expect(path.compose(Path.from('/office', '.'), null).complete).toBe(
+        '/office/work/index.html'
+      );
       expect(path.compose(p => p.withExtension('.ico')).complete).toBe('/home/work/index.ico');
     });
   });
@@ -118,5 +120,10 @@ describe('Path', () => {
   test('.from', () => {
     expect(Path.from('/home/work/index.html').complete).toBe('/home/work/index.html');
     expect(Path.from('/home', 'work/index.html').complete).toBe('/home/work/index.html');
+    expect(Path.from({ fragment: '/home/work/index.html' }).complete).toBe('/home/work/index.html');
+    expect(Path.from({ base: '/home', fragment: 'work/index.html' }).complete).toBe(
+      '/home/work/index.html'
+    );
+    expect(Path.from({ base: '/home' }).complete).toBe('/home');
   });
 });

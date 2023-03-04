@@ -1,4 +1,4 @@
-import { Path, PathMapping } from './Path';
+import { Path, PathMapping, PathSpec } from './Path';
 
 export type TransformFn<In, Out> = (input: In) => Out;
 export type TransformFnAsync<In, Out> = (input: In) => Promise<Out> | Out;
@@ -61,7 +61,7 @@ export interface Task<T> {
   */
   dest(
     this: Task<WritableData>,
-    baseOrPath: Path | PathMapping | string | null,
+    baseOrPath: Path | PathSpec | PathMapping | string | null,
     fragment?: string | null
   ): OutputTask<string | Buffer>;
 

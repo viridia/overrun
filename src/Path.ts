@@ -1,6 +1,10 @@
 import path from 'path';
 
 export type PathMapping = (path: Path) => Path;
+export interface PathSpec {
+  base?: string;
+  fragment?: string;
+}
 
 /**
     A `Path` object contains a filesystem path. Path object are similar to, and are inspired by, the
@@ -41,9 +45,12 @@ export class Path {
       You can also construct a `Path` object direcly by calling the constructor, however note that
       the order of arguments is reversed, making the second parameter the optional one.
   */
-  static from(path: string | Path): Path;
-  static from(base: string | Path, fragment?: string): Path;
-  static from(base: string | Path, fragment?: string): Path {
+  static from(path: string | Path | PathSpec): Path;
+  static from(base: string | Path | PathSpec, fragment?: string): Path;
+  static from(base: string | Path | PathSpec, fragment?: string): Path {
+    if (typeof base === 'object' && !(base instanceof Path)) {
+      return new Path(base.fragment ?? '.', base.base);
+    }
     return fragment !== undefined
       ? new Path(fragment, base)
       : typeof base === 'string'
@@ -67,12 +74,19 @@ export class Path {
     return this.frag;
   }
 
-  /** The complete absolute path, including both base and fragment. */
+  /** The complete path, including both base and fragment. Does not make the path absolute. */
   public get complete(): string {
+    return this.basepath && !path.isAbsolute(this.frag)
+      ? path.join(this.basepath, this.frag)
+      : this.frag;
+  }
+
+  /** The complete absolute path, including both base and fragment. */
+  public get full(): string {
     return this.basepath ? path.resolve(this.basepath, this.frag) : path.resolve(this.frag);
   }
 
-  /** Return the base path. */
+  /** Return the base portion of the path path. */
   public get base(): string | undefined {
     return this.basepath;
   }
@@ -159,7 +173,7 @@ export class Path {
         existing fragment. If it's a string, it means we want to replace it.
    */
   public compose(
-    newBaseOrPath: Path | PathMapping | string | null,
+    newBaseOrPath: Path | PathSpec | PathMapping | string | null,
     newFragment?: string | null
   ): Path {
     if (typeof newBaseOrPath === 'function') {

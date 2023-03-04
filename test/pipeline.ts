@@ -1,10 +1,10 @@
-target(source('./source', 'demo.txt').dest('./output', null));
+target(source({ base: './source', fragment: 'demo.txt' }).dest({ base: './output' }));
 
 target(
   'source.text',
-  directory('./source', '.')
+  directory({ base: './source' })
     .match('*.txt')
-    .map(src => src.dest('./output', null))
+    .map(src => src.dest({ base: './output' }))
 );
 
 target(

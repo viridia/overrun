@@ -142,7 +142,6 @@ async function buildTargets(options = {}) {
         let isChanged = false;
         let isReady = false;
         const rebuild = async () => {
-            console.log('rebuild');
             isChanged = false;
             const results = await Promise.allSettled(buildTargets(false));
             const rejected = results.filter(result => result.status === 'rejected');

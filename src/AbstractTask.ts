@@ -1,6 +1,6 @@
 import { taskContructors } from './ctors';
 import type { OutputFileTask } from './OutputFileTask';
-import type { Path, PathMapping } from './Path';
+import type { Path, PathMapping, PathSpec } from './Path';
 import type { Builder, DependencySet, Task, WritableData } from './Task';
 
 export interface AbstractOutput extends Task<WritableData> {}
@@ -26,7 +26,7 @@ export abstract class AbstractTask<T> implements Task<T> {
 
   public dest(
     this: Task<WritableData>,
-    baseOrPath: Path | PathMapping | string | null,
+    baseOrPath: Path | PathSpec | PathMapping | string | null,
     fragment?: string | null
   ): OutputType<string | Buffer> {
     return taskContructors.output(this, this.path.compose(baseOrPath, fragment)) as any;

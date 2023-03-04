@@ -36,6 +36,9 @@ class Path {
     frag;
     basepath;
     static from(base, fragment) {
+        if (typeof base === 'object' && !(base instanceof Path)) {
+            return new Path(base.fragment ?? '.', base.base);
+        }
         return fragment !== undefined
             ? new Path(fragment, base)
             : typeof base === 'string'
@@ -56,8 +59,12 @@ class Path {
     get fragment() {
         return this.frag;
     }
-    /** The complete absolute path, including both base and fragment. */
+    /** The complete path, including both base and fragment. */
     get complete() {
+        return this.basepath ? path_1.default.join(this.basepath, this.frag) : this.frag;
+    }
+    /** The complete absolute path, including both base and fragment. */
+    get full() {
         return this.basepath ? path_1.default.resolve(this.basepath, this.frag) : path_1.default.resolve(this.frag);
     }
     /** Return the base path. */

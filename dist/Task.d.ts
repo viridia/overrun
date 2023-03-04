@@ -1,5 +1,5 @@
 /// <reference types="node" />
-import { Path, PathMapping } from './Path';
+import { Path, PathMapping, PathSpec } from './Path';
 export declare type TransformFn<In, Out> = (input: In) => Out;
 export declare type TransformFnAsync<In, Out> = (input: In) => Promise<Out> | Out;
 /** A TypeScript interface representing an object which produces data asynchronously. It
@@ -52,7 +52,7 @@ export interface Task<T> {
         @param fragment New fragment. This is appended to the base path. This is required
           if the first argument is null or undefined.
     */
-    dest(this: Task<WritableData>, baseOrPath: Path | PathMapping | string | null, fragment?: string | null): OutputTask<string | Buffer>;
+    dest(this: Task<WritableData>, baseOrPath: Path | PathSpec | PathMapping | string | null, fragment?: string | null): OutputTask<string | Buffer>;
     /** Collect builders which need to be rebuilt.
         @param force If true, returns all builders regardless of whether they are out of date.
         @returns A promise which resolves to an array of builders to be built.

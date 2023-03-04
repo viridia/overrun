@@ -13,7 +13,7 @@ const directoryTasks = new Map();
 const watchDirs = new Set();
 /** Return true if `path` is a source file. */
 function hasSourceTask(path) {
-    const fullPath = path.complete;
+    const fullPath = path.full;
     return sourceTasks.has(fullPath);
 }
 exports.hasSourceTask = hasSourceTask;
@@ -21,7 +21,7 @@ exports.hasSourceTask = hasSourceTask;
 // multiple `source` directives appear in a build configuration, those that point to the
 // same file will be merged to a single definition.
 function getOrCreateSourceTask(srcPath) {
-    const fullPath = path_1.default.resolve(srcPath.complete);
+    const fullPath = srcPath.full;
     let task = sourceTasks.get(fullPath);
     if (!task) {
         task = new SourceFileTask_1.SourceFileTask(srcPath);
@@ -40,12 +40,12 @@ function getSourceTask(path) {
 exports.getSourceTask = getSourceTask;
 /** Return true if `path` is a source file. */
 function hasDirectoryTask(path) {
-    const fullPath = path.complete;
+    const fullPath = path.full;
     return directoryTasks.has(fullPath);
 }
 exports.hasDirectoryTask = hasDirectoryTask;
 function createDirectoryTask(srcPath) {
-    const fullPath = path_1.default.resolve(srcPath.complete);
+    const fullPath = srcPath.full;
     watchDirs.add(fullPath);
     const task = new DirectoryTask_1.DirectoryTask(srcPath);
     const taskList = directoryTasks.get(fullPath);
