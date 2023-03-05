@@ -7,6 +7,7 @@ export declare const argv: {
     w: boolean | undefined;
     targets: string | undefined;
     color: boolean | undefined;
+    verbose: boolean | undefined;
     _: (string | number)[];
     $0: string;
 } | Promise<{
@@ -18,6 +19,7 @@ export declare const argv: {
     w: boolean | undefined;
     targets: string | undefined;
     color: boolean | undefined;
+    verbose: boolean | undefined;
     _: (string | number)[];
     $0: string;
 }>;
@@ -30,6 +32,7 @@ export declare function getArgs(): Promise<{
     w: boolean | undefined;
     targets: string | undefined;
     color: boolean | undefined;
+    verbose: boolean | undefined;
     _: (string | number)[];
     $0: string;
 } | {
@@ -41,6 +44,7 @@ export declare function getArgs(): Promise<{
     w: boolean | undefined;
     targets: string | undefined;
     color: boolean | undefined;
+    verbose: boolean | undefined;
     _: (string | number)[];
     $0: string;
 }>;

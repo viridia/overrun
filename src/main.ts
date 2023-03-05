@@ -2,6 +2,7 @@ import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import { buildTargets } from './target';
 import c from 'ansi-colors';
+import { setVerboseLogging } from './debug';
 
 export const argv = yargs(hideBin(process.argv))
   .version()
@@ -31,7 +32,12 @@ export const argv = yargs(hideBin(process.argv))
       type: 'string',
     },
     color: {
-      describe: 'Enabled colored output.',
+      describe: 'Enable colored output.',
+      boolean: true,
+    },
+    verbose: {
+      alias: 'v',
+      describe: 'Enable verbose logging.',
       boolean: true,
     },
   })
@@ -42,6 +48,10 @@ export async function getArgs() {
 
   if (args.color !== undefined) {
     c.enabled = args.color;
+  }
+
+  if (args.verbose !== undefined) {
+    setVerboseLogging(args.verbose);
   }
 
   if (args.cwd !== undefined) {

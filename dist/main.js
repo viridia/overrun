@@ -8,6 +8,7 @@ const yargs_1 = __importDefault(require("yargs/yargs"));
 const helpers_1 = require("yargs/helpers");
 const target_1 = require("./target");
 const ansi_colors_1 = __importDefault(require("ansi-colors"));
+const debug_1 = require("./debug");
 exports.argv = yargs_1.default(helpers_1.hideBin(process.argv))
     .version()
     .help()
@@ -36,7 +37,12 @@ exports.argv = yargs_1.default(helpers_1.hideBin(process.argv))
         type: 'string',
     },
     color: {
-        describe: 'Enabled colored output.',
+        describe: 'Enable colored output.',
+        boolean: true,
+    },
+    verbose: {
+        alias: 'v',
+        describe: 'Enable verbose logging.',
         boolean: true,
     },
 })
@@ -45,6 +51,9 @@ async function getArgs() {
     const args = await exports.argv;
     if (args.color !== undefined) {
         ansi_colors_1.default.enabled = args.color;
+    }
+    if (args.verbose !== undefined) {
+        debug_1.setVerboseLogging(args.verbose);
     }
     if (args.cwd !== undefined) {
         process.chdir(args.cwd);

@@ -3,6 +3,7 @@ import { Path } from './Path';
 import { rootPaths } from './rootPaths';
 import { SourceFileTask } from './SourceFileTask';
 import { DirectoryTask } from './DirectoryTask';
+import { log } from './debug';
 
 const sourceTasks = new Map<string, SourceFileTask>();
 const directoryTasks = new Map<string, DirectoryTask[]>();
@@ -51,7 +52,7 @@ export function createDirectoryTask(srcPath: Path) {
   if (taskList) {
     taskList.push(task);
   } else {
-    directoryTasks.set(fullPath, [task])
+    directoryTasks.set(fullPath, [task]);
   }
 
   return task;
@@ -70,6 +71,9 @@ export function getDirectoryTasks(dirPath: string): DirectoryTask[] {
   while (dirPath && dirPath !== '/') {
     const dirTasks = directoryTasks.get(dirPath);
     if (dirTasks) {
+      dirTasks.forEach(t => {
+        log(`Rebuilding directory task: ${t.path.full}`);
+      });
       // console.log(dirTasks);
       tasks.push(...dirTasks);
     }

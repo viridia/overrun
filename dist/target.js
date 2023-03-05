@@ -12,6 +12,7 @@ const sourceInternal_1 = require("./sourceInternal");
 require("./TransformTask");
 require("./OutputFileTask");
 const path_1 = __importDefault(require("path"));
+const debug_1 = require("./debug");
 const targets = [];
 function target(nameOrBuilder, builder) {
     if (typeof nameOrBuilder === 'string') {
@@ -149,6 +150,9 @@ async function buildTargets(options = {}) {
                 console.log(ansi_colors_1.default.red(`${rejected.length} targets failed.`));
                 return false;
             }
+            else {
+                console.log(ansi_colors_1.default.green('Targets successfully rebuilt'));
+            }
             // Don't clear the timer until build is done; that way we don't schedule a new build
             // until the previous one has finished.
             debounceTimer = null;
@@ -165,6 +169,7 @@ async function buildTargets(options = {}) {
         });
         watcher.on('change', (filePath, stats) => {
             if (isReady && filePath && stats) {
+                debug_1.log(`'change' event for ${filePath}`);
                 if (stats.isFile()) {
                     const task = sourceInternal_1.getSourceTask(filePath);
                     if (task) {
@@ -180,6 +185,7 @@ async function buildTargets(options = {}) {
         });
         watcher.on('add', filePath => {
             if (isReady && filePath) {
+                debug_1.log(`'add' event for ${filePath}`);
                 const dirname = path_1.default.dirname(filePath);
                 sourceInternal_1.getDirectoryTasks(dirname).forEach(task => {
                     task.bumpVersion();
@@ -192,6 +198,7 @@ async function buildTargets(options = {}) {
         });
         watcher.on('unlink', filePath => {
             if (isReady && filePath) {
+                debug_1.log(`'unlink' event for ${filePath}`);
                 const dirname = path_1.default.dirname(filePath);
                 sourceInternal_1.getDirectoryTasks(dirname).forEach(task => {
                     task.bumpVersion();

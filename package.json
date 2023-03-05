@@ -9,7 +9,7 @@
     "clean": "rm -r dist",
     "clean:doc": "rm -r docs/api",
     "demo": "./bin/overrun.js -f ./pipeline.ts --cwd ./test/",
-    "demo:watch": "./bin/overrun.js -f ./pipeline.ts --cwd ./test/ --watch",
+    "demo:watch": "./bin/overrun.js -f ./pipeline.ts --cwd ./test/ --watch --verbose",
     "format": "prettier --write src",
     "lint": "eslint ./src",
     "prepublish": "npm run build",

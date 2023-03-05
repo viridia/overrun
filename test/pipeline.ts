@@ -15,3 +15,19 @@ target(
     .transform(json => JSON.stringify(json))
     .dest('./output/index.json')
 );
+
+target(
+  'colors.text',
+  directory({ root: './source', fragment: 'colors' })
+    .match('*.md')
+    .map(src => src.dest({ root: './output' }))
+);
+
+target(
+  'colors.index',
+  directory('./source', 'colors')
+    .match('*.md')
+    .reduce<string[]>([], (acc, next) => [...acc, next.path.filename])
+    .transform(json => JSON.stringify(json))
+    .dest('./output/colors/index.json')
+);

@@ -10,6 +10,7 @@ const path_1 = __importDefault(require("path"));
 const util_1 = __importDefault(require("util"));
 const AbstractTask_1 = require("./AbstractTask");
 const ctors_1 = require("./ctors");
+const debug_1 = require("./debug");
 const errors_1 = require("./errors");
 const sourceInternal_1 = require("./sourceInternal");
 const Task_1 = require("./Task");
@@ -54,14 +55,15 @@ class OutputFileTask extends AbstractTask_1.AbstractTask {
                 if (Task_1.isFileDependency(dep)) {
                     const depTime = await dep.getModTime();
                     if (depTime > stats.mtime) {
+                        debug_1.log(`Rebuilding ${this.path.full} because source file ${dep.path.full} is newer.`);
                         return true;
                     }
                 }
                 else if (Task_1.isDirectoryDependency(dep)) {
                     if (this.version < dep.getVersion()) {
+                        debug_1.log(`Rebuilding ${this.path.full} because directory ${dep.path.full} changed.`);
                         return true;
                     }
-                    return true;
                 }
             }
             return false;

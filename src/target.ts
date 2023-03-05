@@ -7,6 +7,7 @@ import { getDirectoryTasks, getSourceTask, getWatchDirs } from './sourceInternal
 import './TransformTask';
 import './OutputFileTask';
 import path from 'path';
+import { log } from './debug';
 
 /** @internal */
 export interface Target {
@@ -161,6 +162,8 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
       if (rejected.length > 0) {
         console.log(c.red(`${rejected.length} targets failed.`));
         return false;
+      } else {
+        console.log(c.green('Targets successfully rebuilt'));
       }
 
       // Don't clear the timer until build is done; that way we don't schedule a new build
@@ -182,6 +185,7 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
 
     watcher.on('change', (filePath, stats) => {
       if (isReady && filePath && stats) {
+        log(`'change' event for ${filePath}`);
         if (stats.isFile()) {
           const task = getSourceTask(filePath);
           if (task) {
@@ -198,6 +202,7 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
 
     watcher.on('add', filePath => {
       if (isReady && filePath) {
+        log(`'add' event for ${filePath}`);
         const dirname = path.dirname(filePath);
         getDirectoryTasks(dirname).forEach(task => {
           task.bumpVersion();
@@ -211,6 +216,7 @@ export async function buildTargets(options: BuilderOptions = {}): Promise<boolea
 
     watcher.on('unlink', filePath => {
       if (isReady && filePath) {
+        log(`'unlink' event for ${filePath}`);
         const dirname = path.dirname(filePath);
         getDirectoryTasks(dirname).forEach(task => {
           task.bumpVersion();

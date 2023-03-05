@@ -8,6 +8,7 @@ const path_1 = __importDefault(require("path"));
 const rootPaths_1 = require("./rootPaths");
 const SourceFileTask_1 = require("./SourceFileTask");
 const DirectoryTask_1 = require("./DirectoryTask");
+const debug_1 = require("./debug");
 const sourceTasks = new Map();
 const directoryTasks = new Map();
 const watchDirs = new Set();
@@ -71,6 +72,9 @@ function getDirectoryTasks(dirPath) {
     while (dirPath && dirPath !== '/') {
         const dirTasks = directoryTasks.get(dirPath);
         if (dirTasks) {
+            dirTasks.forEach(t => {
+                debug_1.log(`Rebuilding directory task: ${t.path.full}`);
+            });
             // console.log(dirTasks);
             tasks.push(...dirTasks);
         }

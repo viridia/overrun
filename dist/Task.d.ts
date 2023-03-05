@@ -63,12 +63,14 @@ export interface Task<T> {
 }
 /** A dependency on a file. */
 export interface FileDependency {
+    path: Path;
     getModTime(): Promise<Date>;
 }
 /** A dependency on a directory hierarchy. In such a case, a modification time is meaningless
     so we use an internal version counter instead.
  */
 export interface DirectoryDependency {
+    path: Path;
     /** Return true if the last modified time of this file is newer than the given date. */
     getVersion(): number;
 }

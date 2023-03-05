@@ -4,6 +4,7 @@ import path from 'path';
 import util from 'util';
 import { AbstractTask } from './AbstractTask';
 import { taskContructors } from './ctors';
+import { log } from './debug';
 import { BuildError } from './errors';
 import type { Path } from './Path';
 import { hasSourceTask } from './sourceInternal';
@@ -64,13 +65,14 @@ export class OutputFileTask extends AbstractTask<Buffer | string> implements Bui
         if (isFileDependency(dep)) {
           const depTime = await dep.getModTime();
           if (depTime > stats.mtime) {
+            log(`Rebuilding ${this.path.full} because source file ${dep.path.full} is newer.`);
             return true;
           }
         } else if (isDirectoryDependency(dep)) {
           if (this.version < dep.getVersion()) {
+            log(`Rebuilding ${this.path.full} because directory ${dep.path.full} changed.`);
             return true;
           }
-          return true;
         }
       }
       return false;
